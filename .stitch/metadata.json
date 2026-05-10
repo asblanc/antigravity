@@ -1,0 +1,17 @@
+{
+  "name": "projects/12821775708247337648",
+  "projectId": "12821775708247337648",
+  "title": "IVOIRE BUSINESS CLUB (IBC) - Official Site",
+  "visibility": "PRIVATE",
+  "projectType": "PROJECT_DESIGN",
+  "origin": "STITCH",
+  "deviceType": "DESKTOP",
+  "designTheme": {
+    "colorMode": "LIGHT",
+    "font": "PLAYFAIR_DISPLAY",
+    "roundness": "ROUND_NONE",
+    "customColor": "#1B5E35",
+    "saturation": 3
+  },
+  "screens": {}
+}

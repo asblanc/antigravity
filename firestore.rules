@@ -1,0 +1,74 @@
+// Firestore Security Rules — IVOIRE BUSINESS CLUB (IBC)
+// Deploy with: npx firebase-tools@latest deploy --only firestore
+//
+// DATA MODEL:
+//   users/{uid}          → member or partner profile (role field distinguishes)
+//   transactions/{txId}  → cashback transactions
+//   config/cashback      → platform-wide settings (admin only writes)
+
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // ── Helper functions ──────────────────────────────────────────────────────
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    function isOwner(uid) {
+      return isAuthenticated() && request.auth.uid == uid;
+    }
+
+    function getUserData() {
+      return get(/databases/$(database)/documents/users/$(request.auth.uid)).data;
+    }
+
+    function isAdmin() {
+      return isAuthenticated() && getUserData().role == 'admin';
+    }
+
+    function isPartner() {
+      return isAuthenticated() && getUserData().role == 'partner';
+    }
+
+    // ── users collection ─────────────────────────────────────────────────────
+    match /users/{uid} {
+      // Members/partners can read their own profile; admins can read all
+      allow read: if isOwner(uid) || isAdmin();
+
+      // Only the user themselves or an admin can write their profile
+      allow create: if isOwner(uid);
+      allow update: if isOwner(uid) || isAdmin();
+      allow delete: if isAdmin();
+    }
+
+    // ── transactions collection ───────────────────────────────────────────────
+    match /transactions/{txId} {
+      // Members can read their own transactions; partners can read txns they created; admins can read all
+      allow read: if isAuthenticated() && (
+        resource.data.memberId == request.auth.uid ||
+        resource.data.partnerId == request.auth.uid ||
+        isAdmin()
+      );
+
+      // Only authenticated partners (or admins) can create transactions
+      allow create: if isAuthenticated() && (isPartner() || isAdmin());
+
+      // Only admins can update/delete (e.g., to reverse a transaction)
+      allow update, delete: if isAdmin();
+    }
+
+    // ── config collection (platform settings) ────────────────────────────────
+    match /config/{docId} {
+      // Only admins can read/write platform configuration
+      allow read, write: if isAdmin();
+    }
+
+    // ── partners collection (public listing) ─────────────────────────────────
+    match /partners/{partnerId} {
+      allow read: if true; // public — used for homepage listings
+      allow write: if isAdmin();
+    }
+  }
+}
