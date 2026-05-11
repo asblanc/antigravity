@@ -164,7 +164,7 @@ const App: React.FC = () => {
         <Routes>
           <Route path="/" element={<HomeView />} />
           <Route path="/member-registration" element={<MemberRegistrationView onRegister={handleRegister} />} />
-          <Route path="/partner-registration" element={<HomeView />} />
+          <Route path="/partner-registration" element={<PartnerRegistrationView />} />
           <Route path="/login" element={<LoginView onLogin={handleLogin} />} />
           <Route path="/member-dashboard" element={user ? <MemberDashboardView user={user} onLogout={handleLogout} /> : <Navigate to="/login" />} />
           <Route path="/partner-dashboard" element={<PartnerDashboardView onLogout={handleLogout} />} />
@@ -308,7 +308,7 @@ const HomeView: React.FC<{ }> = ({}) => {
   return (
     <div id="accueil">
       {/* Hero Section */}
-      <section className="relative h-screen flex items-center justify-center overflow-hidden">
+      <section className="relative min-h-screen md:h-screen py-16 md:py-0 flex items-center justify-center overflow-hidden">
         {/* Background Overlay */}
         <div className="absolute inset-0 z-0">
           <div className="absolute inset-0 bg-gradient-to-br from-green-darker/95 via-green-dark/70 to-transparent z-10" />
@@ -319,12 +319,12 @@ const HomeView: React.FC<{ }> = ({}) => {
           />
         </div>
 
-        <div className="container mx-auto px-6 relative z-20 text-center">
+        <div className="container mx-auto px-6 relative z-20 text-center max-w-5xl">
           <motion.div 
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
-            className="inline-block px-6 py-1 border border-gold/50 text-gold text-[10px] uppercase tracking-[0.5em] font-bold mb-10 bg-green-dark/20 backdrop-blur-sm"
+            className="inline-block px-4 sm:px-6 py-1 border border-gold/50 text-gold text-[9px] sm:text-[10px] uppercase tracking-[0.5em] font-bold mb-6 sm:mb-10 bg-green-dark/20 backdrop-blur-sm"
           >
             Bienvenue dans l'Excellence Ivoirienne
           </motion.div>
@@ -333,7 +333,7 @@ const HomeView: React.FC<{ }> = ({}) => {
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 1, delay: 0.2 }}
-            className="text-5xl md:text-8xl font-serif text-white mb-8 leading-tight tracking-tight"
+            className="text-3xl sm:text-5xl md:text-8xl font-serif text-white mb-6 sm:mb-8 leading-tight tracking-tight"
           >
             Luxe, Affaires <br />
             <span className="italic text-transparent bg-clip-text bg-gradient-to-r from-gold via-gold-light to-gold">
@@ -345,7 +345,7 @@ const HomeView: React.FC<{ }> = ({}) => {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 1, delay: 0.4 }}
-            className="text-white/80 text-lg md:text-xl max-w-3xl mx-auto mb-14 font-sans font-light leading-relaxed tracking-wide"
+            className="text-white/80 text-sm sm:text-base md:text-lg max-w-3xl mx-auto mb-10 sm:mb-14 font-sans font-light leading-relaxed tracking-wide"
           >
             Transformez vos loisirs en opportunités d'affaires. 
             Rejoignez le cercle restreint des décideurs et bénéficiez de privilèges exclusifs 
@@ -356,53 +356,53 @@ const HomeView: React.FC<{ }> = ({}) => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.6 }}
-            className="flex flex-col sm:flex-row items-center justify-center gap-8 mb-20"
+            className="flex flex-col gap-3 sm:gap-8 sm:flex-row items-center justify-center mb-12 sm:mb-20"
           >
             <button 
               onClick={() => navigate('/member-registration')}
-              className="btn-gold w-full sm:w-auto shadow-2xl"
+              className="btn-gold w-full sm:w-auto shadow-2xl text-sm sm:text-base"
             >
               Rejoindre le Club
             </button>
             <button 
               onClick={() => navigate('/partner-registration')}
-              className="btn-outline w-full sm:w-auto !border-white/50 !text-white hover:!border-gold hover:!shadow-gold group"
+              className="btn-outline w-full sm:w-auto !border-white/50 !text-white hover:!border-gold hover:!shadow-gold group text-sm sm:text-base"
             >
               Devenir Partenaire 
-              <ArrowRight size={16} className="inline ml-2 group-hover:translate-x-1 transition-transform" />
+              <ArrowRight size={14} className="inline ml-2 group-hover:translate-x-1 transition-transform" />
             </button>
           </motion.div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-12 max-w-5xl mx-auto border-t border-white/10 pt-16">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-8 sm:gap-12 max-w-5xl mx-auto border-t border-white/10 pt-12 sm:pt-16">
             {[
               { label: 'Membres Actifs', value: '1,250+' },
               { label: 'Partenaires Agréés', value: '45+' },
               { label: 'Cashback Redistribué', value: '15M+' }
             ].map((stat, i) => (
               <div key={i} className="text-center group">
-                <div className="text-4xl md:text-5xl font-serif text-gold mb-3 group-hover:scale-110 transition-transform duration-500">{stat.value}</div>
-                <div className="text-[10px] uppercase tracking-[0.3em] text-white/50 font-bold">{stat.label}</div>
+                <div className="text-2xl sm:text-4xl md:text-5xl font-serif text-gold mb-2 sm:mb-3 group-hover:scale-110 transition-transform duration-500">{stat.value}</div>
+                <div className="text-[9px] sm:text-[10px] uppercase tracking-[0.3em] text-white/50 font-bold">{stat.label}</div>
               </div>
             ))}
           </div>
         </div>
 
         {/* Scroll Indicator */}
-        <div className="absolute bottom-8 left-1/2 -translate-x-1/2 z-20 flex flex-col items-center gap-4 text-white/40">
+        <div className="absolute bottom-4 md:bottom-8 left-1/2 -translate-x-1/2 z-20 flex flex-col items-center gap-4 text-white/40 hidden sm:flex">
           <span className="text-[9px] uppercase tracking-[0.4em]">Découvrir</span>
           <div className="w-px h-12 bg-gradient-to-b from-gold to-transparent" />
         </div>
       </section>
 
       {/* Mechanism Section */}
-      <section className="py-32 bg-white-warm relative" id="privilèges">
+      <section className="py-20 sm:py-32 bg-white-warm relative" id="privilèges">
         <div className="container mx-auto px-6">
-          <div className="text-center mb-24">
-            <h2 className="text-[11px] uppercase tracking-[0.6em] text-gold font-bold mb-4">MÉCANISME D'EXCELLENCE</h2>
-            <h3 className="text-4xl md:text-6xl font-serif text-green-dark">Une Expérience en 4 Étapes</h3>
+          <div className="text-center mb-16 sm:mb-24">
+            <h2 className="text-[10px] sm:text-[11px] uppercase tracking-[0.6em] text-gold font-bold mb-3 sm:mb-4">MÉCANISME D'EXCELLENCE</h2>
+            <h3 className="text-2xl sm:text-4xl md:text-6xl font-serif text-green-dark">Une Expérience en 4 Étapes</h3>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-12">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-8 sm:gap-12">
             {[
               { title: 'Inscrivez-vous', desc: 'Créez votre profil exclusif en quelques minutes.', icon: Users },
               { title: 'Découvrez', desc: 'Explorez notre catalogue d\'établissements agréés.', icon: MapPin },
@@ -412,11 +412,11 @@ const HomeView: React.FC<{ }> = ({}) => {
               const Icon = step.icon;
               return (
                 <div key={i} className="relative group text-center md:text-left">
-                  <div className="w-16 h-16 bg-green-dark text-gold flex items-center justify-center mb-8 mx-auto md:mx-0 shadow-lg group-hover:-translate-y-2 transition-transform duration-500">
+                  <div className="w-16 h-16 bg-green-dark text-gold flex items-center justify-center mb-6 sm:mb-8 mx-auto md:mx-0 shadow-lg group-hover:-translate-y-2 transition-transform duration-500">
                     <Icon size={28} />
-                    <div className="absolute -top-4 -right-4 text-6xl font-serif text-gold/10 font-bold -z-10">{i + 1}</div>
+                    <div className="absolute -top-4 -right-4 text-5xl sm:text-6xl font-serif text-gold/10 font-bold -z-10">{i + 1}</div>
                   </div>
-                  <h4 className="text-xl font-serif text-green-dark mb-4">{step.title}</h4>
+                  <h4 className="text-lg sm:text-xl font-serif text-green-dark mb-3 sm:mb-4">{step.title}</h4>
                   <p className="text-text-muted text-sm leading-relaxed">{step.desc}</p>
                 </div>
               );
@@ -1201,6 +1201,139 @@ const LoginView: React.FC<{ onLogin: (email: string) => void }> = ({ onLogin }) 
             >
               Accès Partenaire
             </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+const PartnerRegistrationView: React.FC = () => {
+  const navigate = useNavigate();
+  const [formData, setFormData] = useState({
+    businessName: '',
+    contactName: '',
+    email: '',
+    phone: '',
+    establishmentType: 'restaurant',
+    description: ''
+  });
+  const [submitted, setSubmitted] = useState(false);
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    // Submit partner inquiry
+    toast.success('Merci pour votre intérêt ! Nous vous contactons très bientôt.');
+    setSubmitted(true);
+    setTimeout(() => navigate('/'), 3000);
+  };
+
+  return (
+    <div className="min-h-screen pt-32 pb-20 bg-white-warm">
+      <div className="container mx-auto px-6">
+        <div className="max-w-2xl mx-auto">
+          {/* Header */}
+          <div className="text-center mb-16">
+            <h2 className="section-subtitle">PARTENARIAT</h2>
+            <h3 className="text-3xl md:text-5xl font-serif text-green-dark mb-6">Devenez Partenaire IBC</h3>
+            <p className="text-text-muted italic max-w-xl mx-auto">
+              Rejoignez notre réseau exclusif et développez votre clientèle avec les membres du Club IBC.
+            </p>
+          </div>
+
+          {/* Form Content */}
+          <div className="bg-white p-8 md:p-16 border border-gold/10 shadow-premium relative overflow-hidden">
+            <div className="absolute top-0 right-0 w-32 h-32 bg-gold/5 -rotate-45 translate-x-16 -translate-y-16" />
+            
+            {!submitted ? (
+              <form className="space-y-8" onSubmit={handleSubmit}>
+                <div className="space-y-6">
+                  <div className="space-y-2">
+                    <label className="text-[10px] uppercase tracking-widest font-bold text-gold">Nom de l'Établissement</label>
+                    <input 
+                      type="text" 
+                      placeholder="Hotel, Restaurant ou Service"
+                      className="w-full bg-transparent border-b border-gold/20 py-4 font-serif text-lg focus:border-gold outline-none transition-colors"
+                      value={formData.businessName}
+                      onChange={(e) => setFormData({...formData, businessName: e.target.value})}
+                      required
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <label className="text-[10px] uppercase tracking-widest font-bold text-gold">Responsable</label>
+                    <input 
+                      type="text" 
+                      placeholder="Nom & Prénom"
+                      className="w-full bg-transparent border-b border-gold/20 py-4 font-serif text-lg focus:border-gold outline-none transition-colors"
+                      value={formData.contactName}
+                      onChange={(e) => setFormData({...formData, contactName: e.target.value})}
+                      required
+                    />
+                  </div>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                    <div className="space-y-2">
+                      <label className="text-[10px] uppercase tracking-widest font-bold text-gold">Email</label>
+                      <input 
+                        type="email" 
+                        placeholder="contact@etablissement.ci"
+                        className="w-full bg-transparent border-b border-gold/20 py-4 font-serif text-lg focus:border-gold outline-none transition-colors"
+                        value={formData.email}
+                        onChange={(e) => setFormData({...formData, email: e.target.value})}
+                        required
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <label className="text-[10px] uppercase tracking-widest font-bold text-gold">Téléphone</label>
+                      <input 
+                        type="tel" 
+                        placeholder="+225 04 XX XX XX XX"
+                        className="w-full bg-transparent border-b border-gold/20 py-4 font-serif text-lg focus:border-gold outline-none transition-colors"
+                        value={formData.phone}
+                        onChange={(e) => setFormData({...formData, phone: e.target.value})}
+                        required
+                      />
+                    </div>
+                  </div>
+                  <div className="space-y-2">
+                    <label className="text-[10px] uppercase tracking-widest font-bold text-gold">Type d'Établissement</label>
+                    <select 
+                      className="w-full bg-white border-b border-gold/20 py-4 font-serif text-lg focus:border-gold outline-none transition-colors"
+                      value={formData.establishmentType}
+                      onChange={(e) => setFormData({...formData, establishmentType: e.target.value})}
+                    >
+                      <option>Restaurant</option>
+                      <option>Hotel</option>
+                      <option>Spa & Wellness</option>
+                      <option>Golf & Loisirs</option>
+                      <option>Service Premium</option>
+                      <option>Autre</option>
+                    </select>
+                  </div>
+                  <div className="space-y-2">
+                    <label className="text-[10px] uppercase tracking-widest font-bold text-gold">Description</label>
+                    <textarea 
+                      placeholder="Décrivez votre établissement et pourquoi vous souhaitez rejoindre le Club IBC..."
+                      className="w-full bg-transparent border border-gold/20 p-4 font-sans text-sm focus:border-gold outline-none transition-colors rounded min-h-24"
+                      value={formData.description}
+                      onChange={(e) => setFormData({...formData, description: e.target.value})}
+                    />
+                  </div>
+                </div>
+
+                <button type="submit" className="btn-gold w-full py-4 flex items-center justify-center gap-3">
+                  Soumettre ma Candidature <ArrowRight size={18} />
+                </button>
+              </form>
+            ) : (
+              <div className="text-center py-12">
+                <CheckCircle2 size={48} className="text-green-dark mx-auto mb-6" />
+                <h4 className="text-2xl font-serif text-green-dark mb-4">Merci !</h4>
+                <p className="text-text-muted mb-6">Votre demande a été reçue. Notre équipe vous contactera très bientôt.</p>
+                <button onClick={() => navigate('/')} className="btn-gold">
+                  Retour à l'accueil
+                </button>
+              </div>
+            )}
           </div>
         </div>
       </div>
