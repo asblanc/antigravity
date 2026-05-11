@@ -39,6 +39,9 @@ import { loginUser, registerMember, logoutUser, subscribeToAuthState, getCurrent
 import { getMemberTransactions } from './lib/transaction.service';
 import { PartnerDashboardView } from './components/PartnerDashboardView';
 import { AdminDashboardView } from './components/AdminDashboardView';
+import ibcLogo from "@/assets/ibc-logo.png";
+// puis dans le JSX :
+<img src={ibcLogo} alt="IBC Logo" className="h-10 w-auto" />
 
 // Format numbers with dots as thousands separator
 const formatPrice = (num: number): string => {
