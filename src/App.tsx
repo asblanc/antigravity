@@ -1149,7 +1149,7 @@ const LoginView: React.FC<{ onLogin: (email: string) => void }> = ({ onLogin }) 
       <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-10" />
       <div className="max-w-md w-full relative z-10">
         <div className="text-center mb-12">
-          <img src="/src/assets/ibc-logo.png" alt="IBC Logo" className="w-24 h-24 mx-auto mb-8 border border-gold/30 p-2 rounded-full" />
+          <img src={ibcLogo} alt="IBC Logo" className="w-24 h-24 mx-auto mb-8 border border-gold/30 p-2 rounded-full" />
           <h2 className="text-3xl font-serif text-white mb-2">Accès Privé</h2>
           <p className="text-gold text-[10px] uppercase tracking-[0.4em] font-bold">Portail des Membres</p>
         </div>
@@ -1215,7 +1215,7 @@ const Footer: React.FC = () => {
         <div className="grid grid-cols-1 md:grid-cols-12 gap-16 mb-24">
           <div className="md:col-span-5">
             <div className="flex items-center gap-4 mb-8">
-              <img src="/src/assets/ibc-logo.png" alt="IBC Logo" className="w-16 h-16 border border-gold/30 p-1" />
+              <img src={ibcLogo} alt="IBC Logo" className="w-16 h-16 border border-gold/30 p-1" />
               <div>
                 <span className="font-serif text-2xl font-bold italic block leading-none">Ivoire Business Club</span>
                 <span className="text-gold text-[9px] uppercase tracking-[0.4em] font-bold">Prestige & Excellence</span>
