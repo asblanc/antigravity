@@ -39,7 +39,7 @@ import { loginUser, registerMember, logoutUser, subscribeToAuthState, getCurrent
 import { getMemberTransactions } from './lib/transaction.service';
 import { PartnerDashboardView } from './components/PartnerDashboardView';
 import { AdminDashboardView } from './components/AdminDashboardView';
-import ibcLogo from "@/assets/ibc-logo.png";
+import ibcLogo from "./assets/ibc-logo.png";
 // puis dans le JSX :
 <img src={ibcLogo} alt="IBC Logo" className="h-10 w-auto" />
 
@@ -197,7 +197,7 @@ const Navbar: React.FC<{
       <div className="max-w-7xl mx-auto flex items-center justify-between">
         <div className="flex items-center gap-3 cursor-pointer group" onClick={() => navigate('/')}>
           <div className="w-10 h-10 rounded-full border border-gold/50 overflow-hidden bg-green-dark shadow-sm group-hover:border-gold transition-colors duration-300">
-            <img src="/src/assets/ibc-logo.png" alt="IBC Logo" className="w-full h-full object-contain p-1" />
+            <img src={ibcLogo} alt="IBC Logo" className="w-full h-full object-contain p-1" />
           </div>
           <div className="flex flex-col hidden sm:flex">
             <span className={`font-serif text-lg leading-tight font-bold italic tracking-tight ${scrolled ? 'text-green-dark' : 'text-white'}`}>
