@@ -7,22 +7,58 @@ yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
 
+# Dependencies
 node_modules
+node_modules/.cache
+
+# Build output
 dist
 dist-ssr
 *.local
+
+# Environment variables — NE JAMAIS POUSHER SUR GITHUB
 .env
+.env.local
+.env.production
+.env.development
+.env.staging
+
+# Firebase credentials — CONFIDENTIEL
 credentials.json
 token.json
+firebase-adminsdk*.json
+service-account*.json
+*-service-account.json
+firebaseConfig.js
+firebaseConfig.ts
+
+# Temp files
 tmp/
+temp/
 
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json
 .idea
-.DS_Store
 *.suo
 *.ntvs*
 *.njsproj
 *.sln
 *.sw?
+
+# OS files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+Thumbs.db
+ehthumbs.db
+
+# TypeScript cache
+*.tsbuildinfo
+
+# Optional cache directories
+.npm
+.eslintcache
+.stylelintcache
