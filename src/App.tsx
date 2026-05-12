@@ -20,16 +20,16 @@ import {
   Lock,
   Wallet,
   Smartphone,
-  Info,
+
   LogOut,
-  Settings,
-  Bell,
-  Scan,
-  History,
+
+
+
+
   LayoutDashboard,
   Search,
-  Compass,
-  ArrowUpRight,
+
+
   Award,
   TrendingUp,
   Banknote,
@@ -38,8 +38,8 @@ import {
   Hotel,
   BookOpen,
 } from 'lucide-react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { Routes, Route, useNavigate, useLocation, Link, Navigate } from 'react-router-dom';
+
+import { Routes, Route, useNavigate, useLocation, Navigate } from 'react-router-dom';
 import { QRCodeSVG } from 'qrcode.react';
 import type { Member, Transaction, Offer } from './lib/mock-api';
 import { loginUser, registerMember, logoutUser, subscribeToAuthState, getCurrentMemberProfile } from './lib/auth.service';
@@ -162,8 +162,8 @@ const App: React.FC = () => {
         <Route path="/offers" element={<EstablishmentsView />} />
         <Route path="/login" element={<LoginView onLogin={handleLogin} />} />
         <Route path="/member-dashboard" element={user ? <MemberDashboardView user={user} onLogout={handleLogout} /> : <Navigate to="/login" />} />
-        <Route path="/partner-dashboard" element={<PartnerDashboardView />} />
-        <Route path="/admin-dashboard" element={<AdminDashboardView />} />
+        <Route path="/partner-dashboard" element={<PartnerDashboardView onLogout={handleLogout} />} />
+        <Route path="/admin-dashboard" element={<AdminDashboardView onLogout={handleLogout} />} />
         <Route path="*" element={<Navigate to="/" />} />
       </Routes>
       {!isDashboard && <Footer />}
