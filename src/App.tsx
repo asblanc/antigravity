@@ -36,10 +36,10 @@ import {
   Gamepad2,
   Heart,
   Hotel,
-  BookOpen,
+  BookOpen,   Scan,
 } from 'lucide-react';
 
-import { Routes, Route, useNavigate, useLocation, Navigate } from 'react-router-dom';
+import { Routes, Route, useNavigate, useLocation, Navigate, Link } from 'react-router-dom';
 import { QRCodeSVG } from 'qrcode.react';
 import type { Member, Transaction, Offer } from './lib/mock-api';
 import { loginUser, registerMember, logoutUser, subscribeToAuthState, getCurrentMemberProfile } from './lib/auth.service';
