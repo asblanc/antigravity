@@ -213,7 +213,7 @@ const Navbar: React.FC<{
             {[
               { name: 'Accueil', path: '/' },
               { name: 'Partenaires', path: '/establishments' },
-              { name: 'Privilèges', path: '/offers' },
+              { name: 'Avantages', path: '/offers' },
             ].map((item) => (
               <Link 
                 key={item.name}
@@ -280,7 +280,7 @@ const Navbar: React.FC<{
             {[
               { name: 'Accueil', path: '/' },
               { name: 'Partenaires', path: '/establishments' },
-              { name: 'Privilèges', path: '/offers' },
+              { name: 'Avantages', path: '/offers' },
             ].map((item) => (
               <Link 
                 key={item.name}
@@ -326,7 +326,7 @@ const HomeView: React.FC<{ }> = ({}) => {
             transition={{ duration: 0.8 }}
             className="inline-block px-4 sm:px-6 py-1 border border-gold/50 text-gold text-[9px] sm:text-[10px] uppercase tracking-[0.5em] font-bold mb-6 sm:mb-10 bg-green-dark/20 backdrop-blur-sm"
           >
-            Bienvenue dans l'Excellence Ivoirienne
+            Plateforme Touristique & Programme de Fidélité
           </motion.div>
           
           <motion.h1 
@@ -335,9 +335,9 @@ const HomeView: React.FC<{ }> = ({}) => {
             transition={{ duration: 1, delay: 0.2 }}
             className="text-3xl sm:text-5xl md:text-8xl font-serif text-white mb-6 sm:mb-8 leading-tight tracking-tight"
           >
-            Luxe, Affaires <br />
+            Transformez Vos Loisirs <br />
             <span className="italic text-transparent bg-clip-text bg-gradient-to-r from-gold via-gold-light to-gold">
-              & Prestige
+              en opportunités d'affaires.
             </span>
           </motion.h1>
 
@@ -405,9 +405,9 @@ const HomeView: React.FC<{ }> = ({}) => {
           <div className="grid grid-cols-1 md:grid-cols-4 gap-8 sm:gap-12">
             {[
               { title: 'Inscrivez-vous', desc: 'Créez votre profil exclusif en quelques minutes.', icon: Users },
-              { title: 'Découvrez', desc: 'Explorez notre catalogue d\'établissements agréés.', icon: MapPin },
-              { title: 'Consommez', desc: 'Profitez du meilleur de la gastronomie et de l\'hôtellerie.', icon: Utensils },
-              { title: 'Gagnez', desc: 'Recevez Cashback exclusif sur chaque dépense immédiat sur chaque dépense.', icon: CreditCard }
+              { title: 'Explorez', desc: 'Explorez notre catalogue d\'établissements partenaires : hôtels, restaurants et loisirs.', icon: MapPin },
+              { title: 'Consommez', desc: 'Accédez à des offres exclusives dans les hôtels, restaurants et loisirs. Payez directement sur place ou via mobile money.', icon: Utensils },
+              { title: 'Gagnez', desc: 'Recevez votre cashback automatiquement selon votre statut, à chaque dépense validée chez un partenaire.', icon: CreditCard }
             ].map((step, i) => {
               const Icon = step.icon;
               return (
@@ -504,7 +504,7 @@ const HomeView: React.FC<{ }> = ({}) => {
         <div className="container mx-auto px-6">
           <div className="text-center mb-24">
             <h2 className="text-[11px] uppercase tracking-[0.6em] text-gold font-bold mb-4">PROGRAMME DE FIDÉLITÉ</h2>
-            <h3 className="text-4xl md:text-6xl font-serif text-green-dark">Élevez Votre Statut</h3>
+            <h3 className="text-4xl md:text-6xl font-serif text-green-dark">ACCUMULEZ DU CASHBACK SELON VOTRE STATUT</h3>               <p className="text-text-muted mt-6 max-w-xl mx-auto text-sm leading-relaxed">Votre statut détermine votre taux de cashback. Plus vous consommez, plus vous progressez.</p>
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
@@ -568,8 +568,8 @@ const HomeView: React.FC<{ }> = ({}) => {
           <div className="max-w-4xl mx-auto">
             <h2 className="text-gold/30 text-8xl font-serif absolute -top-10 left-0 leading-none">“</h2>
             <p className="text-3xl md:text-5xl font-serif text-white italic leading-tight mb-16 px-10">
-              Nous ne promettons pas de visibilité, <br />
-              nous sommes un <span className="text-gold">canal privé</span> de clientèle qualifiée.
+              Nous vous connectons à une clientèle qualifiée et fidèle. <br />
+              Chaque transaction validée chez vous génère un cashback pour le membre — et une <span className="text-gold">visibilité pour votre établissement.</span>
             </p>
             <div className="flex flex-col items-center">
               <div className="w-16 h-px bg-gold mb-8" />
@@ -577,7 +577,7 @@ const HomeView: React.FC<{ }> = ({}) => {
                 onClick={() => navigate('/member-registration')}
                 className="btn-gold !px-12"
               >
-                Demander mon Adhésion
+                Rejoindre le Réseau IBC
               </button>
             </div>
           </div>
@@ -1191,7 +1191,7 @@ const LoginView: React.FC<{ onLogin: (email: string) => void }> = ({ onLogin }) 
               onClick={() => navigate('/member-registration')}
               className="text-green-dark text-xs font-bold uppercase tracking-[0.2em] border-b border-gold hover:text-gold transition-colors"
             >
-              Demander mon adhésion
+              Rejoindre le Réseau IBC
             </button>
           </div>
           <div className="mt-4 text-center">
