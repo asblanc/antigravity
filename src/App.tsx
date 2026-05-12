@@ -347,9 +347,8 @@ const HomeView: React.FC<{ }> = ({}) => {
             transition={{ duration: 1, delay: 0.4 }}
             className="text-white/80 text-sm sm:text-base md:text-lg max-w-3xl mx-auto mb-10 sm:mb-14 font-sans font-light leading-relaxed tracking-wide"
           >
-            Transformez vos loisirs en opportunités d'affaires. 
-            Rejoignez le cercle restreint des décideurs et bénéficiez de privilèges exclusifs 
-            dans les plus beaux établissements de Côte d'Ivoire.
+            Transformez vos dépenses touristiques en épargnes. Rejoignez le club privé des consommateurs qualifiés et bénéficiez de privilèges exclusifs dans les plus beaux établissements de Côte d'Ivoire. 
+            
           </motion.p>
 
           <motion.div 
@@ -614,7 +613,7 @@ const MemberRegistrationView: React.FC<{ onRegister: (data: any) => void }> = ({
             <h2 className="section-subtitle">INSCRIPTION PREMIUM</h2>
             <h3 className="text-4xl md:text-5xl font-serif text-green-dark mb-6">Devenez Membre de l'Excellence</h3>
             <p className="text-text-muted italic max-w-xl mx-auto">
-              Rejoignez le cercle restreint des décideurs et bénéficiez de privilèges exclusifs conçus pour l'élite.
+              Transformez vos dépenses touristiques en épargnes. Rejoignez le club privé des consommateurs qualifiés et bénéficiez de privilèges exclusifs dans les plus beaux établissements de Côte d'Ivoire. conçus pour l'élite.
             </p>
           </div>
 
