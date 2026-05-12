@@ -187,7 +187,7 @@ const Navbar: React.FC<{ scrolled: boolean, mobileMenuOpen: boolean, setMobileMe
           {[{ name: 'Accueil', path: '/' }, { name: 'Partenaires', path: '/establishments' }, { name: 'Avantages', path: '/offers' }].map((item) => (
             <Link key={item.path} to={item.path} className={`relative font-medium text-[10px] uppercase tracking-widest transition-colors duration-300 group ${scrolled ? 'text-text hover:text-gold' : 'text-white/90 hover:text-white'}`}>{item.name}</Link>
           ))}
-          <button type="button" onClick={() => { navigate('/'); setTimeout(() => document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' }), 100); }} className={`relative font-medium text-[10px] uppercase tracking-widest transition-colors duration-300 ${scrolled ? 'text-text hover:text-gold' : 'text-white/90 hover:text-white'}`}>Contact</button>
+          <button type="button" onClick={() => { navigate('/'); setTimeout(() => document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' }), 100); }} className={`relative font-medium text-[10px] uppercase tracking-widest transition-colors duration-300 after:absolute after:bottom-[-2px] after:left-0 after:h-[1px] after:w-0 after:bg-gold hover:after:w-full after:transition-all after:duration-300 ${scrolled ? 'text-text hover:text-gold' : 'text-white/90 hover:text-white'}`}>Contact</button>
           {user ? (
             <button onClick={() => navigate('/member-dashboard')} className="btn-gold !px-5 !py-2 text-[10px] flex items-center gap-2">Mon Dashboard</button>
           ) : (
@@ -393,7 +393,7 @@ const HomeView: React.FC = () => {
         <div className="container mx-auto px-6 max-w-4xl">
           <div className="border border-gold/20 p-12 text-center mb-10">
             <span className="text-[10px] uppercase tracking-[0.4em] text-gold font-bold block mb-6">Inscription Gratuite</span>
-            <h2 className="font-serif text-3xl md:text-4xl font-bold text-green-dark leading-tight">
+            <h2 className="font-serif text-2xl md:text-3xl lg:text-4xl font-bold text-green-dark leading-tight">
               Payez 500 FCFA / mois de Frais<br />de participation au programme IBC
             </h2>
           </div>
