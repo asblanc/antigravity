@@ -92,3 +92,23 @@
 .animate-fade-in-up {
   animation: fade-in-up 0.8s ease-out forwards;
 }
+
+
+/* Navigation hover underline effect */
+.nav-link {
+  position: relative;
+  display: inline-block;
+}
+.nav-link::after {
+  content: '';
+  position: absolute;
+  bottom: -3px;
+  left: 0;
+  width: 0;
+  height: 1px;
+  background-color: #C9A84C;
+  transition: width 0.3s ease;
+}
+.nav-link:hover::after {
+  width: 100%;
+}
