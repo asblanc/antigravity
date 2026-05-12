@@ -96,7 +96,7 @@ const App: React.FC = () => {
       toast.success(`Bienvenue, ${userData.name}`);
     } catch (error: any) {
       const msg = error?.code === 'auth/invalid-credential'
-        ? 'Email ou mot de passe incorrect'
+        ? 'E-mail ou mot de passe incorrect'
         : error?.message || 'Erreur de connexion';
       toast.error(msg);
     }
@@ -116,8 +116,8 @@ const App: React.FC = () => {
       toast.success('Bienvenue dans le Club IBC !');
     } catch (error: any) {
       const msg = error?.code === 'auth/email-already-in-use'
-        ? 'Cet email est deja utilise'
-        : error?.message || 'Erreur lors de l inscription';
+        ? 'Cet e-mail est déjà utilisé'
+        : error?.message || 'Erreur lors de l’inscription';
       toast.error(msg);
     }
   };
@@ -224,16 +224,16 @@ const HomeView: React.FC = () => {
             <span className="text-gold text-[10px] uppercase tracking-[0.4em] font-bold">Plateforme Touristique & Programme de Fidelite</span>
           </div>
           <h1 className="font-serif text-4xl sm:text-6xl md:text-7xl font-bold mb-8 leading-tight">
-            Transformez Vos Loisirs<br />
-            <span className="italic text-gold">en opportunites d'affaires.</span>
+            Transformez vos loisirs<br />
+            <span className="italic text-gold">en opportunités d'affaires.</span>
           </h1>
-          <p className="text-white/70 text-sm sm:text-base max-w-2xl mx-auto mb-12 leading-relaxed">Transformez vos depenses touristiques en epargnes. Rejoignez le club prive des consommateurs qualifies.</p>
+          <p className="text-white/70 text-sm sm:text-base max-w-2xl mx-auto mb-12 leading-relaxed">Transformez vos dépenses touristiques en économies. Rejoignez le club privé des consommateurs qualifiés.</p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <button onClick={() => navigate('/member-registration')} className="btn-gold w-full sm:w-auto shadow-2xl text-sm sm:text-base">Rejoindre le Club</button>
             <button onClick={() => navigate('/partner-registration')} className="btn-outline w-full sm:w-auto !border-white/50 !text-white hover:!border-gold group text-sm sm:text-base">Devenir Partenaire</button>
           </div>
           <div className="grid grid-cols-3 gap-8 mt-20 max-w-lg mx-auto">
-            {[{ label: 'Membres Actifs', value: '1,250+' }, { label: 'Partenaires Agrees', value: '45+' }, { label: 'Cashback Redistribue', value: '15M+' }].map((stat, i) => (
+            {[{ label: 'Membres Actifs', value: '1,250+' }, { label: 'PARTENAIRES AGRÉÉS', value: '45+' }, { label: 'CASHBACK REDISTRIBUÉ', value: '15M+' }].map((stat, i) => (
               <div key={i} className="text-center">
                 <div className="font-serif text-2xl font-bold text-gold">{stat.value}</div>
                 <div className="text-white/50 text-[9px] uppercase tracking-widest mt-1">{stat.label}</div>
@@ -247,11 +247,11 @@ const HomeView: React.FC = () => {
       <section className="py-32 bg-cream">
         <div className="container mx-auto px-6">
           <div className="text-center mb-20">
-            <span className="text-[10px] uppercase tracking-[0.4em] text-gold font-bold">Mecanisme d'Excellence</span>
-            <h2 className="font-serif text-4xl font-bold text-green-dark mt-4">Une Experience en 4 Etapes</h2>
+            <span className="text-[10px] uppercase tracking-[0.4em] text-gold font-bold">Mécanisme d’Excellence</span>
+            <h2 className="font-serif text-4xl font-bold text-green-dark mt-4">Une Expérience en 4 Étapes</h2>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-            {[{ title: 'Inscrivez-vous', desc: 'Creez votre profil exclusif en quelques minutes.', icon: Users }, { title: 'Explorez', desc: 'Explorez notre catalogue d etablissements partenaires.', icon: MapPin }, { title: 'Consommez', desc: 'Acceandez a des offres exclusives dans les hotels, restaurants et loisirs.', icon: Utensils }, { title: 'Gagnez', desc: 'Recevez votre cashback automatiquement selon votre statut.', icon: CreditCard }].map((step, i) => {
+            {[{ title: 'Inscrivez-vous', desc: 'Creez votre profil exclusif en quelques minutes.', icon: Users }, { title: 'Explorez', desc: 'Explorez notre catalogue d’établissements partenaires.', icon: MapPin }, { title: 'Consommez', desc: 'Acceandez a des offres exclusives dans les hotels, restaurants et loisirs.', icon: Utensils }, { title: 'Gagnez', desc: 'Recevez votre cashback automatiquement selon votre statut.', icon: CreditCard }].map((step, i) => {
               const Icon = step.icon;
               return (
                 <div key={i} className="p-8 bg-white border border-gold/10 hover:border-gold/30 transition-all group">
@@ -271,13 +271,13 @@ const HomeView: React.FC = () => {
         <div className="container mx-auto px-6">
           <div className="flex items-end justify-between mb-16">
             <div>
-              <span className="text-[10px] uppercase tracking-[0.4em] text-gold font-bold">Le Reseau IBC</span>
+              <span className="text-[10px] uppercase tracking-[0.4em] text-gold font-bold">LE RÉSEAU IBC</span>
               <h2 className="font-serif text-4xl font-bold text-white mt-4">Nos Partenaires</h2>
             </div>
-            <button onClick={() => navigate('/establishments')} className="btn-outline !text-white !border-white/30 hover:!border-gold whitespace-nowrap">Voir tout le catalogue</button>
+            <button onClick={() => navigate('/establishments')} className="btn-outline !text-white !border-white/30 hover:!border-gold text-xs md:text-sm px-4 py-2 md:px-6 md:py-3">Voir tout le catalogue</button>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {[{ name: 'Sofitel Abidjan', type: 'L Hotel Ivoire iconique', img: 'https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?auto=format&fit=crop&q=80&w=800' }, { name: 'Sky Lounge', type: 'Vue panoramique sur Abidjan', img: 'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&q=80&w=800' }, { name: 'Radisson Blu', type: 'Hub des affaires internationales', img: 'https://images.unsplash.com/photo-1445019980597-93fa8acb246c?auto=format&fit=crop&q=80&w=800' }, { name: 'Pullman Helios', type: 'Excellence au coeur du Plateau', img: '/assets/pullman-hotel.png' }].map((p, i) => (
+            {[{ name: 'Sofitel Abidjan', type: 'L’Hôtel Ivoire iconique', img: 'https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?auto=format&fit=crop&q=80&w=800' }, { name: 'Sky Lounge', type: 'Vue panoramique sur Abidjan', img: 'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&q=80&w=800' }, { name: 'Radisson Blu', type: 'Hub des affaires internationales', img: 'https://images.unsplash.com/photo-1445019980597-93fa8acb246c?auto=format&fit=crop&q=80&w=800' }, { name: 'Pullman Helios', type: 'Excellence au coeur du Plateau', img: '/assets/pullman-hotel.png' }].map((p, i) => (
               <div key={i} className="group relative overflow-hidden">
                 <img src={p.img} alt={p.name} className="w-full h-64 object-cover group-hover:scale-105 transition-transform duration-700" />
                 <div className="absolute inset-0 bg-gradient-to-t from-green-dark/90 to-transparent" />
@@ -299,7 +299,7 @@ const HomeView: React.FC = () => {
             <h2 className="font-serif text-4xl font-bold text-green-dark mt-4">Experiences Signature</h2>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-            {[{ title: 'AFTERWORK SOCIAL', desc: 'Connectez-vous avec l elite economique dans des lieux d exception.', icon: Users }, { title: 'DINNER SIGNATURE', desc: 'Une table reservee, une experience culinaire hors du commun.', icon: Utensils }, { title: 'LUXURY ESCAPE', desc: 'Evadez-vous dans nos destinations partenaires les plus priseees.', icon: MapPin }, { title: 'WEEKEND ESCAPE', desc: 'Le repos bien merite des batisseurs, dans un cadre serein.', icon: Coffee }].map((exp, i) => {
+            {[{ title: 'AFTERWORK SOCIAL', desc: 'Connectez-vous avec l elite economique dans des lieux d’exception.', icon: Users }, { title: 'DINNER SIGNATURE', desc: 'Une table reservee, une experience culinaire hors du commun.', icon: Utensils }, { title: 'LUXURY ESCAPE', desc: 'Evadez-vous dans nos destinations partenaires les plus priseees.', icon: MapPin }, { title: 'WEEKEND ESCAPE', desc: 'Le repos bien merite des batisseurs, dans un cadre serein.', icon: Coffee }].map((exp, i) => {
               const Icon = exp.icon;
               return (
                 <div key={i} className="p-8 border border-gold/10 hover:border-gold/30 hover:shadow-premium transition-all group bg-white">
@@ -347,7 +347,7 @@ const HomeView: React.FC = () => {
               </div>
             </div>
           </div>
-          <p className="text-green-dark font-serif text-xl italic">Rejoignez-nous et faites partie de la revolution touristique !</p>
+          <p className="text-green-dark font-serif text-xl italic">Rejoignez-nous et faites partie de la révolution touristique !</p>
         </div>
       </section>
       
@@ -360,7 +360,7 @@ const HomeView: React.FC = () => {
           </div>
           <div className="border border-gold/10 p-8 bg-white/50">
             <p className="text-text-muted text-base italic text-center leading-relaxed">
-              Rejoignez le cercle restreint des consommateurs privilegies et beneficiez
+              Rejoignez le cercle restreint des consommateurs privilégiés et beneficiez
               des opportunites exclusifs concus pour l'elite.
             </p>
           </div>
@@ -429,7 +429,7 @@ const HomeView: React.FC = () => {
             validee chez vous genere un cashback pour le membre et une visibilite pour votre etablissement.
           </p>
           <button onClick={() => navigate('/partner-registration')} className="btn-gold !px-12">
-            Rejoindre le Reseau IBC
+            Rejoindre LE RÉSEAU IBC
           </button>
         </div>
       </section>
@@ -541,7 +541,7 @@ const MemberRegistrationView: React.FC<{ onRegister: (data: any) => void }> = ({
           <span className="text-[10px] uppercase tracking-[0.4em] text-gold font-bold block mb-4">Inscription Gratuite</span>
           <h2 className="font-serif text-4xl font-bold text-green-dark">Devenez Membre du club</h2>
           <p className="text-text-muted mt-4 italic text-sm leading-relaxed">
-            Transformez vos depenses touristiques en epargnes. Rejoignez le club prive des consommateurs qualifies
+            Transformez vos dépenses touristiques en économies. Rejoignez le club privé des consommateurs qualifiés
             et beneficiez de privileges exclusifs dans les plus beaux etablissements de Cote d'Ivoire.
           </p>
         </div>
@@ -755,7 +755,7 @@ const EstablishmentsView: React.FC = () => {
         {filteredPlaces.length === 0 && (
           <div className="text-center py-20">
             <h4 className="font-serif text-2xl text-green-dark mb-4">Aucun etablissement trouve</h4>
-            <p className="text-text-muted">Essayez d'elargir votre recherche.</p>
+            <p className="text-text-muted">Essayez d'élargir votre recherche.</p>
           </div>
         )}
       </div>
@@ -784,7 +784,7 @@ const LoginView: React.FC<{ onLogin: (email: string, password?: string) => void 
           <button type="submit" className="btn-gold w-full py-4">Entrer dans le Club</button>
         </form>
         <p className="text-center mt-8 text-text-muted text-sm">Pas encore membre ?</p>
-        <button onClick={() => navigate('/member-registration')} className="w-full text-center text-green-dark text-xs font-bold uppercase tracking-[0.2em] border-b border-gold hover:text-gold transition-colors mt-2">Rejoindre le Reseau IBC</button>
+        <button onClick={() => navigate('/member-registration')} className="w-full text-center text-green-dark text-xs font-bold uppercase tracking-[0.2em] border-b border-gold hover:text-gold transition-colors mt-2">Rejoindre LE RÉSEAU IBC</button>
       </div>
     </div>
   );
@@ -794,7 +794,7 @@ const PartnerRegistrationView: React.FC = () => {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({ businessName: '', contactName: '', email: '', phone: '', establishmentType: 'restaurant', description: '' });
   const [submitted, setSubmitted] = useState(false);
-  const handleSubmit = (e: React.FormEvent) => { e.preventDefault(); toast.success('Merci pour votre interet ! Nous vous contactons tres bientot.'); setSubmitted(true); setTimeout(() => navigate('/'), 3000); };
+  const handleSubmit = (e: React.FormEvent) => { e.preventDefault(); toast.success('Merci pour votre interet ! Nous vous contactons très bientôt.'); setSubmitted(true); setTimeout(() => navigate('/'), 3000); };
   return (
     <div className="min-h-screen bg-cream py-24">
       <div className="container mx-auto px-6 max-w-2xl">
@@ -805,7 +805,7 @@ const PartnerRegistrationView: React.FC = () => {
         </div>
         {!submitted ? (
           <form onSubmit={handleSubmit} className="space-y-8">
-            {[{ label: 'Nom de l Etablissement', key: 'businessName', placeholder: 'Hotel, Restaurant ou Service', type: 'text' }, { label: 'Responsable', key: 'contactName', placeholder: 'Nom & Prenom', type: 'text' }, { label: 'Email', key: 'email', placeholder: 'contact@etablissement.ci', type: 'email' }, { label: 'Telephone', key: 'phone', placeholder: '+225 04 XX XX XX XX', type: 'tel' }].map((field) => (
+            {[{ label: 'Nom de l’Établissement', key: 'businessName', placeholder: 'Hotel, Restaurant ou Service', type: 'text' }, { label: 'Responsable', key: 'contactName', placeholder: 'Nom & Prenom', type: 'text' }, { label: 'Email', key: 'email', placeholder: 'contact@etablissement.ci', type: 'email' }, { label: 'Telephone', key: 'phone', placeholder: '+225 04 XX XX XX XX', type: 'tel' }].map((field) => (
               <div key={field.key}>
                 <label className="text-[10px] uppercase tracking-widest font-bold text-text-muted">{field.label}</label>
                 <input type={field.type} placeholder={field.placeholder} className="w-full bg-transparent border-b border-gold/20 py-4 font-serif text-lg focus:border-gold outline-none transition-colors" value={formData[field.key as keyof typeof formData]} onChange={(e) => setFormData({...formData, [field.key]: e.target.value})} required />
@@ -824,7 +824,7 @@ const PartnerRegistrationView: React.FC = () => {
             </div>
             <div>
               <label className="text-[10px] uppercase tracking-widest font-bold text-text-muted">Description</label>
-              <textarea placeholder="Decrivez votre etablissement..." className="w-full bg-transparent border border-gold/20 p-4 font-sans text-sm focus:border-gold outline-none transition-colors rounded min-h-24" value={formData.description} onChange={(e) => setFormData({...formData, description: e.target.value})} />
+              <textarea placeholder="Décrivez votre etablissement..." className="w-full bg-transparent border border-gold/20 p-4 font-sans text-sm focus:border-gold outline-none transition-colors rounded min-h-24" value={formData.description} onChange={(e) => setFormData({...formData, description: e.target.value})} />
             </div>
             <button type="submit" className="btn-gold w-full py-4 flex items-center justify-center gap-3">Soumettre ma Candidature <ArrowRight size={18} /></button>
           </form>
@@ -832,7 +832,7 @@ const PartnerRegistrationView: React.FC = () => {
           <div className="text-center py-12">
             <CheckCircle2 size={48} className="text-green-dark mx-auto mb-6" />
             <h4 className="text-2xl font-serif text-green-dark mb-4">Merci !</h4>
-            <p className="text-text-muted mb-6">Votre demande a ete recue. Notre equipe vous contactera tres bientot.</p>
+            <p className="text-text-muted mb-6">Votre demande a ete recue. Notre equipe vous contactera très bientôt.</p>
             <button onClick={() => navigate('/')} className="btn-gold">Retour a l accueil</button>
           </div>
         )}
