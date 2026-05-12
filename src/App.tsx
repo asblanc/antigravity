@@ -326,7 +326,7 @@ const HomeView: React.FC<{ }> = ({}) => {
             transition={{ duration: 0.8 }}
             className="inline-block px-4 sm:px-6 py-1 border border-gold/50 text-gold text-[9px] sm:text-[10px] uppercase tracking-[0.5em] font-bold mb-6 sm:mb-10 bg-green-dark/20 backdrop-blur-sm"
           >
-            Plateforme Touristique & Programme de Fidélité
+            Plateforme Touristique & PROGRAMME DE FIDÉLITÉ — INSCRIPTION GRATUITE
           </motion.div>
           
           <motion.h1 
@@ -405,7 +405,7 @@ const HomeView: React.FC<{ }> = ({}) => {
             {[
               { title: 'Inscrivez-vous', desc: 'Créez votre profil exclusif en quelques minutes.', icon: Users },
               { title: 'Explorez', desc: 'Explorez notre catalogue d\'établissements partenaires : hôtels, restaurants et loisirs.', icon: MapPin },
-              { title: 'Consommez', desc: 'Accédez à des offres exclusives dans les hôtels, restaurants et loisirs. Payez directement sur place ou via mobile money.', icon: Utensils },
+              { title: 'Consommez', desc: 'Accédez à des offres exclusives dans les hôtels, restaurants et loisirs.', icon: Utensils },
               { title: 'Gagnez', desc: 'Recevez votre cashback automatiquement selon votre statut, à chaque dépense validée chez un partenaire.', icon: CreditCard }
             ].map((step, i) => {
               const Icon = step.icon;
@@ -432,7 +432,7 @@ const HomeView: React.FC<{ }> = ({}) => {
           <div className="flex flex-col md:flex-row items-end justify-between gap-8 mb-20">
             <div className="max-w-2xl">
               <h2 className="text-[11px] uppercase tracking-[0.6em] text-gold font-bold mb-4">LE RÉSEAU IBC</h2>
-              <h3 className="text-4xl md:text-6xl font-serif leading-tight">Nos Partenaires de Prestige</h3>
+              <h3 className="text-4xl md:text-6xl font-serif leading-tight">Nos Partenaires</h3>
             </div>
             <button 
               onClick={() => navigate('/establishments')}
@@ -502,8 +502,8 @@ const HomeView: React.FC<{ }> = ({}) => {
       <section className="py-32 bg-white-warm relative overflow-hidden">
         <div className="container mx-auto px-6">
           <div className="text-center mb-24">
-            <h2 className="text-[11px] uppercase tracking-[0.6em] text-gold font-bold mb-4">PROGRAMME DE FIDÉLITÉ</h2>
-            <h3 className="text-4xl md:text-6xl font-serif text-green-dark">ACCUMULEZ DU CASHBACK SELON VOTRE STATUT</h3>               <p className="text-text-muted mt-6 max-w-xl mx-auto text-sm leading-relaxed">Votre statut détermine votre taux de cashback. Plus vous consommez, plus vous progressez.</p>
+            <h2 className="text-[11px] uppercase tracking-[0.6em] text-gold font-bold mb-4">PROGRAMME DE FIDÉLITÉ — INSCRIPTION GRATUITE</h2>
+            <h3 className="text-4xl md:text-6xl font-serif text-green-dark">ACCUMULEZ DU CASHBACK SELON VOTRE STATUT</h3>               <p className="text-text-muted mt-6 max-w-xl mx-auto text-sm leading-relaxed">Votre statut détermine votre taux de cashback. Plus vous consommez, plus vous progressez.</p>               <p className="text-gold font-bold mt-3 text-sm tracking-wide">Rejoignez-nous et faites partie de la révolution touristique !</p>
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
@@ -518,14 +518,14 @@ const HomeView: React.FC<{ }> = ({}) => {
               { 
                 tier: 'SILVER', 
                 title: 'MEMBRE SILVER', 
-                benefits: ['Cashback 5% Bonus', 'Accès Events Premium', 'Conciergerie Dédiée', 'Invitations Afterworks'],
+                benefits: ['Cashback 5% sur chaque dépense', 'Accès Events Premium', 'Conciergerie Dédiée', 'Invitations Afterworks'],
                 price: '2.500 FCFA / mois',
                 highlight: true
               },
               { 
                 tier: 'GOLD ELITE', 
                 title: 'MEMBRE GOLD ELITE', 
-                benefits: ['Cashback 7% Privilège', 'Accès VIP Signature', 'Assistant Personnel 24/7', 'Accès Salons VIP Aéroport'],
+                benefits: ['Cashback 7% sur chaque dépense', 'Accès VIP Signature', 'Assistant Personnel 24/7', 'Accès Salons VIP Aéroport'],
                 price: '10.000 FCFA / mois',
                 highlight: false
               }
@@ -610,8 +610,8 @@ const MemberRegistrationView: React.FC<{ onRegister: (data: any) => void }> = ({
         <div className="max-w-3xl mx-auto">
           {/* Header */}
           <div className="text-center mb-16">
-            <h2 className="section-subtitle">INSCRIPTION PREMIUM</h2>
-            <h3 className="text-4xl md:text-5xl font-serif text-green-dark mb-6">Devenez Membre de l'Excellence</h3>
+            <h2 className="section-subtitle">INSCRIPTION GRATUITE</h2>
+            <h3 className="text-4xl md:text-5xl font-serif text-green-dark mb-6">Devenez Membre du club</h3>
             <p className="text-text-muted italic max-w-xl mx-auto">
               Transformez vos dépenses touristiques en épargnes. Rejoignez le club privé des consommateurs qualifiés et bénéficiez de privilèges exclusifs dans les plus beaux établissements de Côte d'Ivoire. conçus pour l'élite.
             </p>
@@ -777,7 +777,7 @@ const MemberRegistrationView: React.FC<{ onRegister: (data: any) => void }> = ({
                       <ChevronLeft size={18} /> Retour
                     </button>
                     <button onClick={handleSubmit} className="btn-gold flex-grow flex items-center justify-center gap-3">
-                      Confirmer mon Adhésion <Lock size={16} />
+                      Confirmez mon adhésion <Lock size={16} />
                     </button>
                   </div>
                 </motion.div>
@@ -1026,12 +1026,12 @@ const EstablishmentsView: React.FC = () => {
   const [filter, setFilter] = useState('Tous');
 
   const places = [
-    { name: 'Sofitel Abidjan', cat: 'Hôtel', zone: 'Cocody', cashback: '3-7%', img: 'https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?auto=format&fit=crop&q=80&w=400' },
-    { name: 'Pullman Hélios', cat: 'Hôtel', zone: 'Plateau', cashback: '3-7%', img: '/assets/pullman-hotel.png' },
-    { name: 'Sky Lounge', cat: 'Restaurant', zone: 'Marcory', cashback: '5%', img: 'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&q=80&w=400' },
-    { name: 'Radisson Blu', cat: 'Hôtel', zone: 'Port-Bouët', cashback: '3-7%', img: 'https://images.unsplash.com/photo-1445019980597-93fa8acb246c?auto=format&fit=crop&q=80&w=400' },
-    { name: 'Maison Akoula', cat: 'Lounge', zone: 'Assinie', cashback: '5%', img: 'https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?auto=format&fit=crop&q=80&w=400' },
-    { name: 'Le Grand Large', cat: 'Restaurant', zone: 'Zone 4', cashback: '5%', img: 'https://images.unsplash.com/photo-1514362545857-3bc16c4c7d1b?auto=format&fit=crop&q=80&w=400' }
+    { name: 'Sofitel Abidjan', cat: 'Hébergement', zone: 'Cocody', cashback: '3-7%', img: 'https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?auto=format&fit=crop&q=80&w=400' },
+    { name: 'Pullman Hélios', cat: 'Hébergement', zone: 'Plateau', cashback: '3-7%', img: '/assets/pullman-hotel.png' },
+    { name: 'Sky Lounge', cat: 'Restauration', zone: 'Marcory', cashback: '5%', img: 'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&q=80&w=400' },
+    { name: 'Radisson Blu', cat: 'Hébergement', zone: 'Port-Bouët', cashback: '3-7%', img: 'https://images.unsplash.com/photo-1445019980597-93fa8acb246c?auto=format&fit=crop&q=80&w=400' },
+    { name: 'Maison Akoula', cat: 'Loisirs', zone: 'Assinie', cashback: '5%', img: 'https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?auto=format&fit=crop&q=80&w=400' },
+    { name: 'Le Grand Large', cat: 'Restauration', zone: 'Zone 4', cashback: '5%', img: 'https://images.unsplash.com/photo-1514362545857-3bc16c4c7d1b?auto=format&fit=crop&q=80&w=400' }
   ];
 
   const filteredPlaces = places.filter(p => 
@@ -1043,7 +1043,7 @@ const EstablishmentsView: React.FC = () => {
     <div className="min-h-screen pt-32 pb-20 bg-white-warm">
       <div className="container mx-auto px-6">
         <div className="text-center mb-16">
-          <h2 className="section-subtitle">RÉSEAU DE PRESTIGE</h2>
+          <h2 className="section-subtitle">RÉSEAU EXCLUSIF</h2>
           <h3 className="text-4xl md:text-5xl font-serif text-green-dark mb-6">Nos Établissements Partenaires</h3>
         </div>
 
@@ -1061,7 +1061,7 @@ const EstablishmentsView: React.FC = () => {
           </div>
           
           <div className="flex gap-4 overflow-x-auto no-scrollbar py-2">
-            {['Tous', 'Hôtel', 'Restaurant', 'Lounge', 'Bien-être'].map((f) => (
+            {['Tous', 'Hébergement', 'Restauration', 'Loisirs', 'Bien-être'].map((f) => (
               <button 
                 key={f}
                 onClick={() => setFilter(f)}
