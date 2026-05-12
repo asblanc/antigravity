@@ -187,7 +187,7 @@ const Navbar: React.FC<{ scrolled: boolean, mobileMenuOpen: boolean, setMobileMe
           {[{ name: 'Accueil', path: '/' }, { name: 'Partenaires', path: '/establishments' }, { name: 'Avantages', path: '/offers' }].map((item) => (
             <Link key={item.path} to={item.path} className={`relative font-medium text-[10px] uppercase tracking-widest transition-colors duration-300 group ${scrolled ? 'text-text hover:text-gold' : 'text-white/90 hover:text-white'}`}>{item.name}</Link>
           ))}
-          <button type="button" onClick={() => { navigate('/'); setTimeout(() => document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' }), 100); }} className={`relative font-medium text-[10px] uppercase tracking-widest transition-colors duration-300 after:absolute after:bottom-[-2px] after:left-0 after:h-[1px] after:w-0 after:bg-gold hover:after:w-full after:transition-all after:duration-300 ${scrolled ? 'text-text hover:text-gold' : 'text-white/90 hover:text-white'}`}>Contact</button>
+          <button type="button" onClick={() => { navigate('/'); setTimeout(() => document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' }), 100); }} className={`font-medium text-[10px] uppercase tracking-widest transition-all duration-300 border-b-2 border-transparent hover:border-gold hover:text-gold pb-0.5 ${scrolled ? 'text-text hover:text-gold' : 'text-white/90 hover:text-white'}`}>Contact</button>
           {user ? (
             <button onClick={() => navigate('/member-dashboard')} className="btn-gold !px-5 !py-2 text-[10px] flex items-center gap-2">Mon Dashboard</button>
           ) : (
@@ -221,7 +221,7 @@ const HomeView: React.FC = () => {
         <img src="https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?auto=format&fit=crop&q=80&w=1600" alt="Premium Hotel Abidjan" className="absolute inset-0 w-full h-full object-cover" />
         <div className="relative z-20 container mx-auto px-6 text-center text-white pt-24">
           <div className="inline-block border border-gold/30 px-6 py-2 mb-8">
-            <span className="text-gold text-[10px] uppercase tracking-[0.4em] font-bold">Plateforme Touristique & Programme de Fidelite</span>
+            <span className="text-gold text-[10px] uppercase tracking-[0.4em] font-bold">Plateforme Touristique & PROGRAMME DE FIDÉLITÉ</span>
           </div>
           <h1 className="font-serif text-4xl sm:text-6xl md:text-7xl font-bold mb-8 leading-tight">
             Transformez vos loisirs<br />
@@ -317,7 +317,7 @@ const HomeView: React.FC = () => {
       <section className="py-32 bg-white">
         <div className="container mx-auto px-6 max-w-4xl">
           <div className="border border-gold/20 p-12 text-center mb-10">
-            <span className="text-[10px] uppercase tracking-[0.4em] text-gold font-bold block mb-6">Programme de Fidelite</span>
+            <span className="text-[10px] uppercase tracking-[0.4em] text-gold font-bold block mb-6">PROGRAMME DE FIDÉLITÉ</span>
             <h2 className="font-serif text-4xl md:text-5xl font-bold text-green-dark leading-tight">
               Accumulez du cashback<br />selon votre Statut
             </h2>
