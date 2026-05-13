@@ -126,7 +126,7 @@ const App: React.FC = () => {
     await logoutUser();
     setUser(null);
     navigate('/');
-    toast.success('A bientot !');
+    toast.success('À bientôt !');
   };
 
   if (authLoading) {
@@ -187,7 +187,7 @@ const Navbar: React.FC<{ scrolled: boolean, mobileMenuOpen: boolean, setMobileMe
           {[{ name: 'Accueil', path: '/' }, { name: 'Partenaires', path: '/establishments' }, { name: 'Avantages', path: '/offers' }].map((item) => (
             <Link key={item.path} to={item.path} className={`relative font-medium text-[10px] uppercase tracking-widest transition-colors duration-300 group ${scrolled ? 'text-text hover:text-gold' : 'text-white/90 hover:text-white'}`}>{item.name}</Link>
           ))}
-          <button type="button" onClick={() => { navigate('/'); setTimeout(() => document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' }), 100); }} className={`font-medium text-[10px] uppercase tracking-widest transition-all duration-300 border-b-2 border-transparent hover:border-gold hover:text-gold pb-0.5 ${scrolled ? 'text-text hover:text-gold' : 'text-white/90 hover:text-white'}`}>Contact</button>
+          <button type="button" onClick={() => { navigate('/'); setTimeout(() => document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' }), 100); }} className={`font-medium text-[10px] uppercase tracking-widest transition-all duration-300 nav-link border-b-2 border-transparent hover:border-gold hover:text-gold pb-0.5 ${scrolled ? 'text-text hover:text-gold' : 'text-white/90 hover:text-white'}`}>Contact</button>
           {user ? (
             <button onClick={() => navigate('/member-dashboard')} className="btn-gold !px-5 !py-2 text-[10px] flex items-center gap-2">Mon Dashboard</button>
           ) : (
@@ -251,7 +251,7 @@ const HomeView: React.FC = () => {
             <h2 className="font-serif text-4xl font-bold text-green-dark mt-4">Une Expérience en 4 Étapes</h2>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-            {[{ title: 'Inscrivez-vous', desc: 'Creez votre profil exclusif en quelques minutes.', icon: Users }, { title: 'Explorez', desc: 'Explorez notre catalogue d’établissements partenaires.', icon: MapPin }, { title: 'Consommez', desc: 'Acceandez a des offres exclusives dans les hotels, restaurants et loisirs.', icon: Utensils }, { title: 'Gagnez', desc: 'Recevez votre cashback automatiquement selon votre statut.', icon: CreditCard }].map((step, i) => {
+            {[{ title: 'Inscrivez-vous', desc: 'Créez votre profil exclusif en quelques minutes.', icon: Users }, { title: 'Explorez', desc: 'Explorez notre catalogue d’établissements partenaires.', icon: MapPin }, { title: 'Consommez', desc: 'Accédez a des offres exclusives dans les hotels, restaurants et loisirs.', icon: Utensils }, { title: 'Gagnez', desc: 'Recevez votre cashback automatiquement selon votre statut.', icon: CreditCard }].map((step, i) => {
               const Icon = step.icon;
               return (
                 <div key={i} className="p-8 bg-white border border-gold/10 hover:border-gold/30 transition-all group">
@@ -299,7 +299,7 @@ const HomeView: React.FC = () => {
             <h2 className="font-serif text-4xl font-bold text-green-dark mt-4">Experiences Signature</h2>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-            {[{ title: 'AFTERWORK SOCIAL', desc: 'Connectez-vous avec l elite economique dans des lieux d’exception.', icon: Users }, { title: 'DINNER SIGNATURE', desc: 'Une table reservee, une experience culinaire hors du commun.', icon: Utensils }, { title: 'LUXURY ESCAPE', desc: 'Evadez-vous dans nos destinations partenaires les plus priseees.', icon: MapPin }, { title: 'WEEKEND ESCAPE', desc: 'Le repos bien merite des batisseurs, dans un cadre serein.', icon: Coffee }].map((exp, i) => {
+            {[{ title: 'AFTERWORK SOCIAL', desc: 'Connectez-vous avec l’élite économique dans des lieux d’exception.', icon: Users }, { title: 'DINNER SIGNATURE', desc: 'Une table reservee, une experience culinaire hors du commun.', icon: Utensils }, { title: 'LUXURY ESCAPE', desc: 'Evadez-vous dans nos destinations partenaires les plus prisées.', icon: MapPin }, { title: 'WEEKEND ESCAPE', desc: 'Le repos bien mérité des batisseurs, dans un cadre serein.', icon: Coffee }].map((exp, i) => {
               const Icon = exp.icon;
               return (
                 <div key={i} className="p-8 border border-gold/10 hover:border-gold/30 hover:shadow-premium transition-all group bg-white">
@@ -360,8 +360,8 @@ const HomeView: React.FC = () => {
           </div>
           <div className="border border-gold/10 p-8 bg-white/50">
             <p className="text-text-muted text-base italic text-center leading-relaxed">
-              Rejoignez le cercle restreint des consommateurs privilégiés et beneficiez
-              des opportunites exclusifs concus pour l'elite.
+              Rejoignez le cercle restreint des consommateurs privilégiés et bénéficiez
+              des opportunites exclusifs conçus pour l’élite.
             </p>
           </div>
         </div>
@@ -425,8 +425,8 @@ const HomeView: React.FC = () => {
           <span className="text-[10px] uppercase tracking-[0.4em] text-gold font-bold block mb-6">Reseau Exclusif</span>
           <h2 className="font-serif text-4xl md:text-5xl font-bold text-white mb-6">Devenir Partenaire</h2>
           <p className="text-white/60 max-w-2xl mx-auto mb-10 leading-relaxed">
-            Nous vous connectons a une clientele qualifiee et fidele. Chaque transaction
-            validee chez vous genere un cashback pour le membre et une visibilite pour votre etablissement.
+            Nous vous connectons à une clientèle qualifiée et fidèle. Chaque transaction
+            validee chez vous génère un cashback pour le membre et une visibilité pour votre établissement.
           </p>
           <button onClick={() => navigate('/partner-registration')} className="btn-gold !px-12">
             Rejoindre LE RÉSEAU IBC
@@ -542,7 +542,7 @@ const MemberRegistrationView: React.FC<{ onRegister: (data: any) => void }> = ({
           <h2 className="font-serif text-4xl font-bold text-green-dark">Devenez Membre du club</h2>
           <p className="text-text-muted mt-4 italic text-sm leading-relaxed">
             Transformez vos dépenses touristiques en économies. Rejoignez le club privé des consommateurs qualifiés
-            et beneficiez de privileges exclusifs dans les plus beaux etablissements de Cote d'Ivoire.
+            et bénéficiez de privileges exclusifs dans les plus beaux etablissements de Cote d'Ivoire.
           </p>
         </div>
         {/* Progress */}
@@ -801,7 +801,7 @@ const PartnerRegistrationView: React.FC = () => {
         <div className="border border-gold/20 p-12 mb-12">
           <span className="text-[10px] uppercase tracking-[0.4em] text-gold font-bold block mb-4">Partenariat</span>
           <h2 className="font-serif text-4xl font-bold text-green-dark">Devenez Partenaire IBC</h2>
-          <p className="text-text-muted mt-4 text-sm leading-relaxed">Rejoignez notre reseau exclusif et developpez votre clientele avec les membres du Club IBC.</p>
+          <p className="text-text-muted mt-4 text-sm leading-relaxed">Rejoignez notre reseau exclusif et developpez votre clientèle avec les membres du Club IBC.</p>
         </div>
         {!submitted ? (
           <form onSubmit={handleSubmit} className="space-y-8">
