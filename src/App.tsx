@@ -872,7 +872,7 @@ const Footer: React.FC = () => {
           <div className="md:col-span-2">
             <h4 className="font-serif text-gold text-lg mb-8 tracking-wide">Services</h4>
             <ul className="space-y-5 text-[10px] font-bold uppercase tracking-widest text-white/40">
-              {['Conciergerie', 'Networking', 'Cashback', 'Sponsoring'].map((item) => (
+              {[{ label: 'Conciergerie', path: '/offers' }, { label: 'Networking', path: '/establishments' }, { label: 'Cashback', path: '/member-registration' }, { label: 'Sponsoring', path: '/partner-registration' }].map((item) => (
                 <li key={item.label}><Link to={item.path} className="hover:text-white transition-colors">{item.label}</Link></li>
               ))}
             </ul>
