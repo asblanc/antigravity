@@ -185,9 +185,9 @@ const Navbar: React.FC<{ scrolled: boolean, mobileMenuOpen: boolean, setMobileMe
         </button>
         <div className="hidden md:flex items-center gap-10">
           {[{ name: 'Accueil', path: '/' }, { name: 'Partenaires', path: '/establishments' }, { name: 'Avantages', path: '/offers' }].map((item) => (
-            <Link key={item.path} to={item.path} className={`relative font-medium text-[10px] uppercase tracking-widest transition-colors duration-300 group ${scrolled ? 'text-text hover:text-gold' : 'text-white/90 hover:text-white'}`}>{item.name}</Link>
+            <Link key={item.path} to={item.path} className={`relative font-medium text-[10px] uppercase tracking-widest transition-all duration-300 pb-0.5 border-b-2 ${currentView === item.path ? 'text-gold border-gold' : (scrolled ? 'text-text hover:text-gold border-transparent hover:border-gold' : 'text-white/90 hover:text-white border-transparent hover:border-white/60')}`}>{item.name}</Link>
           ))}
-          <button type="button" onClick={() => { navigate('/'); setTimeout(() => document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' }), 100); }} className={`font-medium text-[10px] uppercase tracking-widest transition-all duration-300 nav-link border-b-2 border-transparent hover:border-gold hover:text-gold pb-0.5 ${scrolled ? 'text-text hover:text-gold' : 'text-white/90 hover:text-white'}`}>Contact</button>
+          <button type="button" onClick={() => { navigate('/'); setTimeout(() => document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' }), 100); }} className={`font-medium text-[10px] uppercase tracking-widest transition-all duration-300 nav-link border-b-2 border-transparent hover:border-gold hover:text-gold pb-0.5 ${currentView === item.path ? 'text-gold border-gold' : (scrolled ? 'text-text hover:text-gold border-transparent hover:border-gold' : 'text-white/90 hover:text-white border-transparent hover:border-white/60')}`}>Contact</button>
           {user ? (
             <button onClick={() => navigate('/member-dashboard')} className="btn-gold !px-5 !py-2 text-[10px] flex items-center gap-2">Mon Dashboard</button>
           ) : (
@@ -361,7 +361,7 @@ const HomeView: React.FC = () => {
           <div className="border border-gold/10 p-8 bg-white/50">
             <p className="text-text-muted text-base italic text-center leading-relaxed">
               Rejoignez le cercle restreint des consommateurs privilégiés et bénéficiez
-              des opportunites exclusifs conçus pour l’élite.
+              des opportunites exclusives conçus pour l’élite.
             </p>
           </div>
         </div>
@@ -446,7 +446,7 @@ const HomeView: React.FC = () => {
               <LayoutDashboard size={32} className="text-gold shrink-0" />
               <div>
                 <p className="text-white font-bold font-serif">Tableau de bord</p>
-                <p className="text-white/50 text-sm">Suivez vos cashbacks et activites</p>
+                <p className="text-white/50 text-sm">Suivez vos cashbacks et activités</p>
               </div>
             </div>
             <div className="border border-gold/20 p-8 flex items-center gap-6">
@@ -668,7 +668,7 @@ const MemberDashboardView: React.FC<{ user: Member, onLogout: () => void }> = ({
           </div>
         </div>
         <div>
-          <h3 className="font-serif text-xl text-green-dark font-bold mb-6">Activites Recentes</h3>
+          <h3 className="font-serif text-xl text-green-dark font-bold mb-6">Activités Récentes</h3>
           {transactions.map((tx, i) => (
             <div key={i} className="flex items-center justify-between py-4 border-b border-gold/10">
               <div><p className="font-bold text-green-dark">{tx.partnerName}</p><p className="text-text-muted text-xs">{tx.date}</p></div>
