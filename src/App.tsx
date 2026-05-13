@@ -542,7 +542,7 @@ const MemberRegistrationView: React.FC<{ onRegister: (data: any) => void }> = ({
           <h2 className="font-serif text-4xl font-bold text-green-dark">Devenez Membre du club</h2>
           <p className="text-text-muted mt-4 italic text-sm leading-relaxed">
             Transformez vos dépenses touristiques en économies. Rejoignez le club privé des consommateurs qualifiés
-            et bénéficiez de privileges exclusifs dans les plus beaux etablissements de Cote d'Ivoire.
+            et bénéficiez de privileges exclusives dans les plus beaux etablissements de Cote d'Ivoire.
           </p>
         </div>
         {/* Progress */}
