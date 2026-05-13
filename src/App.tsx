@@ -453,7 +453,7 @@ const HomeView: React.FC = () => {
               <BookOpen size={32} className="text-gold shrink-0" />
               <div>
                 <p className="text-white font-bold font-serif">Catalogue partenaires</p>
-                <p className="text-white/50 text-sm">Acceaez a tous les etablissements</p>
+                <p className="text-white/50 text-sm">Accédez à tous les établissements</p>
               </div>
             </div>
           </div>
@@ -469,7 +469,7 @@ const HomeView: React.FC = () => {
           </div>
           <div className="text-center">
             <button onClick={() => navigate('/login')} className="btn-gold !px-12">
-              Acceder a mon espace
+              Accéder à mon espace
             </button>
           </div>
         </div>
@@ -864,8 +864,8 @@ const Footer: React.FC = () => {
           <div className="md:col-span-2">
             <h4 className="font-serif text-gold text-lg mb-8 tracking-wide">Navigation</h4>
             <ul className="space-y-5 text-[10px] font-bold uppercase tracking-widest text-white/40">
-              {['Privileges', 'Partenariats', 'Evenements', 'Adhesion'].map((item) => (
-                <li key={item}><button type="button" className="hover:text-white transition-colors">{item}</button></li>
+              {[{ label: 'Privilèges', path: '/offers' }, { label: 'Partenariats', path: '/partner-registration' }, { label: 'Événements', path: '/' }, { label: 'Adhésion', path: '/member-registration' }].map((item) => (
+                <li key={item.label}><Link to={item.path} className="hover:text-white transition-colors">{item.label}</Link></li>
               ))}
             </ul>
           </div>
@@ -873,7 +873,7 @@ const Footer: React.FC = () => {
             <h4 className="font-serif text-gold text-lg mb-8 tracking-wide">Services</h4>
             <ul className="space-y-5 text-[10px] font-bold uppercase tracking-widest text-white/40">
               {['Conciergerie', 'Networking', 'Cashback', 'Sponsoring'].map((item) => (
-                <li key={item}><button type="button" className="hover:text-white transition-colors">{item}</button></li>
+                <li key={item.label}><Link to={item.path} className="hover:text-white transition-colors">{item.label}</Link></li>
               ))}
             </ul>
           </div>
