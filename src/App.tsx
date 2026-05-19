@@ -235,7 +235,7 @@ const HomeView: React.FC = () => {
             </button>
             <button onClick={() => navigate('/partner-registration')} className="btn-outline w-full sm:w-auto !border-white/50 !text-white hover:!border-gold group flex flex-col items-center py-3">
               <span className="text-base font-bold">DEVENIR PARTENAIRE</span>
-              <span className="text-[9px] uppercase tracking-widest mt-1 opacity-80 text-center">Attirer une clientèle • Générer du trafic • Rejoindre le réseau</span>
+              <span className="text-[9px] uppercase tracking-widest mt-1 opacity-80 text-center">Attirer une clientèle qualifiée • Générer du trafic • Rejoindre le réseau</span>
             </button>
           </div>
           <div className="mt-20 max-w-2xl mx-auto text-center border-t border-white/20 pt-10">
@@ -518,21 +518,31 @@ const HomeView: React.FC = () => {
           <div className="flex flex-wrap gap-3 justify-center mb-12">
             <button onClick={() => navigate('/establishments')} className="px-6 py-2 text-[10px] font-bold uppercase tracking-widest bg-green-dark text-gold border border-gold">Tous</button>
             <button onClick={() => navigate('/establishments')} className="px-6 py-2 text-[10px] font-bold uppercase tracking-widest bg-white text-text-muted border border-gold/10 flex items-center gap-2">
-              <Hotel size={14} />Hebergement
+              <Hotel size={14} />Hébergements & Séjours
             </button>
             <button onClick={() => navigate('/establishments')} className="px-6 py-2 text-[10px] font-bold uppercase tracking-widest bg-white text-text-muted border border-gold/10 flex items-center gap-2">
-              <Utensils size={14} />Restauration
+              <Utensils size={14} />Restaurants & Dining
             </button>
             <button onClick={() => navigate('/establishments')} className="px-6 py-2 text-[10px] font-bold uppercase tracking-widest bg-white text-text-muted border border-gold/10 flex items-center gap-2">
-              <Gamepad2 size={14} />Loisirs
+              <Coffee size={14} />Lounges & Nightlife
             </button>
             <button onClick={() => navigate('/establishments')} className="px-6 py-2 text-[10px] font-bold uppercase tracking-widest bg-white text-text-muted border border-gold/10 flex items-center gap-2">
-              <Heart size={14} />Bien-etre
+              <Gamepad2 size={14} />Beach Clubs & Loisirs
+            </button>
+            <button onClick={() => navigate('/establishments')} className="px-6 py-2 text-[10px] font-bold uppercase tracking-widest bg-white text-text-muted border border-gold/10 flex items-center gap-2">
+              <Heart size={14} />Bien-être & Wellness
             </button>
           </div>
           {/* Cards partenaires */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
-            {[{ name: 'Sofitel Abidjan', cat: 'Hebergement', zone: 'Cocody', cashback: '3-7%', img: 'https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?auto=format&fit=crop&q=80&w=400' }, { name: 'Sky Lounge', cat: 'Restauration', zone: 'Marcory', cashback: '5%', img: 'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&q=80&w=400' }, { name: 'Radisson Blu', cat: 'Hebergement', zone: 'Port-Bouet', cashback: '3-7%', img: 'https://images.unsplash.com/photo-1445019980597-93fa8acb246c?auto=format&fit=crop&q=80&w=400' }, { name: 'Maison Akoula', cat: 'Loisirs', zone: 'Assinie', cashback: '5%', img: 'https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?auto=format&fit=crop&q=80&w=400' }, { name: 'Le Grand Large', cat: 'Restauration', zone: 'Zone 4', cashback: '5%', img: 'https://images.unsplash.com/photo-1514362545857-3bc16c4c7d1b?auto=format&fit=crop&q=80&w=400' }, { name: 'Pullman Helios', cat: 'Hebergement', zone: 'Plateau', cashback: '3-7%', img: '/assets/pullman-hotel.png' }].map((place, i) => (
+            {[
+              { name: 'Sofitel Abidjan', cat: 'Hébergements & Séjours', zone: 'Cocody', cashback: '3-7%', img: 'https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?auto=format&fit=crop&q=80&w=400' },
+              { name: 'Sky Lounge', cat: 'Lounges & Nightlife', zone: 'Marcory', cashback: '5%', img: 'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&q=80&w=400' },
+              { name: 'Radisson Blu', cat: 'Hébergements & Séjours', zone: 'Port-Bouet', cashback: '3-7%', img: 'https://images.unsplash.com/photo-1445019980597-93fa8acb246c?auto=format&fit=crop&q=80&w=400' },
+              { name: 'Maison Akoula', cat: 'Beach Clubs & Loisirs', zone: 'Assinie', cashback: '5%', img: 'https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?auto=format&fit=crop&q=80&w=400' },
+              { name: 'Le Grand Large', cat: 'Restaurants & Dining', zone: 'Zone 4', cashback: '5%', img: 'https://images.unsplash.com/photo-1514362545857-3bc16c4c7d1b?auto=format&fit=crop&q=80&w=400' },
+              { name: 'Orchidée Spa', cat: 'Bien-être & Wellness', zone: 'Cocody', cashback: '5%', img: 'https://images.unsplash.com/photo-1540555700478-4be289fbecef?auto=format&fit=crop&q=80&w=400' }
+            ].map((place, i) => (
               <div key={i} className="bg-white border border-gold/10 overflow-hidden hover:border-gold/30 hover:shadow-premium transition-all group">
                 <div className="relative overflow-hidden h-48">
                   <img src={place.img} alt={place.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
@@ -740,6 +750,7 @@ const EstablishmentsView: React.FC = () => {
     { name: 'Radisson Blu', cat: 'Hébergements & Séjours', zone: 'Port-Bouet', cashback: '3-7%', img: 'https://images.unsplash.com/photo-1445019980597-93fa8acb246c?auto=format&fit=crop&q=80&w=400' },
     { name: 'Maison Akoula', cat: 'Beach Clubs & Loisirs', zone: 'Assinie', cashback: '5%', img: 'https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?auto=format&fit=crop&q=80&w=400' },
     { name: 'Le Grand Large', cat: 'Restaurants & Dining', zone: 'Zone 4', cashback: '5%', img: 'https://images.unsplash.com/photo-1514362545857-3bc16c4c7d1b?auto=format&fit=crop&q=80&w=400' },
+    { name: 'Orchidée Spa', cat: 'Bien-être & Wellness', zone: 'Cocody', cashback: '5%', img: 'https://images.unsplash.com/photo-1540555700478-4be289fbecef?auto=format&fit=crop&q=80&w=400' },
   ];
   const filteredPlaces = places.filter(p =>
     (filter === 'Tous' || p.cat === filter) &&
