@@ -349,103 +349,114 @@ const HomeView: React.FC = () => {
       <section className="py-32 bg-white">
         <div className="container mx-auto px-6 max-w-4xl">
           <div className="border border-gold/20 p-12 text-center mb-10">
-            <span className="text-[10px] uppercase tracking-[0.4em] text-gold font-bold block mb-6">LE PROGRAMME MEMBRE IBC</span>
-            <h2 className="font-serif text-3xl md:text-4xl font-bold text-green-dark leading-tight mt-4">
-              Un système d'avantages et de privilèges évolutif basé sur l'activité et l'expérience membre.
+            <span className="text-[10px] uppercase tracking-[0.4em] text-gold font-bold block mb-4">IBC MEMBERSHIP</span>
+            <h2 className="font-serif text-3xl md:text-4xl font-bold text-green-dark leading-tight">
+              LE PROGRAMME MEMBRE IBC
             </h2>
           </div>
           
-          <div className="mb-16 bg-cream p-8 border border-gold/10">
-            <p className="text-text font-medium mb-4">La plateforme IVOIRE BUSINESS CLUB analyse :</p>
-            <ul className="space-y-2 text-text-muted mb-6 pl-4">
-              <li className="flex items-center gap-2">✦ les habitudes de consommation</li>
-              <li className="flex items-center gap-2">✦ les préférences membres</li>
-              <li className="flex items-center gap-2">✦ les expériences vécues</li>
-              <li className="flex items-center gap-2">✦ les interactions avec les établissements partenaires</li>
+          <div className="mb-16 bg-cream p-8 border border-gold/10 text-green-dark leading-relaxed">
+            <p className="font-semibold mb-4">
+              Un système d'avantages et de privilèges évolutif basé sur l'activité et l'expérience membre.
+            </p>
+            <p className="font-medium mb-3">La plateforme IVOIRE BUSINESS CLUB analyse :</p>
+            <ul className="space-y-2 pl-4 mb-4 text-[#1B5E35]/80">
+              <li className="flex items-start gap-2">
+                <span>•</span> les habitudes de consommation
+              </li>
+              <li className="flex items-start gap-2">
+                <span>•</span> les préférences membres
+              </li>
+              <li className="flex items-start gap-2">
+                <span>•</span> les expériences vécues
+              </li>
+              <li className="flex items-start gap-2">
+                <span>•</span> les interactions avec les établissements partenaires
+              </li>
             </ul>
-            <p className="text-text font-medium italic">afin d'offrir une expérience personnalisée et des avantages adaptés au profil de chaque membre.</p>
+            <p className="font-medium">
+              afin d'offrir une expérience personnalisée et des avantages adaptés au profil de chaque membre.
+            </p>
           </div>
 
           <div className="space-y-8">
             {/* Bronze */}
-            <div className="border border-gold/20 p-8">
+            <div className="border border-gold/20 p-8 bg-cream/10">
               <div className="flex items-center gap-4 mb-4">
-                <div className="w-6 h-6 rounded-full bg-gradient-to-r from-amber-700 to-yellow-500" />
-                <h3 className="text-2xl font-serif font-bold text-green-dark uppercase tracking-widest">STATUT BRONZE</h3>
-              </div>
-              <p className="text-gold text-sm underline mb-4">Discovery Member</p>
-              <p className="text-text-muted mb-4 text-sm">Tous les membres démarrent automatiquement avec le statut Bronze.</p>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <span className="text-2xl">🍃</span>
                 <div>
-                  <p className="font-bold underline text-sm mb-2">Profil</p>
+                  <h3 className="text-2xl font-serif font-bold text-green-dark uppercase tracking-widest">Membre Bronze</h3>
+                  <p className="text-gold text-sm font-semibold tracking-wider">Discovery Member</p>
+                </div>
+              </div>
+              <p className="text-text-muted mb-6 text-sm">Tous les membres démarrent automatiquement avec le statut Bronze.</p>
+              
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-6">
+                <div>
+                  <p className="font-bold text-green-dark text-sm mb-1 uppercase tracking-wider">Profil</p>
                   <p className="text-text-muted text-sm mb-4">Membres découverte & lifestyle occasionnel</p>
-                  <p className="font-bold underline text-sm mb-2">Activité moyenne</p>
+                  
+                  <p className="font-bold text-green-dark text-sm mb-1 uppercase tracking-wider">Activité moyenne</p>
                   <p className="text-text-muted text-sm">10 000 FCFA à 40 000 FCFA / week-end</p>
                 </div>
                 <div>
-                  <p className="font-bold underline text-sm mb-3">Avantages</p>
+                  <p className="font-bold text-green-dark text-sm mb-3 uppercase tracking-wider">Avantages</p>
                   <ul className="space-y-2 text-sm text-text-muted">
-                    <li>✓ accès aux expériences standards</li>
-                    <li>✓ accès prioritaire à certaines offres</li>
-                    <li>✓ invitations événements découverte</li>
-                    <li>✓ avantages partenaires</li>
-                    <li>✓ cashback jusqu'à 3%</li>
+                    <li className="flex items-center gap-2">✓ Accès aux expériences standards</li>
+                    <li className="flex items-center gap-2">✓ Accès prioritaire à certaines offres</li>
+                    <li className="flex items-center gap-2">✓ Invitations événements découverte</li>
+                    <li className="flex items-center gap-2">✓ Avantages partenaires</li>
+                    <li className="flex items-center gap-2">✓ Cashback jusqu'à 3%</li>
                   </ul>
                 </div>
+              </div>
+              <div className="border-t border-gold/10 pt-4 flex justify-between items-center">
+                <span className="text-xs text-text-muted uppercase tracking-wider">Tarif d'adhésion</span>
+                <span className="text-xl font-bold text-green-dark font-serif">500 FCFA / mois</span>
               </div>
             </div>
 
-            {/* Or */}
-            <div className="border border-gold/20 p-8">
-              <div className="flex items-center gap-4 mb-4">
-                <div className="w-6 h-6 rounded-full bg-gradient-to-r from-yellow-400 to-yellow-200" />
-                <h3 className="text-2xl font-serif font-bold text-green-dark uppercase tracking-widest">STATUT OR</h3>
-              </div>
-              <p className="text-gold text-sm underline mb-4">Prestige Member</p>
-              <p className="text-text-muted mb-4 text-sm">Attribué aux membres à forte activité et consommation régulière.</p>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                <div>
-                  <p className="font-bold underline text-sm mb-2">Activité moyenne</p>
-                  <p className="text-text-muted text-sm">50 000 FCFA à 90 000 FCFA / week-end</p>
+            {/* Statuts Verrouillés */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 opacity-60">
+              {/* Or */}
+              <div className="border border-gold/20 p-8 bg-cream/10 relative overflow-hidden">
+                <div className="absolute top-4 right-4 text-gold">
+                  <Lock size={18} />
                 </div>
-                <div>
-                  <p className="font-bold underline text-sm mb-3">Avantages</p>
-                  <ul className="space-y-2 text-sm text-text-muted">
-                    <li>✓ accès aux expériences prestige</li>
-                    <li>✓ invitations événements privés</li>
-                    <li>✓ avantages partenaires renforcés</li>
-                    <li>✓ accès prioritaire à certains événements</li>
-                    <li>✓ cashback jusqu'à 5%</li>
-                  </ul>
+                <div className="flex items-center gap-4 mb-4">
+                  <div className="w-6 h-6 rounded-full bg-gradient-to-r from-yellow-400 to-yellow-200" />
+                  <div>
+                    <h3 className="text-xl font-serif font-bold text-green-dark">Statut Or</h3>
+                    <p className="text-gold text-xs font-semibold tracking-wider uppercase">Prestige Member (bientôt)</p>
+                  </div>
+                </div>
+                <p className="text-text-muted text-sm mb-4 leading-relaxed">
+                  "Attribué aux membres à forte activité — 50 000 à 90 000 FCFA / week-end"
+                </p>
+                <div className="border-t border-gold/10 pt-3 flex justify-between items-center text-xs">
+                  <span className="text-text-muted">Avantage Cashback</span>
+                  <span className="font-bold text-green-dark">Cashback jusqu'à 5%</span>
                 </div>
               </div>
-            </div>
 
-            {/* Platinum */}
-            <div className="border border-gold/20 p-8">
-              <div className="flex items-center gap-4 mb-4">
-                <div className="w-6 h-6 rounded-full bg-gradient-to-r from-gray-400 to-white border border-gray-200" />
-                <h3 className="text-2xl font-serif font-bold text-green-dark uppercase tracking-widest">STATUT PLATINUM</h3>
-              </div>
-              <p className="text-gold text-sm underline mb-4">Elite Member</p>
-              <p className="text-text-muted mb-4 text-sm">Réservé aux membres premium et grands consommateurs d'expériences.</p>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                <div>
-                  <p className="font-bold underline text-sm mb-2">Activité moyenne</p>
-                  <p className="text-text-muted text-sm">100 000 FCFA et plus / week-end</p>
+              {/* Platinum */}
+              <div className="border border-gold/20 p-8 bg-cream/10 relative overflow-hidden">
+                <div className="absolute top-4 right-4 text-gold">
+                  <Lock size={18} />
                 </div>
-                <div>
-                  <p className="font-bold underline text-sm mb-3">Avantages</p>
-                  <ul className="space-y-2 text-sm text-text-muted">
-                    <li>✓ accès expériences premium & VIP</li>
-                    <li>✓ réservations prioritaires</li>
-                    <li>✓ accès lounge</li>
-                    <li>✓ expériences exclusives</li>
-                    <li>✓ événements exclusifs IBC</li>
-                    <li>✓ privilèges partenaires premium</li>
-                    <li>✓ accompagnement privilégié</li>
-                    <li>✓ cashback jusqu'à 7%</li>
-                  </ul>
+                <div className="flex items-center gap-4 mb-4">
+                  <div className="w-6 h-6 rounded-full bg-gradient-to-r from-gray-400 to-white border border-gray-200" />
+                  <div>
+                    <h3 className="text-xl font-serif font-bold text-green-dark">Statut Platinum</h3>
+                    <p className="text-gold text-xs font-semibold tracking-wider uppercase">Elite Member (bientôt)</p>
+                  </div>
+                </div>
+                <p className="text-text-muted text-sm mb-4 leading-relaxed">
+                  "Réservé aux membres premium — 100 000 FCFA et plus / week-end"
+                </p>
+                <div className="border-t border-gold/10 pt-3 flex justify-between items-center text-xs">
+                  <span className="text-text-muted">Avantage Cashback</span>
+                  <span className="font-bold text-green-dark">Cashback jusqu'à 7%</span>
                 </div>
               </div>
             </div>
