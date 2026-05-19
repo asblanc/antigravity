@@ -514,7 +514,7 @@ const HomeView: React.FC = () => {
       <section className="py-24 bg-[#0a1f14]">
         <div className="container mx-auto px-6">
           <div className="text-center mb-12">
-            <span className="text-[10px] uppercase tracking-[0.4em] text-gold font-bold block mb-4">Espace Membre</span>
+            <span className="text-[10px] uppercase tracking-[0.4em] text-gold font-bold block mb-4">MON DASHBOARD</span>
             <h2 className="font-serif text-4xl font-bold text-white">Mon Dashboard</h2>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-3xl mx-auto mb-10">
@@ -540,8 +540,8 @@ const HomeView: React.FC = () => {
             </div>
           </div>
           <div className="text-center">
-            <button onClick={() => navigate('/login')} className="btn-gold !px-12">
-              Accéder à mon espace
+            <button onClick={() => navigate('/login')} className="btn-gold !px-12 font-bold uppercase tracking-widest">
+              ACCÉDER À MON ESPACE
             </button>
           </div>
         </div>
