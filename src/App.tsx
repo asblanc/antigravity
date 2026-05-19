@@ -483,14 +483,18 @@ const HomeView: React.FC = () => {
       {/* Section 8: Devenir Partenaire */}
       <section className="py-32 bg-green-dark">
         <div className="container mx-auto px-6 text-center">
-          <span className="text-[10px] uppercase tracking-[0.4em] text-gold font-bold block mb-6">Reseau Exclusif</span>
+          <span className="text-[10px] uppercase tracking-[0.4em] text-gold font-bold block mb-6">LE RÉSEAU IBC</span>
           <h2 className="font-serif text-4xl md:text-5xl font-bold text-white mb-6">Devenir Partenaire</h2>
-          <p className="text-white/60 max-w-2xl mx-auto mb-10 leading-relaxed">
-            Nous vous connectons à une clientèle qualifiée et fidèle. Chaque transaction
-            validee chez vous génère un cashback pour le membre et une visibilité pour votre établissement.
+          <p className="text-white/80 max-w-2xl mx-auto mb-10 leading-relaxed">
+            Intégrez un réseau d'établissements lifestyle sélectionnés et connectez-vous à une communauté active à la recherche d'expériences locales, de loisirs et d'escapades premium.
+            <br className="hidden md:block" />
+            IVOIRE BUSINESS CLUB transforme les sorties, séjours et expériences en opportunités de fréquentation et de fidélisation pour ses partenaires.
           </p>
-          <button onClick={() => navigate('/partner-registration')} className="btn-gold !px-12">
-            Rejoindre LE RÉSEAU IBC
+          <button
+            onClick={() => navigate('/partner-registration')}
+            className="bg-[#C9A84C] text-[#1B5E35] font-bold rounded-[4px] px-12 py-4 uppercase tracking-widest text-[10px] hover:bg-[#F0C040] transition-colors"
+          >
+            REJOINDRE LE RÉSEAU IBC
           </button>
         </div>
       </section>
