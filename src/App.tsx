@@ -180,7 +180,7 @@ const Navbar: React.FC<{ scrolled: boolean, mobileMenuOpen: boolean, setMobileMe
           <img src={ibcLogo} alt="IBC Logo" className="w-10 h-10" />
           <div>
             <span className={`font-serif text-base font-bold italic block leading-none ${scrolled ? 'text-green-dark' : 'text-white'}`}>Ivoire Business Club</span>
-            <span className="text-gold text-[7px] uppercase tracking-[0.2em] font-bold">PLATEFORME D'EXPÉRIENCES TOURISTIQUES & CLUB PRIVÉ D'AVANTAGES</span>
+            <span className="text-gold text-[7px] uppercase tracking-[0.2em] font-bold">Le club privé des expériences locales et des établissements lifestyle en Côte d'Ivoire</span>
           </div>
         </button>
         <div className="hidden md:flex items-center gap-10">
@@ -238,14 +238,24 @@ const HomeView: React.FC = () => {
               <span className="text-[9px] uppercase tracking-widest mt-1 opacity-80 text-center">Attirer une clientèle qualifiée • Générer du trafic • Rejoindre le réseau</span>
             </button>
           </div>
-          <div className="mt-20 max-w-2xl mx-auto text-center border-t border-white/20 pt-10">
+          <div className="mt-20 max-w-2xl mx-auto text-center bg-[#05150c]/40 backdrop-blur-sm p-8 border border-white/10 rounded-lg">
             <h3 className="text-gold font-serif text-xl mb-6">UNE COMMUNAUTÉ PENSÉE POUR</h3>
             <ul className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-white/80 text-sm">
-              <li className="flex items-center justify-center sm:justify-start gap-2">✦ Les amoureux de découvertes</li>
-              <li className="flex items-center justify-center sm:justify-start gap-2">✦ Les actifs urbains</li>
-              <li className="flex items-center justify-center sm:justify-start gap-2">✦ Les passionnés de lifestyle</li>
-              <li className="flex items-center justify-center sm:justify-start gap-2">✦ Les professionnels et entrepreneurs</li>
-              <li className="flex items-center justify-center sm:justify-start gap-2 sm:col-span-2">✦ Les amateurs d'expériences premium</li>
+              <li className="flex items-center justify-center gap-2">
+                <span className="text-gold">✦</span> Les amoureux de découvertes
+              </li>
+              <li className="flex items-center justify-center gap-2">
+                <span className="text-gold">✦</span> Les actifs urbains
+              </li>
+              <li className="flex items-center justify-center gap-2">
+                <span className="text-gold">✦</span> Les passionnés de lifestyle
+              </li>
+              <li className="flex items-center justify-center gap-2">
+                <span className="text-gold">✦</span> Les professionnels et entrepreneurs
+              </li>
+              <li className="flex items-center justify-center gap-2 sm:col-span-2">
+                <span className="text-gold">✦</span> Les amateurs d'expériences premium
+              </li>
             </ul>
           </div>
         </div>
