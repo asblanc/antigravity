@@ -1,0 +1,180 @@
+import React, { useState } from 'react';
+
+export interface MemberRegistrationViewProps {
+  onRegister: (data: any) => Promise<void>;
+}
+
+export const MemberRegistrationView: React.FC<MemberRegistrationViewProps> = ({ onRegister }) => {
+  const [step, setStep] = useState(1);
+  const [loading, setLoading] = useState(false);
+  const [formData, setFormData] = useState({
+    firstName: '',
+    lastName: '',
+    email: '',
+    phone: '',
+    password: '',
+    confirmPassword: '',
+  });
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    if (formData.password !== formData.confirmPassword) {
+      alert('Les mots de passe ne correspondent pas');
+      return;
+    }
+
+    setLoading(true);
+    try {
+      await onRegister(formData);
+    } catch (error) {
+      console.error('Registration error:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-green-dark via-white to-gold/10 flex items-center justify-center px-4 py-8">
+      <div className="w-full max-w-md">
+        <div className="bg-white rounded-lg shadow-2xl p-8">
+          <h2 className="text-2xl font-serif font-bold text-green-dark mb-2">Inscription</h2>
+          <p className="text-gray-600 mb-6">Rejoignez l'Ivoire Business Club</p>
+
+          <form onSubmit={handleSubmit} className="space-y-4">
+            {step === 1 && (
+              <>
+                <div className="grid grid-cols-2 gap-3">
+                  <div>
+                    <label className="block text-sm font-bold text-green-dark mb-2">Prénom</label>
+                    <input
+                      type="text"
+                      name="firstName"
+                      value={formData.firstName}
+                      onChange={handleChange}
+                      className="w-full px-4 py-2 border border-gold/30 rounded-lg focus:outline-none focus:border-gold"
+                      required
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-bold text-green-dark mb-2">Nom</label>
+                    <input
+                      type="text"
+                      name="lastName"
+                      value={formData.lastName}
+                      onChange={handleChange}
+                      className="w-full px-4 py-2 border border-gold/30 rounded-lg focus:outline-none focus:border-gold"
+                      required
+                    />
+                  </div>
+                </div>
+
+                <button
+                  type="button"
+                  onClick={() => setStep(2)}
+                  className="w-full bg-green-dark hover:bg-green-darker text-white font-bold py-2 rounded-lg transition-colors"
+                >
+                  Continuer
+                </button>
+              </>
+            )}
+
+            {step === 2 && (
+              <>
+                <div>
+                  <label className="block text-sm font-bold text-green-dark mb-2">Email</label>
+                  <input
+                    type="email"
+                    name="email"
+                    value={formData.email}
+                    onChange={handleChange}
+                    className="w-full px-4 py-2 border border-gold/30 rounded-lg focus:outline-none focus:border-gold"
+                    required
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-bold text-green-dark mb-2">Téléphone</label>
+                  <input
+                    type="tel"
+                    name="phone"
+                    value={formData.phone}
+                    onChange={handleChange}
+                    className="w-full px-4 py-2 border border-gold/30 rounded-lg focus:outline-none focus:border-gold"
+                    required
+                  />
+                </div>
+
+                <div className="flex gap-2">
+                  <button
+                    type="button"
+                    onClick={() => setStep(1)}
+                    className="flex-1 bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 rounded-lg transition-colors"
+                  >
+                    Retour
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setStep(3)}
+                    className="flex-1 bg-green-dark hover:bg-green-darker text-white font-bold py-2 rounded-lg transition-colors"
+                  >
+                    Continuer
+                  </button>
+                </div>
+              </>
+            )}
+
+            {step === 3 && (
+              <>
+                <div>
+                  <label className="block text-sm font-bold text-green-dark mb-2">Mot de passe</label>
+                  <input
+                    type="password"
+                    name="password"
+                    value={formData.password}
+                    onChange={handleChange}
+                    className="w-full px-4 py-2 border border-gold/30 rounded-lg focus:outline-none focus:border-gold"
+                    required
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-bold text-green-dark mb-2">Confirmer le mot de passe</label>
+                  <input
+                    type="password"
+                    name="confirmPassword"
+                    value={formData.confirmPassword}
+                    onChange={handleChange}
+                    className="w-full px-4 py-2 border border-gold/30 rounded-lg focus:outline-none focus:border-gold"
+                    required
+                  />
+                </div>
+
+                <div className="flex gap-2">
+                  <button
+                    type="button"
+                    onClick={() => setStep(2)}
+                    className="flex-1 bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 rounded-lg transition-colors"
+                  >
+                    Retour
+                  </button>
+                  <button
+                    type="submit"
+                    disabled={loading}
+                    className="flex-1 bg-green-dark hover:bg-green-darker text-white font-bold py-2 rounded-lg transition-colors disabled:opacity-50"
+                  >
+                    {loading ? 'Inscription...' : 'S\'inscrire'}
+                  </button>
+                </div>
+              </>
+            )}
+          </form>
+        </div>
+      </div>
+    </div>
+  );
+};

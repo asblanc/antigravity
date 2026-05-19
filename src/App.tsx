@@ -180,7 +180,7 @@ const Navbar: React.FC<{ scrolled: boolean, mobileMenuOpen: boolean, setMobileMe
           <img src={ibcLogo} alt="IBC Logo" className="w-10 h-10" />
           <div>
             <span className={`font-serif text-base font-bold italic block leading-none ${scrolled ? 'text-green-dark' : 'text-white'}`}>Ivoire Business Club</span>
-            <span className="text-gold text-[8px] uppercase tracking-[0.3em] font-bold">Prestige & Excellence</span>
+            <span className="text-gold text-[7px] uppercase tracking-[0.2em] font-bold">PLATEFORME D'EXPÉRIENCES TOURISTIQUES & CLUB PRIVÉ D'AVANTAGES</span>
           </div>
         </button>
         <div className="hidden md:flex items-center gap-10">
@@ -221,24 +221,32 @@ const HomeView: React.FC = () => {
         <img src="https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?auto=format&fit=crop&q=80&w=1600" alt="Premium Hotel Abidjan" className="absolute inset-0 w-full h-full object-cover" />
         <div className="relative z-20 container mx-auto px-6 text-center text-white pt-24">
           <div className="inline-block border border-gold/30 px-6 py-2 mb-8">
-            <span className="text-gold text-[10px] uppercase tracking-[0.4em] font-bold">Plateforme Touristique & PROGRAMME DE FIDÉLITÉ</span>
+            <span className="text-gold text-[10px] uppercase tracking-[0.2em] font-bold">Le club privé des expériences locales et des établissements lifestyle en Côte d'Ivoire</span>
           </div>
           <h1 className="font-serif text-4xl sm:text-6xl md:text-7xl font-bold mb-8 leading-tight">
             Transformez vos loisirs<br />
             <span className="italic text-gold">en opportunités d'affaires.</span>
           </h1>
-          <p className="text-white/70 text-sm sm:text-base max-w-2xl mx-auto mb-12 leading-relaxed">Transformez vos dépenses touristiques en économies. Rejoignez le club privé des consommateurs qualifiés.</p>
+          <p className="text-white/70 text-sm sm:text-base max-w-2xl mx-auto mb-12 leading-relaxed">Découvrez des lieux uniques, vivez des expériences exclusives et profitez d'avantages réservés aux membres.</p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <button onClick={() => navigate('/member-registration')} className="btn-gold w-full sm:w-auto shadow-2xl text-sm sm:text-base">Rejoindre le Club</button>
-            <button onClick={() => navigate('/partner-registration')} className="btn-outline w-full sm:w-auto !border-white/50 !text-white hover:!border-gold group text-sm sm:text-base">Devenir Partenaire</button>
+            <button onClick={() => navigate('/member-registration')} className="btn-gold w-full sm:w-auto shadow-2xl flex flex-col items-center py-3">
+              <span className="text-base font-bold">DEVENIR MEMBRE</span>
+              <span className="text-[9px] uppercase tracking-widest mt-1 opacity-80">Découvrir • Sortir • Voyager • Profiter</span>
+            </button>
+            <button onClick={() => navigate('/partner-registration')} className="btn-outline w-full sm:w-auto !border-white/50 !text-white hover:!border-gold group flex flex-col items-center py-3">
+              <span className="text-base font-bold">DEVENIR PARTENAIRE</span>
+              <span className="text-[9px] uppercase tracking-widest mt-1 opacity-80 text-center">Attirer une clientèle • Générer du trafic • Rejoindre le réseau</span>
+            </button>
           </div>
-          <div className="grid grid-cols-3 gap-8 mt-20 max-w-lg mx-auto">
-            {[{ label: 'Membres Actifs', value: '1,250+' }, { label: 'PARTENAIRES AGRÉÉS', value: '45+' }, { label: 'CASHBACK REDISTRIBUÉ', value: '15M+' }].map((stat, i) => (
-              <div key={i} className="text-center">
-                <div className="font-serif text-2xl font-bold text-gold">{stat.value}</div>
-                <div className="text-white/50 text-[9px] uppercase tracking-widest mt-1">{stat.label}</div>
-              </div>
-            ))}
+          <div className="mt-20 max-w-2xl mx-auto text-center border-t border-white/20 pt-10">
+            <h3 className="text-gold font-serif text-xl mb-6">UNE COMMUNAUTÉ PENSÉE POUR</h3>
+            <ul className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-white/80 text-sm">
+              <li className="flex items-center justify-center sm:justify-start gap-2">✦ Les amoureux de découvertes</li>
+              <li className="flex items-center justify-center sm:justify-start gap-2">✦ Les actifs urbains</li>
+              <li className="flex items-center justify-center sm:justify-start gap-2">✦ Les passionnés de lifestyle</li>
+              <li className="flex items-center justify-center sm:justify-start gap-2">✦ Les professionnels et entrepreneurs</li>
+              <li className="flex items-center justify-center sm:justify-start gap-2 sm:col-span-2">✦ Les amateurs d'expériences premium</li>
+            </ul>
           </div>
         </div>
       </section>
@@ -251,7 +259,7 @@ const HomeView: React.FC = () => {
             <h2 className="font-serif text-4xl font-bold text-green-dark mt-4">Une Expérience en 4 Étapes</h2>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-            {[{ title: 'Inscrivez-vous', desc: 'Créez votre profil exclusif en quelques minutes.', icon: Users }, { title: 'Explorez', desc: 'Explorez notre catalogue d’établissements partenaires.', icon: MapPin }, { title: 'Consommez', desc: 'Accédez a des offres exclusives dans les hotels, restaurants et loisirs.', icon: Utensils }, { title: 'Gagnez', desc: 'Recevez votre cashback automatiquement selon votre statut.', icon: CreditCard }].map((step, i) => {
+            {[{ title: 'Rejoignez le Club', desc: 'Créez votre profil membre en quelques minutes.', icon: Users }, { title: 'Explorez', desc: 'Découvrez des établissements et expériences sélectionnés.', icon: MapPin }, { title: 'Vivez l\'expérience', desc: 'Profitez d\'offres et d\'expériences exclusives chez nos partenaires.', icon: Utensils }, { title: 'Profitez d\'avantages exclusifs', desc: 'Cumulez récompenses, privilèges et des avantages selon votre activité et votre statut membre.', icon: CreditCard }].map((step, i) => {
               const Icon = step.icon;
               return (
                 <div key={i} className="p-8 bg-white border border-gold/10 hover:border-gold/30 transition-all group">
@@ -272,9 +280,9 @@ const HomeView: React.FC = () => {
           <div className="flex items-end justify-between mb-16">
             <div>
               <span className="text-[10px] uppercase tracking-[0.4em] text-gold font-bold">LE RÉSEAU IBC</span>
-              <h2 className="font-serif text-4xl font-bold text-white mt-4">Nos Partenaires</h2>
+              <h2 className="font-serif text-4xl font-bold text-white mt-4">NOS DESTINATIONS & PARTENAIRES</h2>
             </div>
-            <button onClick={() => navigate('/establishments')} className="btn-outline !text-white !border-white/30 hover:!border-gold text-xs md:text-sm px-4 py-2 md:px-6 md:py-3">Voir tout le catalogue</button>
+            <button onClick={() => navigate('/establishments')} className="btn-outline !text-white !border-white/30 hover:!border-gold text-xs md:text-sm px-4 py-2 md:px-6 md:py-3">VOIR TOUT LE CATALOGUE</button>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             {[{ name: 'Sofitel Abidjan', type: 'L’Hôtel Ivoire iconique', img: 'https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?auto=format&fit=crop&q=80&w=800' }, { name: 'Sky Lounge', type: 'Vue panoramique sur Abidjan', img: 'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&q=80&w=800' }, { name: 'Radisson Blu', type: 'Hub des affaires internationales', img: 'https://images.unsplash.com/photo-1445019980597-93fa8acb246c?auto=format&fit=crop&q=80&w=800' }, { name: 'Pullman Helios', type: 'Excellence au coeur du Plateau', img: '/assets/pullman-hotel.png' }].map((p, i) => (
@@ -295,11 +303,10 @@ const HomeView: React.FC = () => {
       <section className="py-32 bg-cream">
         <div className="container mx-auto px-6">
           <div className="text-center mb-20">
-            <span className="text-[10px] uppercase tracking-[0.4em] text-gold font-bold">Catalogue Exclusif</span>
-            <h2 className="font-serif text-4xl font-bold text-green-dark mt-4">Experiences Signature</h2>
+            <h2 className="font-serif text-4xl font-bold text-green-dark mt-4">EXPLOREZ NOS UNIVERS</h2>
           </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-            {[{ title: 'AFTERWORK SOCIAL', desc: 'Connectez-vous avec l’élite économique dans des lieux d’exception.', icon: Users }, { title: 'DINNER SIGNATURE', desc: 'Une table reservee, une experience culinaire hors du commun.', icon: Utensils }, { title: 'LUXURY ESCAPE', desc: 'Evadez-vous dans nos destinations partenaires les plus prisées.', icon: MapPin }, { title: 'WEEKEND ESCAPE', desc: 'Le repos bien mérité des batisseurs, dans un cadre serein.', icon: Coffee }].map((exp, i) => {
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6">
+            {[{ title: 'AFTER WORK & NIGHTLIFE', desc: 'Rooftops • DJ Sets • Networking • Lounges', icon: Users }, { title: 'DINING & GASTRONOMIE', desc: 'Restaurants • Cuisine ivoirienne • Dîners signature', icon: Utensils }, { title: 'BEACH & LOISIRS', desc: 'Bassam • Assinie • Beach clubs • Sunset expériences', icon: Coffee }, { title: 'SÉJOURS & ESCAPADES', desc: 'Day use • Week-end • Resorts • Villas privées', icon: Hotel }, { title: 'DIASPORA & HERITAGE', desc: 'Retour aux sources • Culture • Traditions', icon: MapPin }].map((exp, i) => {
               const Icon = exp.icon;
               return (
                 <div key={i} className="p-8 border border-gold/10 hover:border-gold/30 hover:shadow-premium transition-all group bg-white">
@@ -313,88 +320,121 @@ const HomeView: React.FC = () => {
         </div>
       </section>
       
-      {/* LOYALTY PROGRAM - Section 4: Accumulez du cashback */}
+      {/* LOYALTY PROGRAM - Section 4: Le Programme Membre IBC */}
       <section className="py-32 bg-white">
         <div className="container mx-auto px-6 max-w-4xl">
           <div className="border border-gold/20 p-12 text-center mb-10">
-            <span className="text-[10px] uppercase tracking-[0.4em] text-gold font-bold block mb-6">PROGRAMME DE FIDÉLITÉ</span>
-            <h2 className="font-serif text-4xl md:text-5xl font-bold text-green-dark leading-tight">
-              Accumulez du cashback<br />selon votre Statut
+            <span className="text-[10px] uppercase tracking-[0.4em] text-gold font-bold block mb-6">LE PROGRAMME MEMBRE IBC</span>
+            <h2 className="font-serif text-3xl md:text-4xl font-bold text-green-dark leading-tight mt-4">
+              Un système d'avantages et de privilèges évolutif basé sur l'activité et l'expérience membre.
             </h2>
           </div>
-          {/* Badge inscription gratuite */}
-          <div className="flex justify-start mb-10">
-            <div className="inline-flex items-center gap-2 bg-yellow-300 text-green-dark px-4 py-2 font-bold text-sm">
-              <CheckCircle2 size={16} />
-              Inscription gratuite
-            </div>
+          
+          <div className="mb-16 bg-cream p-8 border border-gold/10">
+            <p className="text-text font-medium mb-4">La plateforme IVOIRE BUSINESS CLUB analyse :</p>
+            <ul className="space-y-2 text-text-muted mb-6 pl-4">
+              <li className="flex items-center gap-2">✦ les habitudes de consommation</li>
+              <li className="flex items-center gap-2">✦ les préférences membres</li>
+              <li className="flex items-center gap-2">✦ les expériences vécues</li>
+              <li className="flex items-center gap-2">✦ les interactions avec les établissements partenaires</li>
+            </ul>
+            <p className="text-text font-medium italic">afin d'offrir une expérience personnalisée et des avantages adaptés au profil de chaque membre.</p>
           </div>
-          {/* Statuts */}
-          <div className="mb-10">
-            <p className="text-text font-medium mb-6 text-sm uppercase tracking-widest">Statuts :</p>
-            <div className="space-y-4">
-              <div className="flex items-center gap-4">
-                <div className="w-4 h-4 rounded-full bg-gradient-to-r from-amber-700 to-yellow-500" />
-                <span className="text-green-dark font-bold text-lg">Bronze : <span className="text-gold">3%</span></span>
-              </div>
-              <div className="flex items-center gap-4">
-                <div className="w-4 h-4 rounded-full bg-gradient-to-r from-yellow-400 to-yellow-200" />
-                <span className="text-green-dark font-bold text-lg">Or : <span className="text-gold">5%</span></span>
-              </div>
-              <div className="flex items-center gap-4">
-                <div className="w-4 h-4 rounded-full bg-gradient-to-r from-gray-400 to-white border border-gray-200" />
-                <span className="text-green-dark font-bold text-lg">Platinum : <span className="text-gold">7%</span></span>
-              </div>
-            </div>
-          </div>
-          <p className="text-green-dark font-serif text-xl italic">Rejoignez-nous et faites partie de la révolution touristique !</p>
-        </div>
-      </section>
-      
-      {/* Section 5: Devenez Membre du club */}
-      <section className="py-24 bg-cream">
-        <div className="container mx-auto px-6 max-w-4xl">
-          <div className="border border-gold/20 p-12 text-center mb-8">
-            <span className="text-[10px] uppercase tracking-[0.4em] text-gold font-bold block mb-6">Inscription Gratuite</span>
-            <h2 className="font-serif text-4xl md:text-5xl font-bold text-green-dark">Devenez Membre du club</h2>
-          </div>
-          <div className="border border-gold/10 p-8 bg-white/50">
-            <p className="text-text-muted text-base italic text-center leading-relaxed">
-              Rejoignez le cercle restreint des consommateurs privilégiés et bénéficiez
-              des opportunites exclusives conçus pour l’élite.
-            </p>
-          </div>
-        </div>
-      </section>
 
-      {/* Section 6: Obtenez le Statut de depart */}
-      <section className="py-24 bg-white">
-        <div className="container mx-auto px-6 max-w-4xl">
-          <div className="border border-gold/20 p-12 text-center mb-8">
-            <span className="text-[10px] uppercase tracking-[0.4em] text-gold font-bold block mb-6">Inscription Gratuite</span>
-            <h2 className="font-serif text-4xl md:text-5xl font-bold text-green-dark">Obtenez le Statut de depart</h2>
-          </div>
-          {/* Barre Membre Bronze */}
-          <div className="bg-green-dark px-8 py-5 flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <Award size={20} className="text-gold" />
-              <span className="text-white font-bold text-lg">Membre Bronze</span>
+          <div className="space-y-8">
+            {/* Bronze */}
+            <div className="border border-gold/20 p-8">
+              <div className="flex items-center gap-4 mb-4">
+                <div className="w-6 h-6 rounded-full bg-gradient-to-r from-amber-700 to-yellow-500" />
+                <h3 className="text-2xl font-serif font-bold text-green-dark uppercase tracking-widest">STATUT BRONZE</h3>
+              </div>
+              <p className="text-gold text-sm underline mb-4">Discovery Member</p>
+              <p className="text-text-muted mb-4 text-sm">Tous les membres démarrent automatiquement avec le statut Bronze.</p>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div>
+                  <p className="font-bold underline text-sm mb-2">Profil</p>
+                  <p className="text-text-muted text-sm mb-4">Membres découverte & lifestyle occasionnel</p>
+                  <p className="font-bold underline text-sm mb-2">Activité moyenne</p>
+                  <p className="text-text-muted text-sm">10 000 FCFA à 40 000 FCFA / week-end</p>
+                </div>
+                <div>
+                  <p className="font-bold underline text-sm mb-3">Avantages</p>
+                  <ul className="space-y-2 text-sm text-text-muted">
+                    <li>✓ accès aux expériences standards</li>
+                    <li>✓ accès prioritaire à certaines offres</li>
+                    <li>✓ invitations événements découverte</li>
+                    <li>✓ avantages partenaires</li>
+                    <li>✓ cashback jusqu'à 3%</li>
+                  </ul>
+                </div>
+              </div>
             </div>
-            <div className="flex items-center gap-3">
-              <TrendingUp size={18} className="text-yellow-400" />
-              <span className="text-yellow-400 text-[10px] uppercase tracking-[0.3em] font-bold">Cashback 3% — Sur chaque depense</span>
+
+            {/* Or */}
+            <div className="border border-gold/20 p-8">
+              <div className="flex items-center gap-4 mb-4">
+                <div className="w-6 h-6 rounded-full bg-gradient-to-r from-yellow-400 to-yellow-200" />
+                <h3 className="text-2xl font-serif font-bold text-green-dark uppercase tracking-widest">STATUT OR</h3>
+              </div>
+              <p className="text-gold text-sm underline mb-4">Prestige Member</p>
+              <p className="text-text-muted mb-4 text-sm">Attribué aux membres à forte activité et consommation régulière.</p>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div>
+                  <p className="font-bold underline text-sm mb-2">Activité moyenne</p>
+                  <p className="text-text-muted text-sm">50 000 FCFA à 90 000 FCFA / week-end</p>
+                </div>
+                <div>
+                  <p className="font-bold underline text-sm mb-3">Avantages</p>
+                  <ul className="space-y-2 text-sm text-text-muted">
+                    <li>✓ accès aux expériences prestige</li>
+                    <li>✓ invitations événements privés</li>
+                    <li>✓ avantages partenaires renforcés</li>
+                    <li>✓ accès prioritaire à certains événements</li>
+                    <li>✓ cashback jusqu'à 5%</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+
+            {/* Platinum */}
+            <div className="border border-gold/20 p-8">
+              <div className="flex items-center gap-4 mb-4">
+                <div className="w-6 h-6 rounded-full bg-gradient-to-r from-gray-400 to-white border border-gray-200" />
+                <h3 className="text-2xl font-serif font-bold text-green-dark uppercase tracking-widest">STATUT PLATINUM</h3>
+              </div>
+              <p className="text-gold text-sm underline mb-4">Elite Member</p>
+              <p className="text-text-muted mb-4 text-sm">Réservé aux membres premium et grands consommateurs d'expériences.</p>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div>
+                  <p className="font-bold underline text-sm mb-2">Activité moyenne</p>
+                  <p className="text-text-muted text-sm">100 000 FCFA et plus / week-end</p>
+                </div>
+                <div>
+                  <p className="font-bold underline text-sm mb-3">Avantages</p>
+                  <ul className="space-y-2 text-sm text-text-muted">
+                    <li>✓ accès expériences premium & VIP</li>
+                    <li>✓ réservations prioritaires</li>
+                    <li>✓ accès lounge</li>
+                    <li>✓ expériences exclusives</li>
+                    <li>✓ événements exclusifs IBC</li>
+                    <li>✓ privilèges partenaires premium</li>
+                    <li>✓ accompagnement privilégié</li>
+                    <li>✓ cashback jusqu'à 7%</li>
+                  </ul>
+                </div>
+              </div>
             </div>
           </div>
         </div>
       </section>
       
-      {/* Section 7: Payez 500 FCFA/mois */}
+      {/* Section 7: Inscription */}
       <section className="py-24 bg-cream">
         <div className="container mx-auto px-6 max-w-4xl">
           <div className="border border-gold/20 p-12 text-center mb-10">
-            <span className="text-[10px] uppercase tracking-[0.4em] text-gold font-bold block mb-6">Inscription Gratuite</span>
+            <span className="text-[10px] uppercase tracking-[0.4em] text-gold font-bold block mb-6">Rejoignez gratuitement IBC</span>
             <h2 className="font-serif text-2xl md:text-3xl lg:text-4xl font-bold text-green-dark leading-tight">
-              Payez 500 FCFA / mois de Frais<br />de participation au programme IBC
+              Accès aux expériences, avantages membres et événements privés à partir de 500 FCFA / mois
             </h2>
           </div>
           <div className="mb-8">
@@ -694,31 +734,31 @@ const EstablishmentsView: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [filter, setFilter] = useState('Tous');
   const places = [
-    { name: 'Sofitel Abidjan', cat: 'Hebergement', zone: 'Cocody', cashback: '3-7%', img: 'https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?auto=format&fit=crop&q=80&w=400' },
-    { name: 'Pullman Helios', cat: 'Hebergement', zone: 'Plateau', cashback: '3-7%', img: '/assets/pullman-hotel.png' },
-    { name: 'Sky Lounge', cat: 'Restauration', zone: 'Marcory', cashback: '5%', img: 'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&q=80&w=400' },
-    { name: 'Radisson Blu', cat: 'Hebergement', zone: 'Port-Bouet', cashback: '3-7%', img: 'https://images.unsplash.com/photo-1445019980597-93fa8acb246c?auto=format&fit=crop&q=80&w=400' },
-    { name: 'Maison Akoula', cat: 'Loisirs', zone: 'Assinie', cashback: '5%', img: 'https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?auto=format&fit=crop&q=80&w=400' },
-    { name: 'Le Grand Large', cat: 'Restauration', zone: 'Zone 4', cashback: '5%', img: 'https://images.unsplash.com/photo-1514362545857-3bc16c4c7d1b?auto=format&fit=crop&q=80&w=400' },
+    { name: 'Sofitel Abidjan', cat: 'Hébergements & Séjours', zone: 'Cocody', cashback: '3-7%', img: 'https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?auto=format&fit=crop&q=80&w=400' },
+    { name: 'Pullman Helios', cat: 'Hébergements & Séjours', zone: 'Plateau', cashback: '3-7%', img: '/assets/pullman-hotel.png' },
+    { name: 'Sky Lounge', cat: 'Lounges & Nightlife', zone: 'Marcory', cashback: '5%', img: 'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&q=80&w=400' },
+    { name: 'Radisson Blu', cat: 'Hébergements & Séjours', zone: 'Port-Bouet', cashback: '3-7%', img: 'https://images.unsplash.com/photo-1445019980597-93fa8acb246c?auto=format&fit=crop&q=80&w=400' },
+    { name: 'Maison Akoula', cat: 'Beach Clubs & Loisirs', zone: 'Assinie', cashback: '5%', img: 'https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?auto=format&fit=crop&q=80&w=400' },
+    { name: 'Le Grand Large', cat: 'Restaurants & Dining', zone: 'Zone 4', cashback: '5%', img: 'https://images.unsplash.com/photo-1514362545857-3bc16c4c7d1b?auto=format&fit=crop&q=80&w=400' },
   ];
   const filteredPlaces = places.filter(p =>
     (filter === 'Tous' || p.cat === filter) &&
     (p.name.toLowerCase().includes(searchTerm.toLowerCase()) || p.zone.toLowerCase().includes(searchTerm.toLowerCase()))
   );
-  const filterIcons: Record<string, React.ReactNode> = { 'Hebergement': <Hotel size={14} />, 'Restauration': <Utensils size={14} />, 'Loisirs': <Gamepad2 size={14} />, 'Bien-etre': <Heart size={14} /> };
+  const filterIcons: Record<string, React.ReactNode> = { 'Hébergements & Séjours': <Hotel size={14} />, 'Restaurants & Dining': <Utensils size={14} />, 'Lounges & Nightlife': <Coffee size={14} />, 'Beach Clubs & Loisirs': <Gamepad2 size={14} />, 'Bien-être & Wellness': <Heart size={14} /> };
   return (
     <div className="min-h-screen bg-cream pt-24">
       <div className="container mx-auto px-6 py-16">
         <div className="text-center mb-16">
-          <span className="text-[10px] uppercase tracking-[0.4em] text-gold font-bold">Reseau Exclusif</span>
-          <h2 className="font-serif text-4xl font-bold text-green-dark mt-4">Nos Etablissements Partenaires</h2>
+          <span className="text-[10px] uppercase tracking-[0.4em] text-gold font-bold">LE RÉSEAU IBC</span>
+          <h2 className="font-serif text-4xl font-bold text-green-dark mt-4">NOS DESTINATIONS & PARTENAIRES</h2>
         </div>
         <div className="relative mb-8">
           <Search size={20} className="absolute left-5 top-1/2 -translate-y-1/2 text-text-muted" />
           <input type="text" placeholder="Rechercher un lieu ou une zone..." className="w-full bg-white border border-gold/10 py-5 pl-16 pr-6 font-serif text-lg focus:border-gold outline-none shadow-premium transition-all" value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} />
         </div>
         <div className="flex flex-wrap gap-3 mb-12">
-          {['Tous', 'Hebergement', 'Restauration', 'Loisirs', 'Bien-etre'].map((f) => (
+          {['Tous', 'Hébergements & Séjours', 'Restaurants & Dining', 'Lounges & Nightlife', 'Beach Clubs & Loisirs', 'Bien-être & Wellness'].map((f) => (
             <button key={f} onClick={() => setFilter(f)} className={`px-8 py-2 text-[10px] font-bold uppercase tracking-widest whitespace-nowrap transition-all flex items-center gap-2 ${filter === f ? 'bg-green-dark text-gold border border-gold shadow-gold' : 'bg-white text-text-muted border border-gold/10'}`}>
               {filterIcons[f]}{f}
             </button>
@@ -845,7 +885,7 @@ const Footer: React.FC = () => {
               <img src={ibcLogo} alt="IBC Logo" className="w-16 h-16 border border-gold/30 p-1" />
               <div>
                 <span className="font-serif text-2xl font-bold italic block leading-none">Ivoire Business Club</span>
-                <span className="text-gold text-[9px] uppercase tracking-[0.4em] font-bold">Prestige & Excellence</span>
+                <span className="text-gold text-[7px] uppercase tracking-[0.2em] font-bold">PLATEFORME D'EXPÉRIENCES TOURISTIQUES & CLUB PRIVÉ D'AVANTAGES</span>
               </div>
             </div>
             <p className="text-white/50 text-sm max-w-sm leading-relaxed mb-10 font-light">L'excellence au sommet. Votre passerelle exclusive vers le monde du luxe et des affaires en Cote d'Ivoire.</p>
