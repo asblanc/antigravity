@@ -269,7 +269,7 @@ const HomeView: React.FC = () => {
             <h2 className="font-serif text-4xl font-bold text-green-dark mt-4">Une Expérience en 4 Étapes</h2>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-            {[{ title: 'Rejoignez le Club', desc: 'Créez votre profil membre en quelques minutes.', icon: Users }, { title: 'Explorez', desc: 'Découvrez des établissements et expériences sélectionnés.', icon: MapPin }, { title: 'Vivez l\'expérience', desc: 'Profitez d\'offres et d\'expériences exclusives chez nos partenaires.', icon: Utensils }, { title: 'Profitez d\'avantages exclusifs', desc: 'Cumulez récompenses, privilèges et des avantages selon votre activité et votre statut membre.', icon: CreditCard }].map((step, i) => {
+            {[{ title: 'Rejoignez le Club', desc: 'Créez votre profil membre en quelques minutes', icon: Users }, { title: 'Explorez', desc: 'Découvrez des établissements et expériences sélectionnés', icon: MapPin }, { title: 'Vivez l\'expérience', desc: 'Profitez d\'offres et d\'expériences exclusives chez nos partenaires', icon: Utensils }, { title: 'Profitez d\'avantages exclusifs', desc: 'Cumulez récompenses, privilèges et des avantages selon votre activité et votre statut membre', icon: CreditCard }].map((step, i) => {
               const Icon = step.icon;
               return (
                 <div key={i} className="p-8 bg-white border border-gold/10 hover:border-gold/30 transition-all group">
