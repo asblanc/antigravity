@@ -401,10 +401,6 @@ const HomeView: React.FC = () => {
             <p className="text-text font-medium mb-6 text-sm">Mode de paiement :</p>
             <div className="space-y-3">
               <div className="flex items-center gap-4 p-4 bg-white border border-gold/10">
-                <Banknote size={20} className="text-gold" />
-                <span className="text-green-dark font-medium">Espece</span>
-              </div>
-              <div className="flex items-center gap-4 p-4 bg-white border border-gold/10">
                 <Smartphone size={20} className="text-gold" />
                 <span className="text-green-dark font-medium">Mobile Money</span>
               </div>
@@ -458,10 +454,6 @@ const HomeView: React.FC = () => {
             </div>
           </div>
           <div className="flex justify-center gap-4 mb-10">
-            <div className="flex items-center gap-2 border border-gold/30 px-5 py-2">
-              <Banknote size={16} className="text-gold" />
-              <span className="text-gold text-[10px] uppercase tracking-widest font-bold">Espece</span>
-            </div>
             <div className="flex items-center gap-2 border border-gold/30 px-5 py-2">
               <Smartphone size={16} className="text-gold" />
               <span className="text-gold text-[10px] uppercase tracking-widest font-bold">Mobile Money</span>
@@ -570,8 +562,8 @@ const MemberRegistrationView: React.FC<{ onRegister: (data: any) => void }> = ({
         )}
         {step === 2 && (
           <div className="space-y-6">
-            <h3 className="font-serif text-2xl text-green-dark">Selection du Forfait</h3>
-            {[{ id: 'bronze', name: 'Membre Bronze', price: '500 FCFA / mois', perks: 'Cashback 3% sur chaque depense' }, { id: 'or', name: 'Membre Or', price: '2.500 FCFA / mois', perks: 'Cashback 5% + Conciergerie' }, { id: 'platinum', name: 'Membre Platinum', price: '10.000 FCFA / mois', perks: 'Cashback 7% + Acces VIP' }].map((p) => (
+            <h3 className="font-serif text-2xl text-green-dark">Bienvenue dans le statut Bronze</h3>
+            {[{ id: 'bronze', name: 'Membre Bronze', price: '500 FCFA / mois', perks: 'Cashback 3% sur chaque depense' }].map((p) => (
               <div key={p.id} onClick={() => setFormData({...formData, plan: p.id})} className={`p-6 border cursor-pointer transition-all flex items-center justify-between ${formData.plan === p.id ? 'bg-green-dark text-white border-gold shadow-lg' : 'bg-white text-green-dark border-gold/10 hover:border-gold/30'}`}>
                 <div><p className="font-bold font-serif">{p.name}</p><p className="text-sm opacity-70">{p.perks}</p></div>
                 <div className="flex items-center gap-4"><span className="font-bold">{p.price}</span>{formData.plan === p.id && <CheckCircle2 size={20} className="text-gold" />}</div>
@@ -586,8 +578,8 @@ const MemberRegistrationView: React.FC<{ onRegister: (data: any) => void }> = ({
         {step === 3 && (
           <form onSubmit={handleSubmit} className="space-y-6">
             <h3 className="font-serif text-2xl text-green-dark">Mode de Paiement</h3>
-            <div className="grid grid-cols-2 gap-4">
-              {[{ id: 'orange', name: 'Orange Money', icon: <Smartphone size={24} /> }, { id: 'wave', name: 'Wave', icon: <Smartphone size={24} /> }, { id: 'moov', name: 'Moov Money', icon: <Smartphone size={24} /> }, { id: 'espece', name: 'Espece', icon: <Banknote size={24} /> }].map((m) => (
+            <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+              {[{ id: 'orange', name: 'Orange Money', icon: <Smartphone size={24} /> }, { id: 'wave', name: 'Wave', icon: <Smartphone size={24} /> }, { id: 'moov', name: 'Moov Money', icon: <Smartphone size={24} /> }].map((m) => (
                 <div key={m.id} onClick={() => setFormData({...formData, paymentMethod: m.id})} className={`p-6 border cursor-pointer transition-all text-center flex flex-col items-center gap-4 ${formData.paymentMethod === m.id ? 'bg-green-dark text-white border-gold shadow-lg' : 'bg-white text-green-dark border-gold/10 hover:border-gold/30'}`}>
                   {m.icon}<span className="font-bold text-sm">{m.name}</span>
                   {formData.paymentMethod === m.id && <CheckCircle2 size={18} className="text-gold" />}
@@ -799,26 +791,28 @@ const PartnerRegistrationView: React.FC = () => {
     <div className="min-h-screen bg-cream py-24">
       <div className="container mx-auto px-6 max-w-2xl">
         <div className="border border-gold/20 p-12 mb-12">
-          <span className="text-[10px] uppercase tracking-[0.4em] text-gold font-bold block mb-4">Partenariat</span>
-          <h2 className="font-serif text-4xl font-bold text-green-dark">Devenez Partenaire IBC</h2>
-          <p className="text-text-muted mt-4 text-sm leading-relaxed">Rejoignez notre reseau exclusif et developpez votre clientèle avec les membres du Club IBC.</p>
+          <span className="text-[10px] uppercase tracking-[0.4em] text-gold font-bold block mb-4">LE RÉSEAU IBC</span>
+          <h2 className="font-serif text-4xl font-bold text-green-dark">Devenez Partenaire IVOIRE BUSINESS CLUB</h2>
+          <p className="text-text-muted mt-4 text-sm leading-relaxed">Rejoignez un réseau d'établissements lifestyle et connectez-vous à une clientèle active à la recherche d'expériences, de découvertes et d'adresses sélectionnées en Côte d'Ivoire.</p>
         </div>
         {!submitted ? (
           <form onSubmit={handleSubmit} className="space-y-8">
-            {[{ label: 'Nom de l’Établissement', key: 'businessName', placeholder: 'Hotel, Restaurant ou Service', type: 'text' }, { label: 'Responsable', key: 'contactName', placeholder: 'Nom & Prenom', type: 'text' }, { label: 'Email', key: 'email', placeholder: 'contact@etablissement.ci', type: 'email' }, { label: 'Telephone', key: 'phone', placeholder: '+225 04 XX XX XX XX', type: 'tel' }].map((field) => (
+            <h3 className="font-serif text-2xl text-green-dark border-b border-gold/20 pb-4 mb-6 uppercase">FORMULAIRE</h3>
+            {[{ label: 'Nom de l’Établissement', key: 'businessName', placeholder: 'Hotel, Restaurant ou Service', type: 'text' }, { label: 'Responsable de l\'établissement', key: 'contactName', placeholder: 'Nom & Prenom', type: 'text' }, { label: 'Email', key: 'email', placeholder: 'contact@etablissement.ci', type: 'email' }, { label: 'Telephone', key: 'phone', placeholder: '+225 04 XX XX XX XX', type: 'tel' }].map((field) => (
               <div key={field.key}>
                 <label className="text-[10px] uppercase tracking-widest font-bold text-text-muted">{field.label}</label>
                 <input type={field.type} placeholder={field.placeholder} className="w-full bg-transparent border-b border-gold/20 py-4 font-serif text-lg focus:border-gold outline-none transition-colors" value={formData[field.key as keyof typeof formData]} onChange={(e) => setFormData({...formData, [field.key]: e.target.value})} required />
               </div>
             ))}
             <div>
-              <label className="text-[10px] uppercase tracking-widest font-bold text-text-muted">Type d Etablissement</label>
+              <label className="text-[10px] uppercase tracking-widest font-bold text-text-muted">Catégorie d'activité</label>
               <select className="w-full bg-white border-b border-gold/20 py-4 font-serif text-lg focus:border-gold outline-none" value={formData.establishmentType} onChange={(e) => setFormData({...formData, establishmentType: e.target.value})}>
+                <option value="hebergement">Hébergement</option>
                 <option value="restaurant">Restaurant</option>
-                <option value="hotel">Hotel</option>
-                <option value="spa">Spa & Wellness</option>
-                <option value="golf">Golf & Loisirs</option>
-                <option value="service">Service Premium</option>
+                <option value="lounge">Lounge</option>
+                <option value="beach-club">Beach Club</option>
+                <option value="bien-etre">Bien-être</option>
+                <option value="loisirs">Loisirs</option>
                 <option value="autre">Autre</option>
               </select>
             </div>
