@@ -622,19 +622,18 @@ const HomeView: React.FC = () => {
 
 const MemberRegistrationView: React.FC<{ onRegister: (data: any) => void }> = ({ onRegister }) => {
   const [step, setStep] = useState(1);
-  const [formData, setFormData] = useState({ name: '', email: '', whatsapp: '', plan: 'or', paymentMethod: 'orange' });
+  const [formData, setFormData] = useState({ name: '', email: '', whatsapp: '', plan: 'bronze', paymentMethod: 'orange' });
   const handleNext = () => setStep(step + 1);
   const handleBack = () => setStep(step - 1);
   const handleSubmit = (e: React.FormEvent) => { e.preventDefault(); onRegister(formData); };
   return (
     <div className="min-h-screen bg-cream py-24">
       <div className="container mx-auto px-6 max-w-2xl">
-        <div className="border border-gold/20 p-12 mb-12">
-          <span className="text-[10px] uppercase tracking-[0.4em] text-gold font-bold block mb-4">Inscription Gratuite</span>
+        <div className="border border-gold/20 p-12 mb-12 text-center">
+          <span className="text-[10px] uppercase tracking-[0.4em] text-gold font-bold block mb-4">REJOIGNEZ GRATUITEMENT IBC</span>
           <h2 className="font-serif text-4xl font-bold text-green-dark">Devenez Membre du club</h2>
           <p className="text-text-muted mt-4 italic text-sm leading-relaxed">
-            Transformez vos dépenses touristiques en économies. Rejoignez le club privé des consommateurs qualifiés
-            et bénéficiez de privileges exclusives dans les plus beaux etablissements de Cote d'Ivoire.
+            Accès aux expériences, avantages membres et événements privés à partir de 500 FCFA / mois
           </p>
         </div>
         {/* Progress */}
@@ -663,12 +662,12 @@ const MemberRegistrationView: React.FC<{ onRegister: (data: any) => void }> = ({
         {step === 2 && (
           <div className="space-y-6">
             <h3 className="font-serif text-2xl text-green-dark">Bienvenue dans le statut Bronze</h3>
-            {[{ id: 'bronze', name: 'Membre Bronze', price: '500 FCFA / mois', perks: 'Cashback 3% sur chaque depense' }].map((p) => (
-              <div key={p.id} onClick={() => setFormData({...formData, plan: p.id})} className={`p-6 border cursor-pointer transition-all flex items-center justify-between ${formData.plan === p.id ? 'bg-green-dark text-white border-gold shadow-lg' : 'bg-white text-green-dark border-gold/10 hover:border-gold/30'}`}>
-                <div><p className="font-bold font-serif">{p.name}</p><p className="text-sm opacity-70">{p.perks}</p></div>
-                <div className="flex items-center gap-4"><span className="font-bold">{p.price}</span>{formData.plan === p.id && <CheckCircle2 size={20} className="text-gold" />}</div>
-              </div>
-            ))}
+            <div className="p-6 bg-green-dark text-white border border-gold shadow-lg rounded flex items-center justify-between">
+              <p className="font-bold font-serif text-sm md:text-base leading-relaxed">
+                Membre Bronze — Cashback 3% sur chaque dépense — 500 FCFA / mois
+              </p>
+              <CheckCircle2 size={24} className="text-gold shrink-0 ml-4" />
+            </div>
             <div className="flex gap-4">
               <button onClick={handleBack} className="flex-1 py-4 border border-green-dark text-green-dark font-bold uppercase tracking-widest text-[10px] hover:bg-green-dark hover:text-white transition-all">Retour</button>
               <button onClick={handleNext} className="flex-1 btn-gold py-4">Continuer</button>
@@ -686,11 +685,11 @@ const MemberRegistrationView: React.FC<{ onRegister: (data: any) => void }> = ({
                 </div>
               ))}
             </div>
-            <p className="text-text-muted text-xs text-center">En cliquant sur confirmer, vous acceptez notre Charte de Confidentialite et les Conditions Generales du Club.</p>
-            <div className="flex gap-4">
+            <div className="flex gap-4 pt-4">
               <button type="button" onClick={handleBack} className="flex-1 py-4 border border-green-dark text-green-dark font-bold uppercase tracking-widest text-[10px] hover:bg-green-dark hover:text-white transition-all">Retour</button>
-              <button type="submit" className="flex-1 btn-gold py-4">Confirmez mon adhesion</button>
+              <button type="submit" className="flex-1 bg-[#C9A84C] text-[#1B5E35] font-bold rounded-[4px] py-4 uppercase tracking-widest text-[10px] hover:bg-[#F0C040] transition-colors">CONFIRMEZ MON ADHÉSION</button>
             </div>
+            <p className="text-text-muted text-xs text-center mt-4">En cliquant sur confirmer, vous acceptez notre Charte de Confidentialité et les Conditions Générales du Club.</p>
           </form>
         )}
       </div>
