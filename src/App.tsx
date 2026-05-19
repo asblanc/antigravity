@@ -312,21 +312,35 @@ const HomeView: React.FC = () => {
       
       {/* Experiences Section */}
       <section className="py-32 bg-cream">
-        <div className="container mx-auto px-6">
+        <div className="container mx-auto px-6 max-w-4xl">
           <div className="text-center mb-20">
-            <h2 className="font-serif text-4xl font-bold text-green-dark mt-4">EXPLOREZ NOS UNIVERS</h2>
+            <h2 className="font-serif text-4xl font-bold text-[#1B5E35] tracking-wide uppercase">EXPLOREZ NOS UNIVERS</h2>
           </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6">
-            {[{ title: 'AFTER WORK & NIGHTLIFE', desc: 'Rooftops • DJ Sets • Networking • Lounges', icon: Users }, { title: 'DINING & GASTRONOMIE', desc: 'Restaurants • Cuisine ivoirienne • Dîners signature', icon: Utensils }, { title: 'BEACH & LOISIRS', desc: 'Bassam • Assinie • Beach clubs • Sunset expériences', icon: Coffee }, { title: 'SÉJOURS & ESCAPADES', desc: 'Day use • Week-end • Resorts • Villas privées', icon: Hotel }, { title: 'DIASPORA & HERITAGE', desc: 'Retour aux sources • Culture • Traditions', icon: MapPin }].map((exp, i) => {
-              const Icon = exp.icon;
-              return (
-                <div key={i} className="p-8 border border-gold/10 hover:border-gold/30 hover:shadow-premium transition-all group bg-white">
-                  <Icon size={32} className="text-gold mb-6" />
-                  <h4 className="font-serif text-sm font-bold text-green-dark mb-3 uppercase tracking-widest">{exp.title}</h4>
-                  <p className="text-text-muted text-sm leading-relaxed mb-6">{exp.desc}</p>
+          <div className="flex flex-col border border-[#1B5E35]/10 rounded-lg overflow-hidden divide-y divide-[#1B5E35]/10 shadow-premium">
+            {[
+              { title: 'AFTER WORK & NIGHTLIFE', desc: 'Rooftops • DJ Sets • Networking • Lounges', emoji: '🎧' },
+              { title: 'DINING & GASTRONOMIE', desc: 'Restaurants • Cuisine ivoirienne • Diners signature', emoji: '🍽️' },
+              { title: 'BEACH & LOISIRS', desc: 'Bassam • Assinie • Beach clubs • Sunset experiences', emoji: '🏖️' },
+              { title: 'SÉJOURS & ESCAPADES', desc: 'Day use • Week-end • Resorts • Villas privées', emoji: '🛏️' },
+              { title: 'DIASPORA & HERITAGE', desc: 'Retour aux sources • Culture • Traditions', emoji: '🌍' }
+            ].map((exp, i) => (
+              <div
+                key={i}
+                className="p-6 md:p-8 bg-[#F5F3EE] hover:bg-[#F2EFE8] transition-colors flex flex-col md:flex-row items-center md:items-start text-center md:text-left gap-6 group"
+              >
+                <div className="flex-shrink-0 w-16 h-16 rounded-full bg-[#1B5E35] flex items-center justify-center text-2xl shadow-md group-hover:scale-110 transition-transform duration-300">
+                  {exp.emoji}
                 </div>
-              );
-            })}
+                <div className="flex-grow">
+                  <h4 className="font-serif text-lg font-bold text-[#1B5E35] mb-2 tracking-wide">
+                    {exp.title}
+                  </h4>
+                  <p className="text-[#1B5E35]/80 text-sm font-medium">
+                    {exp.desc}
+                  </p>
+                </div>
+              </div>
+            ))}
           </div>
         </div>
       </section>
