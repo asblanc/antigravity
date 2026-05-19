@@ -886,19 +886,19 @@ const PartnerRegistrationView: React.FC = () => {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({ businessName: '', contactName: '', email: '', phone: '', establishmentType: 'restaurant', description: '' });
   const [submitted, setSubmitted] = useState(false);
-  const handleSubmit = (e: React.FormEvent) => { e.preventDefault(); toast.success('Merci pour votre interet ! Nous vous contactons très bientôt.'); setSubmitted(true); setTimeout(() => navigate('/'), 3000); };
+  const handleSubmit = (e: React.FormEvent) => { e.preventDefault(); toast.success('Merci pour votre intérêt ! Nous vous contactons très bientôt.'); setSubmitted(true); setTimeout(() => navigate('/'), 3000); };
   return (
     <div className="min-h-screen bg-cream py-24">
       <div className="container mx-auto px-6 max-w-2xl">
         <div className="border border-gold/20 p-12 mb-12">
           <span className="text-[10px] uppercase tracking-[0.4em] text-gold font-bold block mb-4">LE RÉSEAU IBC</span>
-          <h2 className="font-serif text-4xl font-bold text-green-dark">Devenez Partenaire IVOIRE BUSINESS CLUB</h2>
+          <h2 className="font-serif text-4xl font-bold text-green-dark">Devenez Partenaire IBC</h2>
           <p className="text-text-muted mt-4 text-sm leading-relaxed">Rejoignez un réseau d'établissements lifestyle et connectez-vous à une clientèle active à la recherche d'expériences, de découvertes et d'adresses sélectionnées en Côte d'Ivoire.</p>
         </div>
         {!submitted ? (
           <form onSubmit={handleSubmit} className="space-y-8">
             <h3 className="font-serif text-2xl text-green-dark border-b border-gold/20 pb-4 mb-6 uppercase">FORMULAIRE</h3>
-            {[{ label: 'Nom de l’Établissement', key: 'businessName', placeholder: 'Hotel, Restaurant ou Service', type: 'text' }, { label: 'Responsable de l\'établissement', key: 'contactName', placeholder: 'Nom & Prenom', type: 'text' }, { label: 'Email', key: 'email', placeholder: 'contact@etablissement.ci', type: 'email' }, { label: 'Telephone', key: 'phone', placeholder: '+225 04 XX XX XX XX', type: 'tel' }].map((field) => (
+            {[{ label: 'Établissement', key: 'businessName', placeholder: 'Hotel, Restaurant ou Service', type: 'text' }, { label: 'Responsable de l\'établissement', key: 'contactName', placeholder: 'Nom & Prénom', type: 'text' }, { label: 'Email', key: 'email', placeholder: 'contact@etablissement.ci', type: 'email' }, { label: 'Téléphone', key: 'phone', placeholder: '+225 07 XX XX XX XX', type: 'tel' }].map((field) => (
               <div key={field.key}>
                 <label className="text-[10px] uppercase tracking-widest font-bold text-text-muted">{field.label}</label>
                 <input type={field.type} placeholder={field.placeholder} className="w-full bg-transparent border-b border-gold/20 py-4 font-serif text-lg focus:border-gold outline-none transition-colors" value={formData[field.key as keyof typeof formData]} onChange={(e) => setFormData({...formData, [field.key]: e.target.value})} required />
@@ -918,7 +918,7 @@ const PartnerRegistrationView: React.FC = () => {
             </div>
             <div>
               <label className="text-[10px] uppercase tracking-widest font-bold text-text-muted">Description</label>
-              <textarea placeholder="Décrivez votre etablissement..." className="w-full bg-transparent border border-gold/20 p-4 font-sans text-sm focus:border-gold outline-none transition-colors rounded min-h-24" value={formData.description} onChange={(e) => setFormData({...formData, description: e.target.value})} />
+              <textarea placeholder="Décrivez votre établissement..." className="w-full bg-transparent border border-gold/20 p-4 font-sans text-sm focus:border-gold outline-none transition-colors rounded min-h-24" value={formData.description} onChange={(e) => setFormData({...formData, description: e.target.value})} />
             </div>
             <button type="submit" className="btn-gold w-full py-4 flex items-center justify-center gap-3">Soumettre ma Candidature <ArrowRight size={18} /></button>
           </form>
@@ -926,8 +926,8 @@ const PartnerRegistrationView: React.FC = () => {
           <div className="text-center py-12">
             <CheckCircle2 size={48} className="text-green-dark mx-auto mb-6" />
             <h4 className="text-2xl font-serif text-green-dark mb-4">Merci !</h4>
-            <p className="text-text-muted mb-6">Votre demande a ete recue. Notre equipe vous contactera très bientôt.</p>
-            <button onClick={() => navigate('/')} className="btn-gold">Retour a l accueil</button>
+            <p className="text-text-muted mb-6">Votre demande a été reçue. Notre équipe vous contactera très bientôt.</p>
+            <button onClick={() => navigate('/')} className="btn-gold">Retour à l'accueil</button>
           </div>
         )}
       </div>
