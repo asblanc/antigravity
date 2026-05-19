@@ -213,6 +213,7 @@ const Navbar: React.FC<{ scrolled: boolean, mobileMenuOpen: boolean, setMobileMe
 
 const HomeView: React.FC = () => {
   const navigate = useNavigate();
+  const [activeFilter, setActiveFilter] = useState('Tous');
   return (
     <div className="min-h-screen bg-cream">
       {/* Hero Section */}
@@ -521,27 +522,35 @@ const HomeView: React.FC = () => {
       <section className="py-32 bg-cream">
         <div className="container mx-auto px-6">
           <div className="border border-gold/20 p-10 text-center mb-12">
-            <span className="text-[10px] uppercase tracking-[0.4em] text-gold font-bold block mb-4">Reseau Exclusif</span>
-            <h2 className="font-serif text-4xl font-bold text-green-dark">Nos Etablissements Partenaires</h2>
+            <span className="text-[10px] uppercase tracking-[0.4em] text-gold font-bold block mb-4">LE RÉSEAU IBC</span>
+            <h2 className="font-serif text-4xl font-bold text-green-dark">NOS DESTINATIONS & PARTENAIRES</h2>
           </div>
           {/* Filtres avec icones */}
           <div className="flex flex-wrap gap-3 justify-center mb-12">
-            <button onClick={() => navigate('/establishments')} className="px-6 py-2 text-[10px] font-bold uppercase tracking-widest bg-green-dark text-gold border border-gold">Tous</button>
-            <button onClick={() => navigate('/establishments')} className="px-6 py-2 text-[10px] font-bold uppercase tracking-widest bg-white text-text-muted border border-gold/10 flex items-center gap-2">
-              <Hotel size={14} />Hébergements & Séjours
-            </button>
-            <button onClick={() => navigate('/establishments')} className="px-6 py-2 text-[10px] font-bold uppercase tracking-widest bg-white text-text-muted border border-gold/10 flex items-center gap-2">
-              <Utensils size={14} />Restaurants & Dining
-            </button>
-            <button onClick={() => navigate('/establishments')} className="px-6 py-2 text-[10px] font-bold uppercase tracking-widest bg-white text-text-muted border border-gold/10 flex items-center gap-2">
-              <Coffee size={14} />Lounges & Nightlife
-            </button>
-            <button onClick={() => navigate('/establishments')} className="px-6 py-2 text-[10px] font-bold uppercase tracking-widest bg-white text-text-muted border border-gold/10 flex items-center gap-2">
-              <Gamepad2 size={14} />Beach Clubs & Loisirs
-            </button>
-            <button onClick={() => navigate('/establishments')} className="px-6 py-2 text-[10px] font-bold uppercase tracking-widest bg-white text-text-muted border border-gold/10 flex items-center gap-2">
-              <Heart size={14} />Bien-être & Wellness
-            </button>
+            {[
+              { id: 'Tous', label: 'Tous', emoji: '' },
+              { id: 'Hébergements & Séjours', label: 'Hébergements & Séjours', emoji: '🛏️' },
+              { id: 'Restaurants & Dining', label: 'Restaurants & Dining', emoji: '🍽️' },
+              { id: 'Lounges & Nightlife', label: 'Lounges & Nightlife', emoji: '🎧' },
+              { id: 'Beach Clubs & Loisirs', label: 'Beach Clubs & Loisirs', emoji: '🏖️' },
+              { id: 'Bien-être & Wellness', label: 'Bien-être & Wellness', emoji: '💆' }
+            ].map((cat) => {
+              const isActive = activeFilter === cat.id;
+              return (
+                <button
+                  key={cat.id}
+                  onClick={() => setActiveFilter(cat.id)}
+                  className={`px-6 py-2 text-[10px] font-bold uppercase tracking-widest transition-all flex items-center gap-2 ${
+                    isActive
+                      ? 'bg-[#1B5E35] text-white border border-[#1B5E35]'
+                      : 'bg-transparent text-[#1B5E35] border border-[#1B5E35]'
+                  }`}
+                >
+                  {cat.emoji && <span className="text-sm">{cat.emoji}</span>}
+                  {cat.label}
+                </button>
+              );
+            })}
           </div>
           {/* Cards partenaires */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
@@ -552,21 +561,23 @@ const HomeView: React.FC = () => {
               { name: 'Maison Akoula', cat: 'Beach Clubs & Loisirs', zone: 'Assinie', cashback: '5%', img: 'https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?auto=format&fit=crop&q=80&w=400' },
               { name: 'Le Grand Large', cat: 'Restaurants & Dining', zone: 'Zone 4', cashback: '5%', img: 'https://images.unsplash.com/photo-1514362545857-3bc16c4c7d1b?auto=format&fit=crop&q=80&w=400' },
               { name: 'Orchidée Spa', cat: 'Bien-être & Wellness', zone: 'Cocody', cashback: '5%', img: 'https://images.unsplash.com/photo-1540555700478-4be289fbecef?auto=format&fit=crop&q=80&w=400' }
-            ].map((place, i) => (
-              <div key={i} className="bg-white border border-gold/10 overflow-hidden hover:border-gold/30 hover:shadow-premium transition-all group">
-                <div className="relative overflow-hidden h-48">
-                  <img src={place.img} alt={place.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
-                  <span className="absolute top-3 left-3 bg-green-dark text-gold text-[9px] uppercase tracking-widest font-bold px-3 py-1">{place.cat}</span>
-                </div>
-                <div className="p-6">
-                  <h4 className="font-serif text-green-dark font-bold mb-2">{place.name}</h4>
-                  <div className="flex items-center justify-between">
-                    <span className="flex items-center gap-1 text-text-muted text-xs"><MapPin size={12} />{place.zone}</span>
-                    <span className="bg-green-dark/10 text-green-dark text-[10px] font-bold px-3 py-1">Cashback {place.cashback}</span>
+            ]
+              .filter(place => activeFilter === 'Tous' || place.cat === activeFilter)
+              .map((place, i) => (
+                <div key={i} className="bg-white border border-gold/10 overflow-hidden hover:border-gold/30 hover:shadow-premium transition-all group">
+                  <div className="relative overflow-hidden h-48">
+                    <img src={place.img} alt={place.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
+                    <span className="absolute top-3 left-3 bg-green-dark text-gold text-[9px] uppercase tracking-widest font-bold px-3 py-1">{place.cat}</span>
+                  </div>
+                  <div className="p-6">
+                    <h4 className="font-serif text-green-dark font-bold mb-2">{place.name}</h4>
+                    <div className="flex items-center justify-between">
+                      <span className="flex items-center gap-1 text-text-muted text-xs"><MapPin size={12} />{place.zone}</span>
+                      <span className="bg-green-dark/10 text-green-dark text-[10px] font-bold px-3 py-1">Cashback {place.cashback}</span>
+                    </div>
                   </div>
                 </div>
-              </div>
-            ))}
+              ))}
           </div>
           <div className="text-center">
             <button onClick={() => navigate('/establishments')} className="btn-gold flex items-center gap-3 mx-auto">
