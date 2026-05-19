@@ -173,31 +173,34 @@ const App: React.FC = () => {
 
 const Navbar: React.FC<{ scrolled: boolean, mobileMenuOpen: boolean, setMobileMenuOpen: (o: boolean) => void, currentView: string, user: Member | null }> = ({ scrolled, mobileMenuOpen, setMobileMenuOpen, currentView, user }) => {
   const navigate = useNavigate();
+  const isSolid = scrolled || currentView !== '/';
   return (
-    <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${scrolled ? 'bg-white shadow-premium py-3' : 'bg-transparent py-6'}`}>
+    <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${isSolid ? 'bg-white shadow-premium py-3' : 'bg-transparent py-6'}`}>
       <div className="container mx-auto px-6 flex items-center justify-between">
         <button type="button" onClick={() => navigate('/')} className="flex items-center gap-3">
           <img src={ibcLogo} alt="IBC Logo" className="w-10 h-10" />
           <div className="flex flex-col items-start text-left">
-            <span className={`font-serif text-lg font-bold italic block leading-none ${scrolled ? 'text-green-dark' : 'text-white'}`}>Ivoire Business Club</span>
-            <span className="hidden lg:block text-gold text-[7px] uppercase tracking-[0.15em] font-bold mt-1">Le club privé des expériences locales & lifestyle</span>
+            <span className={`font-serif text-lg font-bold italic block leading-none ${isSolid ? 'text-green-dark' : 'text-white'}`}>Ivoire Business Club</span>
+            <span className="hidden lg:block text-gold text-[7px] uppercase tracking-[0.15em] font-bold mt-1 leading-tight max-w-[280px]">
+              Le club privé des expériences locales<br />& des établissements lifestyle
+            </span>
           </div>
         </button>
         <div className="hidden md:flex items-center gap-10">
           {[{ name: 'Accueil', path: '/' }, { name: 'Partenaires', path: '/establishments' }, { name: 'Avantages', path: '/offers' }].map((item) => (
-            <Link key={item.path} to={item.path} className={`relative font-medium text-[10px] uppercase tracking-widest transition-all duration-300 pb-0.5 border-b-2 ${currentView === item.path ? 'text-gold border-gold' : (scrolled ? 'text-text hover:text-gold border-transparent hover:border-gold' : 'text-white/90 hover:text-white border-transparent hover:border-white/60')}`}>{item.name}</Link>
+            <Link key={item.path} to={item.path} className={`relative font-medium text-[10px] uppercase tracking-widest transition-all duration-300 pb-0.5 border-b-2 ${currentView === item.path ? 'text-gold border-gold' : (isSolid ? 'text-text hover:text-gold border-transparent hover:border-gold' : 'text-white/90 hover:text-white border-transparent hover:border-white/60')}`}>{item.name}</Link>
           ))}
-          <button type="button" onClick={() => { navigate('/'); setTimeout(() => document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' }), 100); }} className={`font-medium text-[10px] uppercase tracking-widest transition-all duration-300 nav-link border-b-2 border-transparent hover:border-gold hover:text-gold pb-0.5 ${scrolled ? 'text-text hover:text-gold' : 'text-white/90 hover:text-white'}`}>Contact</button>
+          <button type="button" onClick={() => { navigate('/'); setTimeout(() => document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' }), 100); }} className={`font-medium text-[10px] uppercase tracking-widest transition-all duration-300 nav-link border-b-2 border-transparent hover:border-gold hover:text-gold pb-0.5 ${isSolid ? 'text-text hover:text-gold' : 'text-white/90 hover:text-white'}`}>Contact</button>
           {user ? (
             <button onClick={() => navigate('/member-dashboard')} className="btn-gold !px-5 !py-2 text-[10px] flex items-center gap-2">Mon Dashboard</button>
           ) : (
             <>
-              <button onClick={() => navigate('/login')} className={`px-4 py-2 text-[10px] font-bold uppercase tracking-[0.2em] border transition-all duration-300 ${scrolled ? 'border-green-dark text-green-dark hover:bg-green-dark hover:text-gold' : 'border-white/30 text-white hover:bg-white hover:text-green-dark'}`}>Connexion</button>
+              <button onClick={() => navigate('/login')} className={`px-4 py-2 text-[10px] font-bold uppercase tracking-[0.2em] border transition-all duration-300 ${isSolid ? 'border-green-dark text-green-dark hover:bg-green-dark hover:text-gold' : 'border-white/30 text-white hover:bg-white hover:text-green-dark'}`}>Connexion</button>
               <button onClick={() => navigate('/member-registration')} className="btn-gold !px-5 !py-2 text-[10px]">S'inscrire</button>
             </>
           )}
         </div>
-        <button className="md:hidden" onClick={() => setMobileMenuOpen(!mobileMenuOpen)}>{mobileMenuOpen ? <X size={24} className={scrolled ? 'text-green-dark' : 'text-white'} /> : <Menu size={24} className={scrolled ? 'text-green-dark' : 'text-white'} />}</button>
+        <button className="md:hidden" onClick={() => setMobileMenuOpen(!mobileMenuOpen)}>{mobileMenuOpen ? <X size={24} className={isSolid ? 'text-green-dark' : 'text-white'} /> : <Menu size={24} className={isSolid ? 'text-green-dark' : 'text-white'} />}</button>
       </div>
       {mobileMenuOpen && (
         <div className="md:hidden bg-green-dark px-6 py-8 flex flex-col gap-6">
@@ -218,19 +221,24 @@ const HomeView: React.FC = () => {
     <div className="min-h-screen bg-cream">
       {/* Hero Section */}
       <section className="relative min-h-screen flex items-center justify-center overflow-hidden py-32">
-        <div className="absolute inset-0 bg-green-dark/80 z-10" />
+        <div className="absolute inset-0 bg-gradient-to-b from-green-dark/95 via-green-dark/80 to-green-dark/95 z-10" />
         <img src="https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?auto=format&fit=crop&q=80&w=1600" alt="Premium Hotel Abidjan" className="absolute inset-0 w-full h-full object-cover" />
         <div className="relative z-20 container mx-auto px-6 text-center text-white pt-16">
-          <div className="inline-block bg-green-dark/60 backdrop-blur-md border border-gold/30 px-6 py-2.5 mb-10 rounded-sm">
-            <span className="text-gold text-[9px] uppercase tracking-[0.25em] font-bold">Le club privé des expériences locales & lifestyle</span>
+          <div className="inline-block bg-green-dark/60 backdrop-blur-md border border-gold/30 px-8 py-3.5 mb-10 rounded-sm max-w-xl mx-auto">
+            <span className="text-gold text-[10px] uppercase tracking-[0.25em] font-bold block leading-tight">
+              Le club privé des expériences locales
+            </span>
+            <span className="text-gold text-[10px] uppercase tracking-[0.25em] font-bold block mt-1 leading-tight">
+              & des établissements lifestyle en Côte d'Ivoire
+            </span>
           </div>
           <h1 className="font-serif text-4xl sm:text-6xl md:text-7xl font-bold mb-10 leading-tight tracking-wide">
             Transformez vos loisirs<br />
             <span className="italic text-gold">en opportunités d'affaires.</span>
           </h1>
-          <p className="text-white/80 text-sm sm:text-base max-w-2xl mx-auto mb-16 leading-relaxed font-light">Découvrez des lieux uniques, vivez des expériences exclusives et profitez d'avantages réservés aux membres.</p>
+          <p className="text-white/85 text-sm sm:text-base max-w-2xl mx-auto mb-16 leading-relaxed font-light">Découvrez des lieux uniques, vivez des expériences exclusives et profitez d'avantages réservés aux membres.</p>
           
-          <div className="flex flex-col sm:flex-row gap-6 justify-center max-w-2xl mx-auto mb-24">
+          <div className="flex flex-col sm:flex-row gap-6 justify-center max-w-2xl mx-auto">
             <button onClick={() => navigate('/member-registration')} className="btn-gold w-full sm:w-1/2 shadow-2xl flex flex-col items-center py-4 px-6 rounded-sm hover:scale-[1.02] transition-transform duration-300">
               <span className="text-base font-bold tracking-wider">DEVENIR MEMBRE</span>
               <span className="text-[8px] uppercase tracking-widest mt-1.5 opacity-90 font-medium">Découvrir • Sortir • Voyager • Profiter</span>
@@ -240,29 +248,57 @@ const HomeView: React.FC = () => {
               <span className="text-[8px] uppercase tracking-widest mt-1.5 opacity-90 font-medium text-center">Attirer • Fidéliser • Rejoindre le réseau</span>
             </button>
           </div>
+        </div>
+      </section>
 
-          <div className="max-w-3xl mx-auto bg-green-dark/45 backdrop-blur-md p-8 md:p-10 border border-gold/20 rounded shadow-premium">
-            <h3 className="text-gold font-serif text-lg font-bold tracking-[0.25em] mb-8 uppercase text-center">UNE COMMUNAUTÉ PENSÉE POUR</h3>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-white/90">
-              <div className="bg-white/[0.02] border border-gold/10 p-4 rounded hover:bg-white/[0.05] hover:border-gold/30 transition-all duration-300 flex items-center gap-4">
-                <Compass className="text-gold shrink-0 animate-pulse" size={20} />
-                <span className="text-xs uppercase tracking-wider font-semibold text-left">Les amoureux de découvertes</span>
+      {/* Community Target Section */}
+      <section className="py-28 bg-[#092215] border-t border-b border-gold/20 relative overflow-hidden">
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-gold/5 via-transparent to-transparent pointer-events-none" />
+        <div className="container mx-auto px-6 max-w-5xl relative z-10">
+          <div className="text-center mb-16 max-w-2xl mx-auto">
+            <span className="text-[10px] uppercase tracking-[0.4em] text-gold font-bold block mb-4">Pour qui est-ce pensé ?</span>
+            <h2 className="font-serif text-3xl sm:text-4xl font-bold tracking-wide text-white uppercase mb-6">UNE COMMUNAUTÉ PENSÉE POUR</h2>
+            <div className="w-24 h-0.5 bg-gold mx-auto mb-6" />
+            <p className="text-white/60 text-sm font-light leading-relaxed">
+              Le programme membre IBC réunit des profils dynamiques et exigeants autour de passions communes et d'opportunités uniques en Côte d'Ivoire.
+            </p>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 text-white/90">
+            <div className="bg-white/[0.02] border border-gold/10 p-8 rounded hover:bg-white/[0.05] hover:border-gold/30 transition-all duration-500 flex flex-col items-start gap-4 group">
+              <div className="w-12 h-12 rounded-full bg-gold/10 border border-gold/20 flex items-center justify-center group-hover:bg-gold/20 group-hover:border-gold/30 transition-all duration-300">
+                <Compass className="text-gold animate-pulse" size={20} />
               </div>
-              <div className="bg-white/[0.02] border border-gold/10 p-4 rounded hover:bg-white/[0.05] hover:border-gold/30 transition-all duration-300 flex items-center gap-4">
-                <MapPin className="text-gold shrink-0" size={20} />
-                <span className="text-xs uppercase tracking-wider font-semibold text-left">Les actifs urbains</span>
+              <h4 className="font-serif text-lg font-bold text-white group-hover:text-gold transition-colors">Les amoureux de découvertes</h4>
+              <p className="text-white/70 text-xs leading-relaxed font-light">Explorez des destinations uniques, des hébergements insolites et des adresses secrètes à travers toute la Côte d'Ivoire.</p>
+            </div>
+            <div className="bg-white/[0.02] border border-gold/10 p-8 rounded hover:bg-white/[0.05] hover:border-gold/30 transition-all duration-500 flex flex-col items-start gap-4 group">
+              <div className="w-12 h-12 rounded-full bg-gold/10 border border-gold/20 flex items-center justify-center group-hover:bg-gold/20 group-hover:border-gold/30 transition-all duration-300">
+                <MapPin className="text-gold" size={20} />
               </div>
-              <div className="bg-white/[0.02] border border-gold/10 p-4 rounded hover:bg-white/[0.05] hover:border-gold/30 transition-all duration-300 flex items-center gap-4">
-                <Sparkles className="text-gold shrink-0" size={20} />
-                <span className="text-xs uppercase tracking-wider font-semibold text-left">Les passionnés de lifestyle</span>
+              <h4 className="font-serif text-lg font-bold text-white group-hover:text-gold transition-colors">Les actifs urbains</h4>
+              <p className="text-white/70 text-xs leading-relaxed font-light">Décompressez après vos journées intenses grâce à notre sélection exclusive de lounges, rooftops et événements After Work animés.</p>
+            </div>
+            <div className="bg-white/[0.02] border border-gold/10 p-8 rounded hover:bg-[#0c2c1b]/30 hover:border-gold/30 transition-all duration-500 flex flex-col items-start gap-4 group">
+              <div className="w-12 h-12 rounded-full bg-gold/10 border border-gold/20 flex items-center justify-center group-hover:bg-gold/20 group-hover:border-gold/30 transition-all duration-300">
+                <Sparkles className="text-gold" size={20} />
               </div>
-              <div className="bg-white/[0.02] border border-gold/10 p-4 rounded hover:bg-white/[0.05] hover:border-gold/30 transition-all duration-300 flex items-center gap-4">
-                <Briefcase className="text-gold shrink-0" size={20} />
-                <span className="text-xs uppercase tracking-wider font-semibold text-left">Les professionnels & entrepreneurs</span>
+              <h4 className="font-serif text-lg font-bold text-white group-hover:text-gold transition-colors">Les passionnés de lifestyle</h4>
+              <p className="text-white/70 text-xs leading-relaxed font-light">Savourez le meilleur de la gastronomie locale et internationale et accédez à des expériences de bien-être haut de gamme.</p>
+            </div>
+            <div className="bg-white/[0.02] border border-gold/10 p-8 rounded hover:bg-[#0c2c1b]/30 hover:border-gold/30 transition-all duration-500 flex flex-col items-start gap-4 group">
+              <div className="w-12 h-12 rounded-full bg-gold/10 border border-gold/20 flex items-center justify-center group-hover:bg-gold/20 group-hover:border-gold/30 transition-all duration-300">
+                <Briefcase className="text-gold" size={20} />
               </div>
-              <div className="sm:col-span-2 bg-white/[0.02] border border-gold/10 p-4 rounded hover:bg-white/[0.05] hover:border-gold/30 transition-all duration-300 flex items-center justify-center gap-4">
-                <Crown className="text-gold shrink-0" size={20} />
-                <span className="text-xs uppercase tracking-wider font-semibold">Les amateurs d'expériences premium</span>
+              <h4 className="font-serif text-lg font-bold text-white group-hover:text-gold transition-colors">Les professionnels & entrepreneurs</h4>
+              <p className="text-white/70 text-xs leading-relaxed font-light">Connectez-vous avec un réseau sélect d'affaires, participez à des événements privés et créez des opportunités de synergie professionnelle.</p>
+            </div>
+            <div className="sm:col-span-2 bg-white/[0.02] border border-gold/10 p-8 rounded hover:bg-[#0c2c1b]/30 hover:border-gold/30 transition-all duration-500 flex flex-col sm:flex-row items-start sm:items-center gap-6 group">
+              <div className="w-12 h-12 rounded-full bg-gold/10 border border-gold/20 flex items-center justify-center group-hover:bg-gold/20 group-hover:border-gold/30 transition-all duration-300 flex-shrink-0">
+                <Crown className="text-gold" size={20} />
+              </div>
+              <div>
+                <h4 className="font-serif text-lg font-bold text-white group-hover:text-gold transition-colors mb-2">Les amateurs d'expériences premium</h4>
+                <p className="text-white/70 text-xs leading-relaxed font-light">Bénéficiez d'un service d'exception, d'accords privilégiés et d'attentions exclusives réservés à l'élite des membres du réseau.</p>
               </div>
             </div>
           </div>
