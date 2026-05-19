@@ -20,23 +20,23 @@ import {
   Lock,
   Wallet,
   Smartphone,
-
   LogOut,
-
-
-
-
   LayoutDashboard,
   Search,
-
-
   Award,
   TrendingUp,
   Banknote,
   Gamepad2,
   Heart,
   Hotel,
-  BookOpen,   Scan,
+  BookOpen,
+  Scan,
+  Compass,
+  Sparkles,
+  Crown,
+  Headphones,
+  Palmtree,
+  Leaf,
 } from 'lucide-react';
 
 import { Routes, Route, useNavigate, useLocation, Navigate, Link } from 'react-router-dom';
@@ -178,9 +178,9 @@ const Navbar: React.FC<{ scrolled: boolean, mobileMenuOpen: boolean, setMobileMe
       <div className="container mx-auto px-6 flex items-center justify-between">
         <button type="button" onClick={() => navigate('/')} className="flex items-center gap-3">
           <img src={ibcLogo} alt="IBC Logo" className="w-10 h-10" />
-          <div>
-            <span className={`font-serif text-base font-bold italic block leading-none ${scrolled ? 'text-green-dark' : 'text-white'}`}>Ivoire Business Club</span>
-            <span className="text-gold text-[7px] uppercase tracking-[0.2em] font-bold">Le club privé des expériences locales et des établissements lifestyle en Côte d'Ivoire</span>
+          <div className="flex flex-col items-start text-left">
+            <span className={`font-serif text-lg font-bold italic block leading-none ${scrolled ? 'text-green-dark' : 'text-white'}`}>Ivoire Business Club</span>
+            <span className="hidden lg:block text-gold text-[7px] uppercase tracking-[0.15em] font-bold mt-1">Le club privé des expériences locales & lifestyle</span>
           </div>
         </button>
         <div className="hidden md:flex items-center gap-10">
@@ -217,47 +217,54 @@ const HomeView: React.FC = () => {
   return (
     <div className="min-h-screen bg-cream">
       {/* Hero Section */}
-      <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
+      <section className="relative min-h-screen flex items-center justify-center overflow-hidden py-32">
         <div className="absolute inset-0 bg-green-dark/80 z-10" />
         <img src="https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?auto=format&fit=crop&q=80&w=1600" alt="Premium Hotel Abidjan" className="absolute inset-0 w-full h-full object-cover" />
-        <div className="relative z-20 container mx-auto px-6 text-center text-white pt-24">
-          <div className="inline-block border border-gold/30 px-6 py-2 mb-8">
-            <span className="text-gold text-[10px] uppercase tracking-[0.2em] font-bold">Le club privé des expériences locales et des établissements lifestyle en Côte d'Ivoire</span>
+        <div className="relative z-20 container mx-auto px-6 text-center text-white pt-16">
+          <div className="inline-block bg-green-dark/60 backdrop-blur-md border border-gold/30 px-6 py-2.5 mb-10 rounded-sm">
+            <span className="text-gold text-[9px] uppercase tracking-[0.25em] font-bold">Le club privé des expériences locales & lifestyle</span>
           </div>
-          <h1 className="font-serif text-4xl sm:text-6xl md:text-7xl font-bold mb-8 leading-tight">
+          <h1 className="font-serif text-4xl sm:text-6xl md:text-7xl font-bold mb-10 leading-tight tracking-wide">
             Transformez vos loisirs<br />
             <span className="italic text-gold">en opportunités d'affaires.</span>
           </h1>
-          <p className="text-white/70 text-sm sm:text-base max-w-2xl mx-auto mb-12 leading-relaxed">Découvrez des lieux uniques, vivez des expériences exclusives et profitez d'avantages réservés aux membres.</p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <button onClick={() => navigate('/member-registration')} className="btn-gold w-full sm:w-auto shadow-2xl flex flex-col items-center py-3">
-              <span className="text-base font-bold">DEVENIR MEMBRE</span>
-              <span className="text-[9px] uppercase tracking-widest mt-1 opacity-80">Découvrir • Sortir • Voyager • Profiter</span>
+          <p className="text-white/80 text-sm sm:text-base max-w-2xl mx-auto mb-16 leading-relaxed font-light">Découvrez des lieux uniques, vivez des expériences exclusives et profitez d'avantages réservés aux membres.</p>
+          
+          <div className="flex flex-col sm:flex-row gap-6 justify-center max-w-2xl mx-auto mb-24">
+            <button onClick={() => navigate('/member-registration')} className="btn-gold w-full sm:w-1/2 shadow-2xl flex flex-col items-center py-4 px-6 rounded-sm hover:scale-[1.02] transition-transform duration-300">
+              <span className="text-base font-bold tracking-wider">DEVENIR MEMBRE</span>
+              <span className="text-[8px] uppercase tracking-widest mt-1.5 opacity-90 font-medium">Découvrir • Sortir • Voyager • Profiter</span>
             </button>
-            <button onClick={() => navigate('/partner-registration')} className="btn-outline w-full sm:w-auto !border-white/50 !text-white hover:!border-gold group flex flex-col items-center py-3">
-              <span className="text-base font-bold">DEVENIR PARTENAIRE</span>
-              <span className="text-[9px] uppercase tracking-widest mt-1 opacity-80 text-center">Attirer une clientèle qualifiée • Générer du trafic • Rejoindre le réseau</span>
+            <button onClick={() => navigate('/partner-registration')} className="btn-outline w-full sm:w-1/2 !border-gold/50 !text-white hover:!bg-gold hover:!text-green-dark flex flex-col items-center py-4 px-6 rounded-sm hover:scale-[1.02] transition-all duration-300">
+              <span className="text-base font-bold tracking-wider">DEVENIR PARTENAIRE</span>
+              <span className="text-[8px] uppercase tracking-widest mt-1.5 opacity-90 font-medium text-center">Attirer • Fidéliser • Rejoindre le réseau</span>
             </button>
           </div>
-          <div className="mt-20 max-w-2xl mx-auto text-center bg-[#05150c]/40 backdrop-blur-sm p-8 border border-white/10 rounded-lg">
-            <h3 className="text-gold font-serif text-xl mb-6">UNE COMMUNAUTÉ PENSÉE POUR</h3>
-            <ul className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-white/80 text-sm">
-              <li className="flex items-center justify-center gap-2">
-                <span className="text-gold">✦</span> Les amoureux de découvertes
-              </li>
-              <li className="flex items-center justify-center gap-2">
-                <span className="text-gold">✦</span> Les actifs urbains
-              </li>
-              <li className="flex items-center justify-center gap-2">
-                <span className="text-gold">✦</span> Les passionnés de lifestyle
-              </li>
-              <li className="flex items-center justify-center gap-2">
-                <span className="text-gold">✦</span> Les professionnels et entrepreneurs
-              </li>
-              <li className="flex items-center justify-center gap-2 sm:col-span-2">
-                <span className="text-gold">✦</span> Les amateurs d'expériences premium
-              </li>
-            </ul>
+
+          <div className="max-w-3xl mx-auto bg-green-dark/45 backdrop-blur-md p-8 md:p-10 border border-gold/20 rounded shadow-premium">
+            <h3 className="text-gold font-serif text-lg font-bold tracking-[0.25em] mb-8 uppercase text-center">UNE COMMUNAUTÉ PENSÉE POUR</h3>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-white/90">
+              <div className="bg-white/[0.02] border border-gold/10 p-4 rounded hover:bg-white/[0.05] hover:border-gold/30 transition-all duration-300 flex items-center gap-4">
+                <Compass className="text-gold shrink-0 animate-pulse" size={20} />
+                <span className="text-xs uppercase tracking-wider font-semibold text-left">Les amoureux de découvertes</span>
+              </div>
+              <div className="bg-white/[0.02] border border-gold/10 p-4 rounded hover:bg-white/[0.05] hover:border-gold/30 transition-all duration-300 flex items-center gap-4">
+                <MapPin className="text-gold shrink-0" size={20} />
+                <span className="text-xs uppercase tracking-wider font-semibold text-left">Les actifs urbains</span>
+              </div>
+              <div className="bg-white/[0.02] border border-gold/10 p-4 rounded hover:bg-white/[0.05] hover:border-gold/30 transition-all duration-300 flex items-center gap-4">
+                <Sparkles className="text-gold shrink-0" size={20} />
+                <span className="text-xs uppercase tracking-wider font-semibold text-left">Les passionnés de lifestyle</span>
+              </div>
+              <div className="bg-white/[0.02] border border-gold/10 p-4 rounded hover:bg-white/[0.05] hover:border-gold/30 transition-all duration-300 flex items-center gap-4">
+                <Briefcase className="text-gold shrink-0" size={20} />
+                <span className="text-xs uppercase tracking-wider font-semibold text-left">Les professionnels & entrepreneurs</span>
+              </div>
+              <div className="sm:col-span-2 bg-white/[0.02] border border-gold/10 p-4 rounded hover:bg-white/[0.05] hover:border-gold/30 transition-all duration-300 flex items-center justify-center gap-4">
+                <Crown className="text-gold shrink-0" size={20} />
+                <span className="text-xs uppercase tracking-wider font-semibold">Les amateurs d'expériences premium</span>
+              </div>
+            </div>
           </div>
         </div>
       </section>
@@ -318,29 +325,32 @@ const HomeView: React.FC = () => {
           </div>
           <div className="flex flex-col border border-[#1B5E35]/10 rounded-lg overflow-hidden divide-y divide-[#1B5E35]/10 shadow-premium">
             {[
-              { title: 'AFTER WORK & NIGHTLIFE', desc: 'Rooftops • DJ Sets • Networking • Lounges', emoji: '🎧' },
-              { title: 'DINING & GASTRONOMIE', desc: 'Restaurants • Cuisine ivoirienne • Diners signature', emoji: '🍽️' },
-              { title: 'BEACH & LOISIRS', desc: 'Bassam • Assinie • Beach clubs • Sunset experiences', emoji: '🏖️' },
-              { title: 'SÉJOURS & ESCAPADES', desc: 'Day use • Week-end • Resorts • Villas privées', emoji: '🛏️' },
-              { title: 'DIASPORA & HERITAGE', desc: 'Retour aux sources • Culture • Traditions', emoji: '🌍' }
-            ].map((exp, i) => (
-              <div
-                key={i}
-                className="p-6 md:p-8 bg-[#F5F3EE] hover:bg-[#F2EFE8] transition-colors flex flex-col md:flex-row items-center md:items-start text-center md:text-left gap-6 group"
-              >
-                <div className="flex-shrink-0 w-16 h-16 rounded-full bg-[#1B5E35] flex items-center justify-center text-2xl shadow-md group-hover:scale-110 transition-transform duration-300">
-                  {exp.emoji}
+              { title: 'AFTER WORK & NIGHTLIFE', desc: 'Rooftops • DJ Sets • Networking • Lounges', icon: Headphones },
+              { title: 'DINING & GASTRONOMIE', desc: 'Restaurants • Cuisine ivoirienne • Diners signature', icon: Utensils },
+              { title: 'BEACH & LOISIRS', desc: 'Bassam • Assinie • Beach clubs • Sunset experiences', icon: Palmtree },
+              { title: 'SÉJOURS & ESCAPADES', desc: 'Day use • Week-end • Resorts • Villas privées', icon: Hotel },
+              { title: 'DIASPORA & HERITAGE', desc: 'Retour aux sources • Culture • Traditions', icon: Globe }
+            ].map((exp, i) => {
+              const Icon = exp.icon;
+              return (
+                <div
+                  key={i}
+                  className="p-6 md:p-8 bg-[#F5F3EE] hover:bg-[#F2EFE8] transition-colors flex flex-col md:flex-row items-center md:items-start text-center md:text-left gap-6 group"
+                >
+                  <div className="flex-shrink-0 w-16 h-16 rounded-full bg-[#1B5E35] flex items-center justify-center shadow-md group-hover:scale-110 transition-transform duration-300">
+                    <Icon size={24} className="text-gold" />
+                  </div>
+                  <div className="flex-grow">
+                    <h4 className="font-serif text-lg font-bold text-[#1B5E35] mb-2 tracking-wide">
+                      {exp.title}
+                    </h4>
+                    <p className="text-[#1B5E35]/80 text-sm font-medium">
+                      {exp.desc}
+                    </p>
+                  </div>
                 </div>
-                <div className="flex-grow">
-                  <h4 className="font-serif text-lg font-bold text-[#1B5E35] mb-2 tracking-wide">
-                    {exp.title}
-                  </h4>
-                  <p className="text-[#1B5E35]/80 text-sm font-medium">
-                    {exp.desc}
-                  </p>
-                </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         </div>
       </section>
@@ -383,7 +393,7 @@ const HomeView: React.FC = () => {
             {/* Bronze */}
             <div className="border border-gold/20 p-8 bg-cream/10">
               <div className="flex items-center gap-4 mb-4">
-                <span className="text-2xl">🍃</span>
+                <Leaf className="text-gold shrink-0" size={24} />
                 <div>
                   <h3 className="text-2xl font-serif font-bold text-green-dark uppercase tracking-widest">Membre Bronze</h3>
                   <p className="text-gold text-sm font-semibold tracking-wider">Discovery Member</p>
