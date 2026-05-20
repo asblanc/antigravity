@@ -476,7 +476,7 @@ const HomeView: React.FC = () => {
                     <p className="text-gold text-xs font-semibold tracking-wider uppercase">Prestige Member</p>
                   </div>
                 </div>
-                                <div className="mt-2 space-y-3">
+                <div className="mt-2 space-y-3">
                   <div>
                     <p className="text-text-muted text-xs uppercase tracking-wider font-semibold mb-1">Profil</p>
                     <p className="text-text-muted text-sm leading-relaxed">Attribué aux membres à forte activité et consommation régulière.</p>
@@ -488,22 +488,20 @@ const HomeView: React.FC = () => {
                   <div>
                     <p className="text-text-muted text-xs uppercase tracking-wider font-semibold mb-1">Avantages</p>
                     <ul className="text-text-muted text-sm space-y-1">
-                      <li>✔ Accès aux expériences prestige</li>
-                      <li>✔ Invitations événements privés</li>
-                      <li>✔ Avantages partenaires renforcés</li>
-                      <li>✔ Accès prioritaire à certains événements</li>
-                      <li>✔ Cashback jusqu’à 5 %</li>
+                      <li>✔ accès aux expériences prestige</li>
+                      <li>✔ invitations événements privés</li>
+                      <li>✔ avantages partenaires renforcés</li>
+                      <li>✔ accès prioritaire à certains événements</li>
+                      <li>✔ cashback jusqu’à 5 %</li>
                     </ul>
                   </div>
-                                </div>
+                </div>
               </div>
-                          </div>
-          </div>
-{/* Platinum */}
+              {/* Platinum */}
               <div className="border border-gold/20 p-8 bg-cream/10 relative overflow-hidden">
-                              <div className="absolute top-4 right-4 text-gold">
-                <Lock size={18} />
-</div>
+                <div className="absolute top-4 right-4 text-gold">
+                  <Lock size={18} />
+                </div>
                 <div className="flex items-center gap-4 mb-4">
                   <div className="w-6 h-6 rounded-full bg-gradient-to-r from-gray-400 to-white border border-gray-200" />
                   <div>
@@ -511,7 +509,39 @@ const HomeView: React.FC = () => {
                     <p className="text-gold text-xs font-semibold tracking-wider uppercase">Elite Member</p>
                   </div>
                 </div>
-                                <div className="mt-2 space-y-3">
+                <div className="mt-2 space-y-3">
+                  <div>
+                    <p className="text-text-muted text-xs uppercase tracking-wider font-semibold mb-1">Profil</p>
+                    <p className="text-text-muted text-sm leading-relaxed">Réservé aux membres premium et grands consommateurs d’expériences.</p>
+                  </div>
+                  <div>
+                    <p className="text-text-muted text-xs uppercase tracking-wider font-semibold mb-1">Activité Moyenne</p>
+                    <p className="text-text-muted text-sm leading-relaxed">100 000 FCFA et plus / week-end</p>
+                  </div>
+                  <div>
+                    <p className="text-text-muted text-xs uppercase tracking-wider font-semibold mb-1">Avantages</p>
+                    <ul className="text-text-muted text-sm space-y-1">
+                      <li>✔ accès expériences premium &amp; VIP</li>
+                      <li>✔ réservations prioritaires</li>
+                      <li>✔ accès lounge.</li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+          {/* Section 7: Inscription */}
+
+                <div className="flex items-center gap-4 mb-4">
+                  <div className="w-6 h-6 rounded-full bg-gradient-to-r from-gray-400 to-white border border-gray-200" />
+                  <div>
+                    <h3 className="text-xl font-serif font-bold text-green-dark">Statut Platinum</h3>
+                    <p className="text-gold text-xs font-semibold tracking-wider uppercase">Elite Member</p>
+                  </div>
+                </div>
+                <div className="mt-2 space-y-3">
                   <div>
                     <p className="text-text-muted text-xs uppercase tracking-wider font-semibold mb-1">Profil</p>
                     <p className="text-text-muted text-sm leading-relaxed">Réservé aux membres premium et grands consommateurs d’expériences.</p>
@@ -534,9 +564,17 @@ const HomeView: React.FC = () => {
                     </ul>
                   </div>
                 </div>
+<<<<<<< HEAD
                           </div>
                       </div>
                   </div>
+=======
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+>>>>>>> cb907e0 (Fix deployment build: close missing JSX div in App.tsx loyalty section)
           {/* Section 7: Inscription */}
       <section className="py-24 bg-cream">
         <div className="container mx-auto px-6 max-w-4xl">
