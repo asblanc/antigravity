@@ -553,14 +553,9 @@ const HomeView: React.FC = () => {
                   <div>
                     <p className="text-text-muted text-xs uppercase tracking-wider font-semibold mb-1">Avantages</p>
                     <ul className="text-text-muted text-sm space-y-1">
-                      <li>✔ Accès expériences premium &amp; VIP</li>
-                      <li>✔ Réservations prioritaires</li>
-                      <li>✔ Accès lounge</li>
-                      <li>✔ Expériences exclusives</li>
-                      <li>✔ Événements exclusifs IBC</li>
-                      <li>✔ Privilèges partenaires premium</li>
-                      <li>✔ Accompagnement privilégié</li>
-                      <li>✔ Cashback jusqu’à 7 %</li>
+                      <li>✔ accès expériences premium &amp; VIP</li>
+                      <li>✔ réservations prioritaires</li>
+                      <li>✔ accès lounge.</li>
                     </ul>
                   </div>
                 </div>
@@ -648,6 +643,10 @@ const HomeView: React.FC = () => {
             <div className="flex items-center gap-2 border border-gold/30 px-5 py-2">
               <Smartphone size={16} className="text-gold" />
               <span className="text-gold text-[10px] uppercase tracking-widest font-bold">Mobile Money</span>
+            </div>
+            <div className="flex items-center gap-2 border border-gold/30 px-5 py-2">
+              <Banknote size={16} className="text-gold" />
+              <span className="text-gold text-[10px] uppercase tracking-widest font-bold">Espèces</span>
             </div>
           </div>
           <div className="text-center">
