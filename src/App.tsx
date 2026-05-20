@@ -518,6 +518,7 @@ const HomeView: React.FC = () => {
                       <li>✔ accès expériences premium &amp; VIP</li>
                       <li>✔ réservations prioritaires</li>
                       <li>✔ accès lounge.</li>
+                      <li>✔ cashback jusqu’à 7 %</li>
                     </ul>
                   </div>
                 </div>
@@ -726,13 +727,26 @@ const MemberRegistrationView: React.FC<{ onRegister: (data: any) => void }> = ({
           </div>
         )}
         {step === 2 && (
-          <div className="space-y-6">
-            <h3 className="font-serif text-2xl text-green-dark">Bienvenue dans le statut Bronze</h3>
-            <div className="p-6 bg-green-dark text-white border border-gold shadow-lg rounded flex items-center justify-between">
-              <p className="font-bold font-serif text-sm md:text-base leading-relaxed">
-                Membre Bronze — Cashback 3% sur chaque dépense — 500 FCFA / mois
-              </p>
-              <CheckCircle2 size={24} className="text-gold shrink-0 ml-4" />
+          <div className="space-y-8">
+            <h3 className="font-serif text-3xl text-green-dark">Devenez Membre IBC</h3>
+            <p className="text-text-muted leading-relaxed text-sm md:text-base">
+              Accédez à un univers d’expériences, d’avantages exclusifs et d’établissements sélectionnés à travers la Côte d’Ivoire.
+              Rejoignez une communauté active de passionnés de découvertes, de lifestyle et d’escapades locales.
+            </p>
+            <div className="p-8 bg-white border border-gold/20 rounded-xl shadow-sm">
+              <span className="text-[10px] uppercase tracking-[0.4em] text-gold font-bold">Bienvenue dans le statut Bronze</span>
+              <h4 className="font-serif text-2xl text-green-dark font-bold mt-4">Membre Bronze</h4>
+              <p className="text-text-muted mt-2">Discovery Member</p>
+              <ul className="mt-6 space-y-3 text-text-muted text-sm">
+                <li>✓ Accès aux expériences partenaires</li>
+                <li>✓ Avantages membres exclusifs</li>
+                <li>✓ Invitations événements découverte</li>
+                <li>✓ Jusqu’à 3% d’avantages cashback</li>
+              </ul>
+              <div className="mt-6 flex justify-between items-center border-t border-gold/10 pt-4">
+                <span className="text-xs uppercase tracking-wider text-text-muted">Tarif d'adhésion</span>
+                <span className="text-xl font-serif font-bold text-green-dark">500 FCFA / mois</span>
+              </div>
             </div>
             <div className="flex gap-4">
               <button onClick={handleBack} className="flex-1 py-4 border border-green-dark text-green-dark font-bold uppercase tracking-widest text-[10px] hover:bg-green-dark hover:text-white transition-all">Retour</button>
@@ -742,9 +756,21 @@ const MemberRegistrationView: React.FC<{ onRegister: (data: any) => void }> = ({
         )}
         {step === 3 && (
           <form onSubmit={handleSubmit} className="space-y-6">
-            <h3 className="font-serif text-2xl text-green-dark">Mode de Paiement</h3>
+            <div className="space-y-6">
+              <p className="text-[10px] uppercase tracking-[0.4em] text-gold font-bold">A retenir :</p>
+              <h3 className="font-serif text-3xl text-green-dark">Rejoignez IVOIRE BUSINESS CLUB</h3>
+              <p className="text-text-muted text-sm md:text-base leading-relaxed">
+                Accédez à un univers d’expériences locales, d’avantages exclusifs et d’établissements sélectionnés à travers la Côte d’Ivoire.
+                Votre adhésion membre commence à partir de 500 FCFA / mois.
+              </p>
+              <div className="border-t border-gold/10 pt-6">
+                <p className="text-xs uppercase tracking-[0.2em] text-text-muted mb-2">Étape 3/3</p>
+                <h4 className="font-serif text-2xl text-green-dark font-bold">Finaliser mon adhésion</h4>
+                <p className="text-text-muted text-sm mt-2">Choisissez votre mode de paiement sécurisé.</p>
+              </div>
+            </div>
             <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-              {[{ id: 'orange', name: 'Orange Money', icon: <Smartphone size={24} /> }, { id: 'wave', name: 'Wave', icon: <Smartphone size={24} /> }, { id: 'moov', name: 'Moov Money', icon: <Smartphone size={24} /> }].map((m) => (
+              {[{ id: 'orange', name: 'Orange Money', icon: <Smartphone size={24} /> }, { id: 'wave', name: 'Wave', icon: <Smartphone size={24} /> }, { id: 'moov', name: 'Moov Money', icon: <Smartphone size={24} /> }, { id: 'mtn', name: 'MTN Money', icon: <Smartphone size={24} /> }].map((m) => (
                 <div key={m.id} onClick={() => setFormData({...formData, paymentMethod: m.id})} className={`p-6 border cursor-pointer transition-all text-center flex flex-col items-center gap-4 ${formData.paymentMethod === m.id ? 'bg-green-dark text-white border-gold shadow-lg' : 'bg-white text-green-dark border-gold/10 hover:border-gold/30'}`}>
                   {m.icon}<span className="font-bold text-sm">{m.name}</span>
                   {formData.paymentMethod === m.id && <CheckCircle2 size={18} className="text-gold" />}
@@ -768,83 +794,200 @@ const MemberDashboardView: React.FC<{ user: Member, onLogout: () => void }> = ({
   const [showQR, setShowQR] = useState(false);
   const [transactions, setTransactions] = useState<Transaction[]>([]);
   const [offers, setOffers] = useState<Offer[]>([]);
+
   useEffect(() => {
     const fetchData = async () => {
-      try { const txs = await getMemberTransactions(user.uid); setTransactions(txs); } catch (e) { console.error(e); }
-      setOffers([{ id: 'off_1', partnerName: 'Hotel Tiama', description: '-20% sur les suites Junior', imageUrl: 'https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?auto=format&fit=crop&q=80&w=200' }, { id: 'off_2', partnerName: 'Le Grand Large', description: 'Degustation privee offerte', imageUrl: 'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&q=80&w=200' }, { id: 'off_3', partnerName: 'Sofitel', description: 'Acces Spa VIP illimite', imageUrl: 'https://images.unsplash.com/photo-1445019980597-93fa8acb246c?auto=format&fit=crop&q=80&w=200' }]);
+      try {
+        const txs = await getMemberTransactions(user.uid);
+        setTransactions(txs);
+      } catch (e) {
+        console.error(e);
+      }
+      setOffers([
+        { id: 'off_1', partnerName: 'Hôtel Tiama', description: '-20% sur les suites Junior', imageUrl: 'https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?auto=format&fit=crop&q=80&w=200' },
+        { id: 'off_2', partnerName: 'Azar Club', description: '-15% sur boissons premium', imageUrl: 'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&q=80&w=200' },
+        { id: 'off_3', partnerName: 'Assinie Lodge', description: '-20% sur séjour', imageUrl: 'https://images.unsplash.com/photo-1445019980597-93fa8acb246c?auto=format&fit=crop&q=80&w=200' }
+      ]);
     };
     fetchData();
   }, [user.uid]);
+
+  const goalTarget = 50000;
+  const goalProgress = Math.min(1, user.balance / goalTarget);
+  const confirmedCashback = Math.max(0, Math.floor(user.balance * 0.82));
+  const bonusCashback = Math.max(0, user.balance - confirmedCashback);
+  const savings = Math.max(0, Math.floor(user.balance * 0.62));
+
   return (
-    <div className="min-h-screen bg-cream">
-      <div className="bg-green-dark py-6 px-6 flex items-center justify-between">
-        <button onClick={() => navigate('/')} className="flex items-center gap-2 text-gold hover:text-white transition-colors"><ChevronLeft size={18} />Retour au site</button>
-        <div className="flex items-center gap-3">
-          <div className="text-right"><p className="text-white/60 text-[10px] uppercase tracking-widest">Bienvenue,</p><p className="text-white font-serif font-bold">{user.name}</p></div>
-          <img src={`https://ui-avatars.com/api/?name=${encodeURIComponent(user.name)}&background=1B3A2D&color=C9A84C`} alt="Avatar" className="w-10 h-10 rounded-full border border-gold/30" />
-        </div>
-      </div>
-      <div className="container mx-auto px-6 py-12 max-w-2xl space-y-8">
-        <div className="bg-green-dark p-8 border border-gold/20">
-          <div className="flex items-center justify-between mb-6">
-            <span className="text-[10px] uppercase tracking-widest font-bold text-gold">Niveau {user.tier}</span>
-            <span className="text-white/40 text-xs">Votre cashback augmente avec votre niveau</span>
+    <div className="min-h-screen bg-cream pb-32">
+      <div className="bg-white border-b border-gold/10">
+        <div className="container mx-auto px-6 py-8 flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
+          <div>
+            <p className="text-[11px] uppercase tracking-[0.45em] text-text-muted font-bold">Bonjour</p>
+            <h1 className="font-serif text-4xl md:text-5xl font-bold text-green-dark mt-2">Bienvenue dans votre univers IBC <span className="text-gold">✧</span></h1>
+            <p className="text-text-muted mt-3 max-w-2xl">Votre tableau de bord regroupe votre cashback, votre QR Code et toutes vos statistiques IBC. Retrouvez vos offres, votre épargne et l’évolution de vos privilèges.</p>
           </div>
-          <p className="text-white/60 text-[10px] uppercase tracking-[0.3em] mb-2">Mon Compte Cashback IBC</p>
-          <p className="font-serif text-5xl font-bold text-white">{formatPrice(user.balance)} <span className="text-gold text-2xl">FCFA</span></p>
-          <p className="text-white/40 text-xs mt-4">Cashback credite automatiquement apres chaque visite validee.</p>
-        </div>
-        <button onClick={() => setShowQR(true)} className="w-full bg-white text-green-dark p-8 border border-gold shadow-gold flex flex-col items-center gap-4 hover:scale-[1.02] transition-transform">
-          <Scan size={32} className="text-gold" />
-          <div className="text-center">
-            <p className="font-bold font-serif text-lg">Mon QR Code</p>
-            <p className="text-text-muted text-sm">Cliquez pour valider vos privileges</p>
-          </div>
-        </button>
-        <div className="grid grid-cols-2 gap-4">
-          {[{ label: 'Total Depense', value: formatPrice(user.totalSpent), unit: 'FCFA' }, { label: 'Visites ce mois', value: user.visitsThisMonth, unit: 'LIEUX' }].map((stat, i) => (
-            <div key={i} className="bg-white border border-gold/10 p-6 text-center">
-              <p className="text-[10px] uppercase tracking-widest text-text-muted mb-3">{stat.label}</p>
-              <p className="font-serif text-3xl font-bold text-green-dark">{stat.value}</p>
-              <p className="text-[9px] text-gold uppercase tracking-widest mt-1">{stat.unit}</p>
-            </div>
-          ))}
-        </div>
-        <div>
-          <div className="flex items-center justify-between mb-6">
-            <h3 className="font-serif text-xl text-green-dark font-bold">Offres Exclusives</h3>
-            <button onClick={() => navigate('/offers')} className="text-[10px] uppercase tracking-widest font-bold text-text-muted hover:text-gold">Voir tout</button>
-          </div>
-          <div className="flex gap-4 overflow-x-auto pb-2">
-            {offers.map((offer, i) => (
-              <div key={i} className="min-w-[200px] bg-white border border-gold/10">
-                <img src={offer.imageUrl} alt={offer.partnerName} className="w-full h-28 object-cover" />
-                <div className="p-4"><p className="font-bold text-sm text-green-dark">{offer.partnerName}</p><p className="text-text-muted text-xs">{offer.description}</p></div>
+          <div className="flex flex-col gap-4 sm:flex-row sm:items-center">
+            <div className="flex items-center gap-3 rounded-full border border-gold/10 bg-white px-4 py-3 shadow-soft">
+              <img src={`https://ui-avatars.com/api/?name=${encodeURIComponent(user.name)}&background=1B3A2D&color=C9A84C`} alt="Avatar" className="h-12 w-12 rounded-full border border-gold/20" />
+              <div className="text-left">
+                <p className="text-[10px] uppercase tracking-[0.3em] text-text-muted">{user.name}</p>
+                <p className="font-semibold text-green-dark">Membre IBC</p>
               </div>
-            ))}
+            </div>
+            <div className="rounded-full bg-[#F3F1E6] border border-gold/20 px-5 py-3 text-center">
+              <p className="text-[10px] uppercase tracking-[0.35em] text-text-muted">Niveau</p>
+              <p className="font-serif text-lg font-bold text-green-dark">{user.tier === 'gold' ? 'Platinum' : user.tier === 'silver' ? 'Or' : 'Bronze'}</p>
+            </div>
           </div>
         </div>
-        <div>
-          <h3 className="font-serif text-xl text-green-dark font-bold mb-6">Activités Récentes</h3>
-          {transactions.map((tx, i) => (
-            <div key={i} className="flex items-center justify-between py-4 border-b border-gold/10">
-              <div><p className="font-bold text-green-dark">{tx.partnerName}</p><p className="text-text-muted text-xs">{tx.date}</p></div>
-              <div className="text-right"><p className="font-bold text-green-dark">+{formatPrice(tx.cashback)} FCFA</p><p className="text-[9px] text-gold uppercase">{tx.status.toUpperCase()}</p></div>
+      </div>
+
+      <div className="container mx-auto px-6 py-10 max-w-7xl space-y-8">
+        <div className="grid gap-6 xl:grid-cols-[1.7fr_1fr]">
+          <div className="rounded-[40px] bg-green-dark p-8 text-white border border-gold/20 shadow-gold">
+            <div className="flex items-center justify-between mb-6">
+              <div>
+                <p className="text-[10px] uppercase tracking-[0.4em] text-gold font-bold">MON COMPTE CASHBACK IBC</p>
+                <p className="text-[10px] uppercase tracking-[0.3em] text-white/70 mt-3">Votre cashback augmente avec votre niveau</p>
+              </div>
+              <div className="rounded-3xl bg-white/10 px-4 py-2 text-[10px] uppercase tracking-[0.4em] text-gold border border-white/10">Mon compte</div>
             </div>
-          ))}
+            <p className="font-serif text-6xl font-bold">{formatPrice(user.balance)}</p>
+            <p className="text-gold text-2xl mt-2">FCFA</p>
+            <p className="text-white/70 mt-5 leading-7">Cashback crédité automatiquement après chaque visite validée.</p>
+            <button onClick={() => navigate('/transactions')} className="mt-8 inline-flex items-center gap-2 rounded-full bg-white px-6 py-3 text-[10px] uppercase tracking-[0.35em] font-bold text-green-dark hover:bg-[#f8f6eb] transition-colors">Voir l'historique <ArrowRight size={16} /></button>
+          </div>
+
+          <div className="grid gap-6">
+            <div className="rounded-[40px] bg-white border border-gold/10 p-6 shadow-soft">
+              <p className="text-[10px] uppercase tracking-[0.4em] text-text-muted font-bold mb-4">MON QR CODE</p>
+              <div className="rounded-3xl bg-cream p-6 border border-gold/10 flex justify-center">
+                <QRCodeSVG value={user.qrCode} size={160} />
+              </div>
+              <p className="text-center text-green-dark font-semibold mt-5">Présentez ce QR Code chez nos partenaires pour cumuler vos avantages.</p>
+              <button onClick={() => setShowQR(true)} className="mt-6 w-full rounded-full bg-green-dark px-5 py-3 text-[10px] uppercase tracking-[0.35em] font-bold text-white hover:bg-[#163b22] transition-colors">Voir mon pass IBC</button>
+            </div>
+
+            <div className="rounded-[40px] bg-white border border-gold/10 p-6 shadow-soft">
+              <div className="flex items-center justify-between mb-6">
+                <div>
+                  <p className="text-[10px] uppercase tracking-[0.4em] text-text-muted font-bold">MES STATISTIQUES</p>
+                  <p className="text-[10px] uppercase tracking-[0.35em] text-green-dark mt-2">Toutes mes performances IBC</p>
+                </div>
+                <button onClick={() => navigate('/stats')} className="text-[10px] uppercase tracking-[0.35em] font-bold text-text-muted hover:text-gold transition-colors">Voir détails</button>
+              </div>
+              <div className="grid gap-4">
+                <div className="rounded-3xl bg-cream p-5 border border-gold/10">
+                  <p className="text-[10px] uppercase tracking-[0.4em] text-text-muted">Total dépenses</p>
+                  <p className="font-serif text-3xl font-bold text-green-dark mt-3">{formatPrice(user.totalSpent)} FCFA</p>
+                </div>
+                <div className="rounded-3xl bg-cream p-5 border border-gold/10">
+                  <p className="text-[10px] uppercase tracking-[0.4em] text-text-muted">Visites ce mois</p>
+                  <p className="font-serif text-3xl font-bold text-green-dark mt-3">{user.visitsThisMonth}</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div className="grid gap-6 lg:grid-cols-4">
+          <div className="rounded-[32px] bg-white border border-gold/10 p-6 shadow-soft">
+            <p className="text-[10px] uppercase tracking-[0.4em] text-text-muted font-bold mb-4">MA CAGNOTTE IBC</p>
+            <p className="font-serif text-3xl font-bold text-green-dark">{formatPrice(user.balance)} FCFA</p>
+            <div className="mt-4 text-sm text-text-muted space-y-2">
+              <p>Cashback confirmé {formatPrice(confirmedCashback)} FCFA</p>
+              <p>Bonus & privilèges {formatPrice(bonusCashback)} FCFA</p>
+            </div>
+            <button className="mt-6 w-full rounded-full bg-[#F3F1E6] text-green-dark py-3 text-[10px] uppercase tracking-[0.35em] font-bold">Utiliser ma cagnotte</button>
+          </div>
+
+          <div className="rounded-[32px] bg-white border border-gold/10 p-6 shadow-soft">
+            <div className="flex items-center justify-between mb-4">
+              <p className="text-[10px] uppercase tracking-[0.4em] text-text-muted font-bold">MON OBJECTIF ÉVASION</p>
+              <span className="text-[10px] uppercase tracking-[0.35em] text-gold font-bold">62%</span>
+            </div>
+            <p className="font-serif text-2xl font-bold text-green-dark">Weekend Assinie</p>
+            <p className="text-text-muted text-sm mt-2">Objectif : {formatPrice(goalTarget)} FCFA</p>
+            <div className="mt-5 h-3 rounded-full bg-gold/10 overflow-hidden">
+              <div className="h-full rounded-full bg-green-dark" style={{ width: `${goalProgress * 100}%` }} />
+            </div>
+            <p className="text-[10px] uppercase tracking-[0.35em] text-text-muted mt-3">{formatPrice(Math.floor(goalProgress * goalTarget))} / {formatPrice(goalTarget)} FCFA</p>
+          </div>
+
+          <div className="rounded-[32px] bg-white border border-gold/10 p-6 shadow-soft">
+            <p className="text-[10px] uppercase tracking-[0.4em] text-text-muted font-bold mb-4">ÉPARGNE CLUB</p>
+            <p className="font-serif text-3xl font-bold text-green-dark">{formatPrice(savings)} FCFA</p>
+            <p className="text-text-muted text-sm mt-3">Épargnez automatiquement votre cashback pour financer vos prochaines expériences.</p>
+            <button className="mt-6 w-full rounded-full bg-[#F3F1E6] text-green-dark py-3 text-[10px] uppercase tracking-[0.35em] font-bold">Gérer mon épargne</button>
+          </div>
+
+          <div className="rounded-[32px] bg-white border border-gold/10 p-6 shadow-soft">
+            <div className="flex items-center justify-between mb-4">
+              <p className="text-[10px] uppercase tracking-[0.4em] text-text-muted font-bold">CERCLE ÉVASION IBC</p>
+              <span className="text-[10px] uppercase tracking-[0.35em] text-green-dark font-bold">+8</span>
+            </div>
+            <div className="flex -space-x-3 mb-4">
+              {['AA','BB','CC','DD'].map((initial, idx) => (
+                <span key={idx} className="inline-flex h-10 w-10 items-center justify-center rounded-full border-2 border-white bg-green-dark text-[10px] text-white">{initial}</span>
+              ))}
+            </div>
+            <p className="text-text-muted text-sm">Épargner à plusieurs, voyager loin. Rejoignez ou créez votre cercle privé.</p>
+            <button className="mt-6 w-full rounded-full bg-[#F3F1E6] text-green-dark py-3 text-[10px] uppercase tracking-[0.35em] font-bold">Voir mes cercles</button>
+          </div>
+        </div>
+
+        <div className="grid gap-6 lg:grid-cols-2">
+          <div className="rounded-[32px] bg-white border border-gold/10 p-6 shadow-soft">
+            <div className="flex items-center justify-between mb-6">
+              <h2 className="font-serif text-xl font-bold text-green-dark">Mes privilèges actifs</h2>
+              <button onClick={() => navigate('/offers')} className="text-[10px] uppercase tracking-[0.35em] font-bold text-text-muted hover:text-gold transition-colors">Voir tous</button>
+            </div>
+            <div className="grid gap-4">
+              {offers.map((offer) => (
+                <div key={offer.id} className="rounded-3xl bg-cream border border-gold/10 p-4">
+                  <p className="font-bold text-sm text-green-dark">{offer.partnerName}</p>
+                  <p className="text-text-muted text-xs mt-1">{offer.description}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <div className="rounded-[32px] bg-white border border-gold/10 p-6 shadow-soft">
+            <div className="flex items-center justify-between mb-6">
+              <h2 className="font-serif text-xl font-bold text-green-dark">Mes expériences à venir</h2>
+              <button onClick={() => navigate('/agenda')} className="text-[10px] uppercase tracking-[0.35em] font-bold text-text-muted hover:text-gold transition-colors">Voir agenda</button>
+            </div>
+            <div className="space-y-4">
+              <div className="rounded-3xl bg-cream border border-gold/10 p-4">
+                <p className="font-bold text-sm text-green-dark">Sunset Lounge</p>
+                <p className="text-text-muted text-xs">Vendredi 24 Mai • 18h00</p>
+              </div>
+              <div className="rounded-3xl bg-cream border border-gold/10 p-4">
+                <p className="font-bold text-sm text-green-dark">Brunch & Chill</p>
+                <p className="text-text-muted text-xs">Dimanche 26 Mai • 11h00</p>
+              </div>
+              <div className="rounded-3xl bg-cream border border-gold/10 p-4">
+                <p className="font-bold text-sm text-green-dark">Weekend Assinie</p>
+                <p className="text-text-muted text-xs">1er - 2 Juin • 2 jours</p>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
+
       {showQR && (
         <div className="fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-6" onClick={() => setShowQR(false)}>
           <div className="bg-white p-8 max-w-xs w-full text-center relative" onClick={(e) => e.stopPropagation()}>
             <button onClick={() => setShowQR(false)} className="absolute top-4 right-4 text-green-dark"><X size={20} /></button>
             <h3 className="font-serif text-xl text-green-dark mb-2">Votre Pass IBC</h3>
             <p className="text-text-muted text-xs mb-6">{user.name} - Membre {user.tier.toUpperCase()}</p>
-            <QRCodeSVG value={`IBC-MEMBER-${user.uid}`} size={180} className="mx-auto" />
-            <p className="text-text-muted text-xs mt-6">Presentez ce code a l accueil de l etablissement.</p>
+            <QRCodeSVG value={user.qrCode} size={180} className="mx-auto" />
+            <p className="text-text-muted text-xs mt-6">Présentez ce code à l’accueil de l’établissement.</p>
           </div>
         </div>
       )}
+
       <div className="fixed bottom-0 left-0 right-0 bg-green-dark border-t border-gold/20 flex justify-around py-4 z-40">
         <button className="flex flex-col items-center gap-1 text-gold"><LayoutDashboard size={20} /><span className="text-[9px] uppercase tracking-widest">Dashboard</span></button>
         <button onClick={() => navigate('/establishments')} className="flex flex-col items-center gap-1 text-white/50 hover:text-gold transition-colors"><MapPin size={20} /><span className="text-[9px] uppercase tracking-widest">Lieux</span></button>
@@ -964,24 +1107,24 @@ const PartnerRegistrationView: React.FC = () => {
         {!submitted ? (
           <form onSubmit={handleSubmit} className="space-y-8">
             <h3 className="font-serif text-2xl text-green-dark border-b border-gold/20 pb-4 mb-6 uppercase">FORMULAIRE</h3>
-            {[{ label: 'Établissement', key: 'businessName', placeholder: 'Hotel, Restaurant ou Service', type: 'text' }, { label: 'Responsable de l\'établissement', key: 'contactName', placeholder: 'Nom & Prénom', type: 'text' }, { label: 'Email', key: 'email', placeholder: 'contact@etablissement.ci', type: 'email' }, { label: 'Téléphone', key: 'phone', placeholder: '+225 07 XX XX XX XX', type: 'tel' }].map((field) => (
+            {[{ label: 'Nom de l\'établissement', key: 'businessName', placeholder: 'Hotel, Restaurant ou Service', type: 'text' }, { label: 'Catégorie d\'activité', key: 'establishmentType', placeholder: '', type: 'select' }, { label: 'Responsable de l\'établissement', key: 'contactName', placeholder: 'Nom & Prénom', type: 'text' }, { label: 'Email', key: 'email', placeholder: 'contact@etablissement.ci', type: 'email' }, { label: 'Téléphone', key: 'phone', placeholder: '+225 07 XX XX XX XX', type: 'tel' }].map((field) => (
               <div key={field.key}>
                 <label className="text-[10px] uppercase tracking-widest font-bold text-text-muted">{field.label}</label>
-                <input type={field.type} placeholder={field.placeholder} className="w-full bg-transparent border-b border-gold/20 py-4 font-serif text-lg focus:border-gold outline-none transition-colors" value={formData[field.key as keyof typeof formData]} onChange={(e) => setFormData({...formData, [field.key]: e.target.value})} required />
+                {field.type === 'select' ? (
+                  <select className="w-full bg-white border-b border-gold/20 py-4 font-serif text-lg focus:border-gold outline-none" value={formData.establishmentType} onChange={(e) => setFormData({...formData, establishmentType: e.target.value})}>
+                    <option value="hebergement">Hébergement</option>
+                    <option value="restaurant">Restaurant</option>
+                    <option value="lounge">Lounge</option>
+                    <option value="beach-club">Beach Club</option>
+                    <option value="bien-etre">Bien-être</option>
+                    <option value="loisirs">Loisirs</option>
+                    <option value="autre">Autre</option>
+                  </select>
+                ) : (
+                  <input type={field.type} placeholder={field.placeholder} className="w-full bg-transparent border-b border-gold/20 py-4 font-serif text-lg focus:border-gold outline-none transition-colors" value={formData[field.key as keyof typeof formData]} onChange={(e) => setFormData({...formData, [field.key]: e.target.value})} required />
+                )}
               </div>
             ))}
-            <div>
-              <label className="text-[10px] uppercase tracking-widest font-bold text-text-muted">Catégorie d'activité</label>
-              <select className="w-full bg-white border-b border-gold/20 py-4 font-serif text-lg focus:border-gold outline-none" value={formData.establishmentType} onChange={(e) => setFormData({...formData, establishmentType: e.target.value})}>
-                <option value="hebergement">Hébergement</option>
-                <option value="restaurant">Restaurant</option>
-                <option value="lounge">Lounge</option>
-                <option value="beach-club">Beach Club</option>
-                <option value="bien-etre">Bien-être</option>
-                <option value="loisirs">Loisirs</option>
-                <option value="autre">Autre</option>
-              </select>
-            </div>
             <div>
               <label className="text-[10px] uppercase tracking-widest font-bold text-text-muted">Description</label>
               <textarea placeholder="Décrivez votre établissement..." className="w-full bg-transparent border border-gold/20 p-4 font-sans text-sm focus:border-gold outline-none transition-colors rounded min-h-24" value={formData.description} onChange={(e) => setFormData({...formData, description: e.target.value})} />
