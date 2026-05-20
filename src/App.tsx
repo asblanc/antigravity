@@ -476,14 +476,29 @@ const HomeView: React.FC = () => {
                     <p className="text-gold text-xs font-semibold tracking-wider uppercase">Prestige Member</p>
                   </div>
                 </div>
-                <p className="text-text-muted text-sm mb-4 leading-relaxed">
-                  "Membres à forte activité lifestyle"
-                </p>
-                <div className="border-t border-gold/10 pt-3 flex justify-between items-center text-xs">
-                  <span className="text-text-muted">Avantage Cashback</span>
-                  <span className="font-bold text-green-dark">Cashback jusqu'à 5%</span>
+                                <div className="mt-2 space-y-3">
+                  <div>
+                    <p className="text-text-muted text-xs uppercase tracking-wider font-semibold mb-1">Profil</p>
+                    <p className="text-text-muted text-sm leading-relaxed">Attribué aux membres à forte activité et consommation régulière.</p>
+                  </div>
+                  <div>
+                    <p className="text-text-muted text-xs uppercase tracking-wider font-semibold mb-1">Activité Moyenne</p>
+                    <p className="text-text-muted text-sm leading-relaxed">50 000 FCFA à 90 000 FCFA / week-end</p>
+                  </div>
+                  <div>
+                    <p className="text-text-muted text-xs uppercase tracking-wider font-semibold mb-1">Avantages</p>
+                    <ul className="text-text-muted text-sm space-y-1">
+                      <li>✔ Accès aux expériences prestige</li>
+                      <li>✔ Invitations événements privés</li>
+                      <li>✔ Avantages partenaires renforcés</li>
+                      <li>✔ Accès prioritaire à certains événements</li>
+                      <li>✔ Cashback jusqu’à 5 %</li>
+                    </ul>
+                  </div>
+                </div>
                 </div>
               </div>
+</div>
 
               {/* Platinum */}
               <div className="border border-gold/20 p-8 bg-cream/10 relative overflow-hidden">
@@ -497,14 +512,32 @@ const HomeView: React.FC = () => {
                     <p className="text-gold text-xs font-semibold tracking-wider uppercase">Elite Member</p>
                   </div>
                 </div>
-                <p className="text-text-muted text-sm mb-4 leading-relaxed">
-                  "Membres premium & VIP exclusifs"
-                </p>
-                <div className="border-t border-gold/10 pt-3 flex justify-between items-center text-xs">
-                  <span className="text-text-muted">Avantage Cashback</span>
-                  <span className="font-bold text-green-dark">Cashback jusqu'à 7%</span>
+                                <div className="mt-2 space-y-3">
+                  <div>
+                    <p className="text-text-muted text-xs uppercase tracking-wider font-semibold mb-1">Profil</p>
+                    <p className="text-text-muted text-sm leading-relaxed">Réservé aux membres premium et grands consommateurs d’expériences.</p>
+                  </div>
+                  <div>
+                    <p className="text-text-muted text-xs uppercase tracking-wider font-semibold mb-1">Activité Moyenne</p>
+                    <p className="text-text-muted text-sm leading-relaxed">100 000 FCFA et plus / week-end</p>
+                  </div>
+                  <div>
+                    <p className="text-text-muted text-xs uppercase tracking-wider font-semibold mb-1">Avantages</p>
+                    <ul className="text-text-muted text-sm space-y-1">
+                      <li>✔ Accès expériences premium &amp; VIP</li>
+                      <li>✔ Réservations prioritaires</li>
+                      <li>✔ Accès lounge</li>
+                      <li>✔ Expériences exclusives</li>
+                      <li>✔ Événements exclusifs IBC</li>
+                      <li>✔ Privilèges partenaires premium</li>
+                      <li>✔ Accompagnement privilégié</li>
+                      <li>✔ Cashback jusqu’à 7 %</li>
+                    </ul>
+                  </div>
+                </div>
                 </div>
               </div>
+div>
             </div>
           </div>
         </div>
