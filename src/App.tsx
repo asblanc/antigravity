@@ -497,9 +497,13 @@ const HomeView: React.FC = () => {
                   </div>
                                 </div>
               </div>
-              {/* Platinum */}
+                          </div>
+          </div>
+{/* Platinum */}
               <div className="border border-gold/20 p-8 bg-cream/10 relative overflow-hidden">
-                </div>
+                              <div className="absolute top-4 right-4 text-gold">
+                <Lock size={18} />
+</div>
                 <div className="flex items-center gap-4 mb-4">
                   <div className="w-6 h-6 rounded-full bg-gradient-to-r from-gray-400 to-white border border-gray-200" />
                   <div>
@@ -531,7 +535,9 @@ const HomeView: React.FC = () => {
                   </div>
                 </div>
                           </div>
-          Section 7: Inscription */}
+                      </div>
+                  </div>
+          {/* Section 7: Inscription */}
       <section className="py-24 bg-cream">
         <div className="container mx-auto px-6 max-w-4xl">
           <div className="border border-gold/20 p-12 text-center mb-10">
