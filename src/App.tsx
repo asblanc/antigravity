@@ -462,13 +462,10 @@ const HomeView: React.FC = () => {
               </div>
             </div>
 
-            {/* Statuts Verrouillés */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 opacity-60">
+            {/* Statuts */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               {/* Or */}
-              <div className="border border-gold/20 p-8 bg-cream/10 relative overflow-hidden">
-                <div className="absolute top-4 right-4 text-gold">
-                  <Lock size={18} />
-                </div>
+              <div className="border border-gold/20 p-8 bg-cream/10">
                 <div className="flex items-center gap-4 mb-4">
                   <div className="w-6 h-6 rounded-full bg-gradient-to-r from-yellow-400 to-yellow-200" />
                   <div>
@@ -498,10 +495,7 @@ const HomeView: React.FC = () => {
                 </div>
               </div>
               {/* Platinum */}
-              <div className="border border-gold/20 p-8 bg-cream/10 relative overflow-hidden">
-                <div className="absolute top-4 right-4 text-gold">
-                  <Lock size={18} />
-                </div>
+              <div className="border border-gold/20 p-8 bg-cream/10">
                 <div className="flex items-center gap-4 mb-4">
                   <div className="w-6 h-6 rounded-full bg-gradient-to-r from-gray-400 to-white border border-gray-200" />
                   <div>
