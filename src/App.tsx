@@ -495,11 +495,7 @@ const HomeView: React.FC = () => {
                       <li>✔ Cashback jusqu’à 5 %</li>
                     </ul>
                   </div>
-                </div>
-                </div>
-              </div>
-</div>
-
+                                </div>
               {/* Platinum */}
               <div className="border border-gold/20 p-8 bg-cream/10 relative overflow-hidden">
                 <div className="absolute top-4 right-4 text-gold">
@@ -537,12 +533,9 @@ const HomeView: React.FC = () => {
                 </div>
                 </div>
               </div>
-div>
             </div>
           </div>
         </div>
-      </section>
-      
       {/* Section 7: Inscription */}
       <section className="py-24 bg-cream">
         <div className="container mx-auto px-6 max-w-4xl">
