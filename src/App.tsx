@@ -182,7 +182,7 @@ const Navbar: React.FC<{ scrolled: boolean, mobileMenuOpen: boolean, setMobileMe
           <div className="flex flex-col items-start text-left">
             <span className={`font-serif text-lg font-bold italic block leading-none ${isSolid ? 'text-green-dark' : 'text-white'}`}>Ivoire Business Club</span>
             <span className="hidden lg:block text-gold text-[7px] uppercase tracking-[0.15em] font-bold mt-1 leading-tight max-w-[280px]">
-              PLATEFORME D'EXPÉRIENCES TOURISTIQUES & CLUB PRIVÉ D'AVANTAGES
+PLATEFORME D'EXPÉRIENCES TOURISTIQUES<br />& CLUB PRIVÉ D'AVANTAGES
             </span>
           </div>
         </button>
@@ -479,14 +479,12 @@ const HomeView: React.FC = () => {
                 <p className="text-text-muted text-sm mb-4 leading-relaxed">
                   "Membres à forte activité lifestyle"
                 </p>
-                                <p className="text-xs font-bold uppercase tracking-wider text-green-dark mt-3 mb-1">Avantages</p>
-                <ul className="text-xs text-left space-y-1 mb-3 text-text-muted">
-                  <li>✓ Accès aux expériences premium</li>
-                  <li>✓ Offres exclusives partenaires</li>
-                  <li>✓ Invitations événements VIP</li>
-                  <li>✓ Service conciergerie</li>
-                  <li>✓ Cashback jusqu'à 5%</li>
-                </ul>
+                <div className="border-t border-gold/10 pt-3 flex justify-between items-center text-xs">
+                  <span className="text-text-muted">Avantage Cashback</span>
+                  <span className="font-bold text-green-dark">Cashback jusqu'à 5%</span>
+                </div>
+              </div>
+
               {/* Platinum */}
               <div className="border border-gold/20 p-8 bg-cream/10 relative overflow-hidden">
                 <div className="absolute top-4 right-4 text-gold">
@@ -502,15 +500,12 @@ const HomeView: React.FC = () => {
                 <p className="text-text-muted text-sm mb-4 leading-relaxed">
                   "Membres premium & VIP exclusifs"
                 </p>
-                                <p className="text-xs font-bold uppercase tracking-wider text-green-dark mt-3 mb-1">Avantages</p>
-                <ul className="text-xs text-left space-y-1 mb-3 text-text-muted">
-                  <li>✓ Accès à toutes les expériences exclusives</li>
-                  <li>✓ Offres ultra-premium & events privés</li>
-                  <li>✓ Conciergerie VIP dédiée 24/7</li>
-                  <li>✓ Accès en avant-première</li>
-                  <li>✓ Cashback jusqu'à 7%</li>
-                </ul>
-                
+                <div className="border-t border-gold/10 pt-3 flex justify-between items-center text-xs">
+                  <span className="text-text-muted">Avantage Cashback</span>
+                  <span className="font-bold text-green-dark">Cashback jusqu'à 7%</span>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </section>
