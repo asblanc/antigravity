@@ -496,6 +496,9 @@ const HomeView: React.FC = () => {
                     </ul>
                   </div>
                                 </div>
+              </div>
+            </div>
+          </div>
               {/* Platinum */}
               <div className="border border-gold/20 p-8 bg-cream/10 relative overflow-hidden">
                 <div className="absolute top-4 right-4 text-gold">
@@ -531,9 +534,7 @@ const HomeView: React.FC = () => {
                     </ul>
                   </div>
                 </div>
-                </div>
-              </div>
-            </div>
+                          </div>
           </div>
         </div>
       {/* Section 7: Inscription */}
