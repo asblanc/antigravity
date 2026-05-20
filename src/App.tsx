@@ -110,6 +110,7 @@ const App: React.FC = () => {
         password: data.password || 'IBC' + Math.random().toString(36).slice(2, 8).toUpperCase(),
         whatsapp: data.whatsapp,
         plan: data.plan || 'bronze',
+        paymentMethod: data.paymentMethod,
       });
       setUser(userData);
       navigate('/member-dashboard');
@@ -688,27 +689,54 @@ const HomeView: React.FC = () => {
 };
 
 const MemberRegistrationView: React.FC<{ onRegister: (data: any) => void }> = ({ onRegister }) => {
+  const navigate = useNavigate();
   const [step, setStep] = useState(1);
   const [formData, setFormData] = useState({ name: '', email: '', whatsapp: '', plan: 'bronze', paymentMethod: 'orange' });
-  const handleNext = () => setStep(step + 1);
-  const handleBack = () => setStep(step - 1);
-  const handleSubmit = (e: React.FormEvent) => { e.preventDefault(); onRegister(formData); };
+  const [photoFile, setPhotoFile] = useState<File | null>(null);
+  const [photoPreview, setPhotoPreview] = useState<string | null>(null);
+  const stepLabels = ['Informations personnelles', 'Choix d’adhésion', 'Paiement sécurisé'];
+
+  const handleNext = () => setStep(Math.min(3, step + 1));
+  const handleBack = () => setStep(Math.max(1, step - 1));
+  const handlePhotoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0] ?? null;
+    setPhotoFile(file);
+    if (file) {
+      setPhotoPreview(URL.createObjectURL(file));
+    } else {
+      setPhotoPreview(null);
+    }
+  };
+
+  useEffect(() => {
+    return () => {
+      if (photoPreview) URL.revokeObjectURL(photoPreview);
+    };
+  }, [photoPreview]);
+
+  const handleSubmit = (e: React.FormEvent) => { e.preventDefault(); onRegister({ ...formData, photoFile }); };
   return (
     <div className="min-h-screen bg-cream py-24">
       <div className="container mx-auto px-6 max-w-2xl">
-        <div className="border border-gold/20 p-12 mb-12 text-center">
-          <span className="text-[10px] uppercase tracking-[0.4em] text-gold font-bold block mb-4">REJOIGNEZ GRATUITEMENT IBC</span>
-          <h2 className="font-serif text-4xl font-bold text-green-dark">Devenez Membre du club</h2>
-          <p className="text-text-muted mt-4 italic text-sm leading-relaxed">
+        <div className="border border-gold/20 p-12 mb-6 flex flex-col gap-6">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+            <div>
+              <span className="text-[10px] uppercase tracking-[0.4em] text-gold font-bold block mb-4">REJOIGNEZ GRATUITEMENT IBC</span>
+              <h2 className="font-serif text-4xl font-bold text-green-dark">Devenez Membre du club</h2>
+            </div>
+            <button type="button" onClick={() => navigate('/')} className="text-[10px] uppercase tracking-[0.3em] font-bold text-green-dark border-b border-green-dark hover:text-gold transition-colors">Retour à l'accueil</button>
+          </div>
+          <p className="text-text-muted italic text-sm leading-relaxed">
             Accès aux expériences, avantages membres et événements privés à partir de 500 FCFA / mois
           </p>
         </div>
         {/* Progress */}
-        <div className="flex items-center justify-center gap-4 mb-12">
-          {[1, 2, 3].map((s) => (
-            <div key={s} className={`w-10 h-10 flex items-center justify-center font-bold font-serif transition-all ${step >= s ? 'bg-green-dark text-gold shadow-gold' : 'bg-white text-gold/30 border border-gold/10'}`}>
-              {step > s ? <CheckCircle2 size={18} /> : s}
-            </div>
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-12">
+          {stepLabels.map((label, index) => (
+            <button key={label} type="button" onClick={() => setStep(index + 1)} className={`border rounded-full p-4 text-left transition-all ${step === index + 1 ? 'bg-green-dark text-gold border-gold shadow-soft' : 'bg-white text-green-dark border-gold/10 hover:border-gold hover:shadow-sm'}`}>
+              <p className="text-[10px] uppercase tracking-[0.3em] font-bold mb-1">Étape {index + 1}</p>
+              <p className="text-sm font-semibold leading-snug">{label}</p>
+            </button>
           ))}
         </div>
         {step === 1 && (
@@ -723,7 +751,23 @@ const MemberRegistrationView: React.FC<{ onRegister: (data: any) => void }> = ({
                 <span className="text-text-muted text-sm pr-3">+225</span>
                 <input type="tel" placeholder="07 00 00 00 00" className="flex-1 bg-transparent py-4 font-serif text-lg focus:outline-none" value={formData.whatsapp} onChange={(e) => setFormData({...formData, whatsapp: e.target.value})} />
               </div></div>
+            <div className="space-y-3">
+              <label className="text-[10px] uppercase tracking-widest font-bold text-text-muted">Photo de profil</label>
+              <div className="flex flex-col gap-3">
+                <input type="file" accept="image/*" onChange={handlePhotoChange} className="text-sm text-text-muted" />
+                {photoPreview ? (
+                  <div className="overflow-hidden rounded-3xl border border-gold/20 bg-white p-3">
+                    <img src={photoPreview} alt="Aperçu" className="h-40 w-full object-cover rounded-3xl" />
+                  </div>
+                ) : (
+                  <p className="text-[11px] text-text-muted">Téléchargez une photo pour votre carte membre IBC.</p>
+                )}
+              </div>
+            </div>
             <button onClick={handleNext} className="btn-gold w-full py-4">Continuer</button>
+            <div className="text-center mt-4">
+              <button type="button" onClick={() => navigate('/login')} className="text-[10px] uppercase tracking-[0.2em] text-text-muted hover:text-green-dark transition-colors">Déjà membre ? Connectez-vous</button>
+            </div>
           </div>
         )}
         {step === 2 && (
@@ -777,9 +821,12 @@ const MemberRegistrationView: React.FC<{ onRegister: (data: any) => void }> = ({
                 </div>
               ))}
             </div>
-            <div className="flex gap-4 pt-4">
-              <button type="button" onClick={handleBack} className="flex-1 py-4 border border-green-dark text-green-dark font-bold uppercase tracking-widest text-[10px] hover:bg-green-dark hover:text-white transition-all">Retour</button>
+            <div className="flex flex-col sm:flex-row gap-4 pt-4">
+              <button type="button" onClick={handleBack} className="flex-1 py-4 border border-green-dark text-green-dark font-bold uppercase tracking-widest text-[10px] hover:bg-green-dark hover:text-white transition-all">Étape précédente</button>
               <button type="submit" className="flex-1 bg-[#C9A84C] text-[#1B5E35] font-bold rounded-[4px] py-4 uppercase tracking-widest text-[10px] hover:bg-[#F0C040] transition-colors">CONFIRMEZ MON ADHÉSION</button>
+            </div>
+            <div className="text-center mt-4">
+              <button type="button" onClick={() => navigate('/')} className="text-[10px] uppercase tracking-[0.2em] text-text-muted hover:text-green-dark transition-colors">Retour à l'accueil</button>
             </div>
             <p className="text-text-muted text-xs text-center mt-4">En cliquant sur confirmer, vous acceptez notre Charte de Confidentialité et les Conditions Générales du Club.</p>
           </form>
@@ -829,10 +876,13 @@ const MemberDashboardView: React.FC<{ user: Member, onLogout: () => void }> = ({
           </div>
           <div className="flex flex-col gap-4 sm:flex-row sm:items-center">
             <div className="flex items-center gap-3 rounded-full border border-gold/10 bg-white px-4 py-3 shadow-soft">
-              <img src={`https://ui-avatars.com/api/?name=${encodeURIComponent(user.name)}&background=1B3A2D&color=C9A84C`} alt="Avatar" className="h-12 w-12 rounded-full border border-gold/20" />
+              <img src={user.photoURL || `https://ui-avatars.com/api/?name=${encodeURIComponent(user.name)}&background=1B3A2D&color=C9A84C`} alt="Avatar" className="h-12 w-12 rounded-full border border-gold/20" />
               <div className="text-left">
                 <p className="text-[10px] uppercase tracking-[0.3em] text-text-muted">{user.name}</p>
                 <p className="font-semibold text-green-dark">Membre IBC</p>
+                {user.paymentMethod && (
+                  <p className="text-[10px] text-text-muted">Mode de paiement : {user.paymentMethod === 'orange' ? 'Orange Money' : user.paymentMethod === 'wave' ? 'Wave' : user.paymentMethod === 'moov' ? 'Moov Money' : user.paymentMethod === 'mtn' ? 'MTN Money' : user.paymentMethod}</p>
+                )}
               </div>
             </div>
             <div className="rounded-full bg-[#F3F1E6] border border-gold/20 px-5 py-3 text-center">
@@ -1072,8 +1122,11 @@ const LoginView: React.FC<{ onLogin: (email: string, password?: string) => void 
   return (
     <div className="min-h-screen bg-cream flex items-center justify-center py-24">
       <div className="w-full max-w-md px-6">
-        <div className="text-center mb-12">
-          <img src={ibcLogo} alt="IBC Logo" className="w-16 h-16 mx-auto mb-6" />
+        <div className="text-center mb-6">
+          <div className="flex flex-col items-center gap-4">
+            <img src={ibcLogo} alt="IBC Logo" className="w-16 h-16" />
+            <button type="button" onClick={() => navigate('/')} className="text-[10px] uppercase tracking-[0.3em] font-bold text-green-dark border-b border-green-dark hover:text-gold transition-colors">Retour à l'accueil</button>
+          </div>
           <span className="text-[10px] uppercase tracking-[0.4em] text-gold font-bold block mb-2">Acces Prive</span>
           <h2 className="font-serif text-3xl font-bold text-green-dark">Portail des Membres</h2>
         </div>
@@ -1085,7 +1138,10 @@ const LoginView: React.FC<{ onLogin: (email: string, password?: string) => void 
           <button type="submit" className="btn-gold w-full py-4">Entrer dans le Club</button>
         </form>
         <p className="text-center mt-8 text-text-muted text-sm">Pas encore membre ?</p>
-        <button onClick={() => navigate('/member-registration')} className="w-full text-center text-green-dark text-xs font-bold uppercase tracking-[0.2em] border-b border-gold hover:text-gold transition-colors mt-2">Rejoindre LE RÉSEAU IBC</button>
+        <div className="flex flex-col gap-3 mt-3">
+          <button onClick={() => navigate('/member-registration')} className="w-full text-center text-green-dark text-xs font-bold uppercase tracking-[0.2em] border-b border-gold hover:text-gold transition-colors">Rejoindre LE RÉSEAU IBC</button>
+          <button onClick={() => navigate('/partner-registration')} className="w-full text-center text-gold text-xs font-bold uppercase tracking-[0.2em] border-b border-gold hover:text-green-dark transition-colors">Devenir partenaire</button>
+        </div>
       </div>
     </div>
   );
@@ -1136,7 +1192,10 @@ const PartnerRegistrationView: React.FC = () => {
             <CheckCircle2 size={48} className="text-green-dark mx-auto mb-6" />
             <h4 className="text-2xl font-serif text-green-dark mb-4">Merci !</h4>
             <p className="text-text-muted mb-6">Votre demande a été reçue. Notre équipe vous contactera très bientôt.</p>
-            <button onClick={() => navigate('/')} className="btn-gold">Retour à l'accueil</button>
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+              <button onClick={() => navigate('/')} className="btn-gold">Retour à l'accueil</button>
+              <button onClick={() => navigate('/member-registration')} className="btn-outline border-gold text-green-dark hover:bg-gold hover:text-green-dark">Devenir membre</button>
+            </div>
           </div>
         )}
       </div>

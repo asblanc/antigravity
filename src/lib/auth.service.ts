@@ -6,6 +6,7 @@ import {
   signInWithEmailAndPassword,
   signOut,
   onAuthStateChanged,
+  updateProfile,
   type User,
 } from 'firebase/auth';
 import {
@@ -14,7 +15,12 @@ import {
   getDoc,
   serverTimestamp,
 } from 'firebase/firestore';
-import { auth, db } from './firebase';
+import {
+  ref,
+  uploadBytes,
+  getDownloadURL,
+} from 'firebase/storage';
+import { auth, db, storage } from './firebase';
 import type { Member } from './mock-api';
 
 // ─── Register a new member ────────────────────────────────────────────────────
@@ -24,6 +30,8 @@ export async function registerMember(data: {
   password: string;
   whatsapp: string;
   plan: 'bronze' | 'silver' | 'gold';
+  paymentMethod?: string;
+  photoFile?: File | null;
 }): Promise<Member> {
   // 1. Create Firebase Auth user
   const { user } = await createUserWithEmailAndPassword(auth, data.email, data.password);
@@ -33,12 +41,30 @@ export async function registerMember(data: {
 
   // 3. Build QR code payload
   const qrCode = `IBC-MEMBER-${data.name.toUpperCase().replace(/\s+/g, '-')}-${data.plan.toUpperCase()}-${user.uid}`;
+  const defaultPhotoUrl = `https://ui-avatars.com/api/?name=${encodeURIComponent(data.name)}&background=1B3A2D&color=C9A84C&bold=true`;
+  const paymentMethod = data.paymentMethod || 'orange';
 
-  // 4. Build the Firestore document
+  let photoURL = defaultPhotoUrl;
+  if (data.photoFile) {
+    const extension = data.photoFile.name.split('.').pop()?.toLowerCase() || 'jpg';
+    const storageRef = ref(storage, `users/${user.uid}/profile-photo.${extension}`);
+    await uploadBytes(storageRef, data.photoFile);
+    photoURL = await getDownloadURL(storageRef);
+  }
+
+  // 4. Set Firebase Auth display info for consistent profile data
+  await updateProfile(user, {
+    displayName: data.name,
+    photoURL,
+  });
+
+  // 5. Build the Firestore document
   const memberData: Omit<Member, 'uid'> & { role: string; createdAt: unknown; memberCode: string } = {
     name: data.name,
     email: data.email,
     whatsapp: data.whatsapp,
+    photoURL,
+    paymentMethod,
     tier: data.plan,
     balance: 0,
     totalSpent: 0,

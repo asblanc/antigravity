@@ -6,6 +6,8 @@ export interface Member {
   name: string;
   email: string;
   whatsapp: string;
+  photoURL?: string;
+  paymentMethod?: string;
   tier: 'bronze' | 'silver' | 'gold';
   balance: number;
   totalSpent: number;
