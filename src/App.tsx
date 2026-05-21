@@ -111,6 +111,7 @@ const App: React.FC = () => {
         whatsapp: data.whatsapp,
         plan: data.plan || 'bronze',
         paymentMethod: data.paymentMethod,
+        photoFile: data.photoFile,
       });
       setUser(userData);
       navigate('/member-dashboard');
