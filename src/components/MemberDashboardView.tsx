@@ -93,7 +93,9 @@ export const MemberDashboardView: React.FC<MemberDashboardViewProps> = ({ user, 
   const referralBonus = referralStats?.referralBonus ?? 2500;
   const referralLink = referralStats?.referralLink ?? `https://ibc.ci/parrain/${displayName.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/\s+/g, '')}`;
   
-  const memberPoints = 9450; // Matches 9 450 pts screenshot
+  const memberPoints = 9450; // Points mock pour compatibilité
+  // Pouvoir d'achat moyen mensuel pour évolution de statut
+  const spendingLevel = 28000; // FCFA — tranche Bronze: 10k–40k
   
   const handleCopyLink = () => {
     navigator.clipboard.writeText(referralLink);
@@ -788,13 +790,7 @@ export const MemberDashboardView: React.FC<MemberDashboardViewProps> = ({ user, 
                       setActiveTab('parrainage');
                       window.scrollTo({ top: 0, behavior: 'smooth' });
                     }}
-                    className="mt-4 text-center text-green-dark hover:text-gold text-[9px] uppercase tracking-widest font-bold flex items-center justify-center gap-1 transition-colors border-t border-gold/10 pt-3 cursor-pointer"
-                  >
-                    <span>Voir mon programme de parrainage →</span>
-                  </button>
-                </div>
-
-                {/* CARD 9: MON ÉVOLUTION MEMBRE (TIMELINE TRACKER) */}
+                    className="mt-4 text-center text-green-dark hover:text-gold text-[9px] uppercase tracking-widest font-bold flex items-center justify-center gap-1 transi                {/* CARD 9: MON ÉVOLUTION MEMBRE (SPENDING POWER TRACKER) */}
                 <div className="rounded-[36px] bg-white border border-gold/15 p-6 shadow-soft flex flex-col justify-between min-h-[260px]">
                   
                   {/* Header Line */}
@@ -803,12 +799,12 @@ export const MemberDashboardView: React.FC<MemberDashboardViewProps> = ({ user, 
                       MON ÉVOLUTION MEMBRE
                     </span>
                     <span className="bg-[#1B5E35] text-gold text-[8px] font-extrabold px-2 py-0.5 rounded-full font-mono">
-                      {formatPrice(memberPoints)} pts
+                      {formatPrice(spendingLevel)} F
                     </span>
                   </div>
 
                   <p className="text-[10px] text-text-muted leading-relaxed">
-                    Plus vous vivez d'expériences, plus vos privilèges évoluent. Accumulez les points !
+                    Plus vous vivez d’expériences, plus vos privilèges évoluent. Votre pouvoir d’achat mensuel détermine votre statut.
                   </p>
 
                   {/* Horizontal Timeline Tracker */}
@@ -816,19 +812,19 @@ export const MemberDashboardView: React.FC<MemberDashboardViewProps> = ({ user, 
                     {/* Line Background Track */}
                     <div className="absolute top-1/2 left-4 right-4 h-1 bg-gold/20 -translate-y-1/2" />
                     
-                    {/* Line Active Fill */}
+                    {/* Line Active Fill — Bronze: 10k–40k = environ 28% du parcours */}
                     <div 
                       className="absolute top-1/2 left-4 h-1 bg-gradient-to-r from-orange-500 to-gold -translate-y-1/2" 
                       style={{ width: 'calc(31.5% * (100% - 32px))' }}
                     />
 
-                    {/* Floating points badge */}
+                    {/* Floating spending badge */}
                     <div 
                       className="absolute -top-7 transform -translate-x-1/2 flex flex-col items-center"
                       style={{ left: 'calc(16px + 31.5% * (100% - 32px))' }}
                     >
                       <div className="bg-[#1B5E35] text-white text-[9px] font-extrabold px-2.5 py-0.5 rounded-full shadow-md whitespace-nowrap">
-                        9 450 pts
+                        {formatPrice(spendingLevel)} F
                       </div>
                       <div className="w-1.5 h-1.5 bg-[#1B5E35] rotate-45 -mt-0.5" />
                     </div>
@@ -842,7 +838,7 @@ export const MemberDashboardView: React.FC<MemberDashboardViewProps> = ({ user, 
                           <Star size={10} fill="currentColor" />
                         </div>
                         <p className="text-[8px] font-extrabold uppercase mt-2 text-[#8C6239]">BRONZE</p>
-                        <p className="text-[7px] text-text-muted mt-0.5">Actuel</p>
+                        <p className="text-[7px] text-text-muted mt-0.5">10k – 40k F</p>
                       </div>
 
                       {/* Milestone 2: Or */}
@@ -851,7 +847,7 @@ export const MemberDashboardView: React.FC<MemberDashboardViewProps> = ({ user, 
                           <Star size={10} fill="currentColor" />
                         </div>
                         <p className="text-[8px] font-extrabold uppercase mt-2 text-gold">OR</p>
-                        <p className="text-[7px] text-text-muted mt-0.5">15 000 pts</p>
+                        <p className="text-[7px] text-text-muted mt-0.5">50k – 90k F</p>
                       </div>
 
                       {/* Milestone 3: Platinum */}
@@ -860,15 +856,20 @@ export const MemberDashboardView: React.FC<MemberDashboardViewProps> = ({ user, 
                           <Star size={10} fill="currentColor" />
                         </div>
                         <p className="text-[8px] font-extrabold uppercase mt-2 text-slate-500">PLATINUM</p>
-                        <p className="text-[7px] text-text-muted mt-0.5">30 000 pts</p>
+                        <p className="text-[7px] text-text-muted mt-0.5">100k+ F</p>
                       </div>
 
                     </div>
                   </div>
 
                   <button 
-                    onClick={() => toast('Le barème des points de fidélité se base sur le montant de vos factures partenaires enregistrées.', { icon: '⭐' })}
+                    onClick={() => toast('Votre statut est déterminé par votre pouvoir d’achat mensuel moyen chez nos partenaires : Bronze (10 000–40 000 F), Or (50 000–90 000 F), Platinum (100 000 F et plus).', { icon: '⭐' })}
                     className="text-center text-green-dark hover:text-gold text-[9px] uppercase tracking-widest font-bold flex items-center justify-center gap-1 transition-colors border-t border-gold/10 pt-3"
+                  >
+                    <span>Comprendre les niveaux</span>
+                    <ArrowRight size={10} />
+                  </button>
+                </div>n-colors border-t border-gold/10 pt-3"
                   >
                     <span>Comprendre les niveaux</span>
                     <ArrowRight size={10} />
@@ -978,7 +979,79 @@ export const MemberDashboardView: React.FC<MemberDashboardViewProps> = ({ user, 
 
               </div>
 
-              {/* ─── BOTTOM SECTION: RECOMMANDÉS POUR VOUS CAROUSEL ─── */}
+              {/* ─── RÉPARTITION DES TRANSACTIONS ─── */}
+              <div className="border-t border-gold/15 pt-8">
+                <div className="bg-white border border-gold/15 rounded-[36px] shadow-soft p-6">
+                  <div className="flex items-center justify-between mb-6">
+                    <div>
+                      <h3 className="text-[10px] uppercase tracking-[0.4em] text-green-dark font-bold">RÉPARTITION DES TRANSACTIONS</h3>
+                      <p className="text-[9px] text-text-muted mt-0.5">Par catégorie — ce mois-ci</p>
+                    </div>
+                    <select className="text-[9px] font-bold text-green-dark border border-gold/20 rounded-lg px-3 py-1.5 bg-cream/30 outline-none focus:border-gold cursor-pointer uppercase tracking-wider">
+                      <option>Par catégorie</option>
+                      <option>Par établissement</option>
+                      <option>Par mois</option>
+                    </select>
+                  </div>
+
+                  <div className="flex flex-col md:flex-row items-center gap-8">
+                    {/* Donut SVG Chart */}
+                    <div className="relative shrink-0">
+                      <svg width="160" height="160" viewBox="0 0 160 160">
+                        {/* Restauration 45% — vert foncé */}
+                        <circle cx="80" cy="80" r="60" fill="none" stroke="#1B5E35" strokeWidth="28"
+                          strokeDasharray="169.6 376.8" strokeDashoffset="94.2" />
+                        {/* Boissons 25% — or */}
+                        <circle cx="80" cy="80" r="60" fill="none" stroke="#C9A84C" strokeWidth="28"
+                          strokeDasharray="94.2 452.2" strokeDashoffset="-75.4" />
+                        {/* Location transats 15% — vert clair */}
+                        <circle cx="80" cy="80" r="60" fill="none" stroke="#2D7A4F" strokeWidth="28"
+                          strokeDasharray="56.5 489.9" strokeDashoffset="-169.6" />
+                        {/* Activités 10% — or clair */}
+                        <circle cx="80" cy="80" r="60" fill="none" stroke="#8C6239" strokeWidth="28"
+                          strokeDasharray="37.7 508.7" strokeDashoffset="-226.1" />
+                        {/* Autres 5% — gris doré */}
+                        <circle cx="80" cy="80" r="60" fill="none" stroke="#D4AF37" strokeWidth="28"
+                          strokeDasharray="18.8 527.6" strokeDashoffset="-263.9" />
+                        {/* Cercle central blanc */}
+                        <circle cx="80" cy="80" r="44" fill="white" />
+                        <text x="80" y="77" textAnchor="middle" className="font-serif" style={{fontFamily:'serif', fontWeight:700, fontSize:11, fill:'#1B5E35'}}>Mois</text>
+                        <text x="80" y="92" textAnchor="middle" style={{fontFamily:'sans-serif', fontWeight:800, fontSize:13, fill:'#1B5E35'}}>Mai</text>
+                      </svg>
+                    </div>
+
+                    {/* Légende */}
+                    <div className="flex-1 space-y-3 w-full">
+                      {[
+                        { label: 'Restauration', pct: 45, color: '#1B5E35' },
+                        { label: 'Boissons', pct: 25, color: '#C9A84C' },
+                        { label: 'Location & transats', pct: 15, color: '#2D7A4F' },
+                        { label: 'Activités', pct: 10, color: '#8C6239' },
+                        { label: 'Autres', pct: 5, color: '#D4AF37' },
+                      ].map((item) => (
+                        <div key={item.label} className="flex items-center gap-3">
+                          <span className="w-2.5 h-2.5 rounded-full shrink-0" style={{ background: item.color }} />
+                          <span className="text-[11px] text-text flex-1 font-medium">{item.label}</span>
+                          <div className="flex items-center gap-2">
+                            <div className="w-24 h-1.5 bg-gold/10 rounded-full overflow-hidden">
+                              <div className="h-full rounded-full" style={{ width: `${item.pct}%`, background: item.color }} />
+                            </div>
+                            <span className="text-[11px] font-bold text-green-dark w-8 text-right">{item.pct}%</span>
+                          </div>
+                        </div>
+                      ))}
+                      <button
+                        onClick={() => setActiveTab('transactions')}
+                        className="mt-2 text-[9px] font-bold text-green-dark hover:text-gold uppercase tracking-widest flex items-center gap-1 transition-colors border-t border-gold/10 pt-3"
+                      >
+                        Voir le détail des catégories <ArrowRight size={10} />
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* ─── BOTTOM SECTION: RECOMMANDÉS POUR VOUS CAROUSEL ─── */}}
               <div className="border-t border-gold/15 pt-8 space-y-6">
                 
                 <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">

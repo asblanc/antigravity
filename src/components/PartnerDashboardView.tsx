@@ -453,36 +453,47 @@ export const PartnerDashboardView: React.FC<{ onLogout: () => void }> = ({ onLog
                       </div>
                     </div>
 
-                    {/* Repartition des transactions / Status clients */}
-                    <div className="bg-white/5 border border-gold/15 rounded-3xl p-6 shadow-soft">
-                      <h4 className="font-serif text-lg text-gold border-b border-white/5 pb-4 mb-4">Origine des clients</h4>
-                      <div className="space-y-4">
-                        <div>
-                          <div className="flex justify-between text-xs mb-1">
-                            <span className="text-white/70">Membres Platinum</span>
-                            <span className="font-bold text-white">45%</span>
-                          </div>
-                          <div className="h-2 w-full bg-black/30 rounded-full overflow-hidden">
-                            <div className="h-full bg-gold w-[45%]" />
-                          </div>
+                    {/* Répartition des transactions */}
+                    <div className="bg-white/5 border border-gold/15 rounded-3xl p-6 shadow-soft flex flex-col justify-between">
+                      <div className="flex items-center justify-between border-b border-white/5 pb-4 mb-4">
+                        <h4 className="font-serif text-lg text-gold">Répartition par catégorie</h4>
+                        <span className="text-[9px] text-white/40 uppercase font-bold tracking-widest">Mai</span>
+                      </div>
+                      
+                      <div className="flex flex-col sm:flex-row items-center gap-6 mt-2">
+                        {/* Donut SVG Chart */}
+                        <div className="relative shrink-0">
+                          <svg width="120" height="120" viewBox="0 0 160 160">
+                            {/* Restauration 45% */}
+                            <circle cx="80" cy="80" r="60" fill="none" stroke="#C9A84C" strokeWidth="24"
+                              strokeDasharray="169.6 376.8" strokeDashoffset="94.2" />
+                            {/* Hébergement 35% */}
+                            <circle cx="80" cy="80" r="60" fill="none" stroke="#8C6239" strokeWidth="24"
+                              strokeDasharray="131.9 414.5" strokeDashoffset="-75.4" />
+                            {/* Loisirs 20% */}
+                            <circle cx="80" cy="80" r="60" fill="none" stroke="#4a3b22" strokeWidth="24"
+                              strokeDasharray="75.4 471.0" strokeDashoffset="-207.3" />
+                            {/* Cercle central foncé */}
+                            <circle cx="80" cy="80" r="48" fill="#010a04" />
+                            <text x="80" y="85" textAnchor="middle" style={{fontFamily:'serif', fontWeight:700, fontSize:16, fill:'#C9A84C'}}>CA</text>
+                          </svg>
                         </div>
-                        <div>
-                          <div className="flex justify-between text-xs mb-1">
-                            <span className="text-white/70">Membres Or</span>
-                            <span className="font-bold text-white">35%</span>
-                          </div>
-                          <div className="h-2 w-full bg-black/30 rounded-full overflow-hidden">
-                            <div className="h-full bg-yellow-600 w-[35%]" />
-                          </div>
-                        </div>
-                        <div>
-                          <div className="flex justify-between text-xs mb-1">
-                            <span className="text-white/70">Membres Bronze</span>
-                            <span className="font-bold text-white">20%</span>
-                          </div>
-                          <div className="h-2 w-full bg-black/30 rounded-full overflow-hidden">
-                            <div className="h-full bg-orange-700 w-[20%]" />
-                          </div>
+
+                        {/* Légende */}
+                        <div className="flex-1 space-y-3 w-full">
+                          {[
+                            { label: 'Restauration', pct: 45, color: '#C9A84C' },
+                            { label: 'Hébergement', pct: 35, color: '#8C6239' },
+                            { label: 'Loisirs & Spa', pct: 20, color: '#4a3b22' },
+                          ].map((item) => (
+                            <div key={item.label} className="flex items-center justify-between">
+                              <div className="flex items-center gap-2">
+                                <span className="w-2 h-2 rounded-full" style={{ background: item.color }} />
+                                <span className="text-[10px] text-white/80">{item.label}</span>
+                              </div>
+                              <span className="text-[10px] font-bold text-white">{item.pct}%</span>
+                            </div>
+                          ))}
                         </div>
                       </div>
                     </div>

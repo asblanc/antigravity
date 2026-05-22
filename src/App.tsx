@@ -185,7 +185,7 @@ const Navbar: React.FC<{ scrolled: boolean, mobileMenuOpen: boolean, setMobileMe
           <div className="flex flex-col items-start text-left">
             <span className={`font-serif text-lg font-bold italic block leading-none ${isSolid ? 'text-green-dark' : 'text-white'}`}>Ivoire Business Club</span>
             <span className="hidden lg:block text-gold text-[7px] uppercase tracking-[0.15em] font-bold mt-1 leading-tight max-w-[280px]">
-PLATEFORME D'EXPÉRIENCES TOURISTIQUES<br />& CLUB PRIVÉ D'AVANTAGES
+PLATEFORME D'EXPÉRIENCES TOURISTIQUES<br />ET CLUB PRIVÉ D'AVANTAGES
             </span>
           </div>
         </button>
@@ -231,22 +231,65 @@ PLATEFORME D'EXPÉRIENCES TOURISTIQUES<br />& CLUB PRIVÉ D'AVANTAGES
   );
 };
 
+const HERO_IMAGES = [
+  { src: '/hero-lounge.jpg', alt: 'Rooftop lounge vue sur Abidjan' },
+  { src: '/hero-restaurant.jpg', alt: 'Restaurant gastronomique premium' },
+  { src: '/hero-beach.jpg', alt: 'Beach Club Assinie en bord de mer' },
+  { src: 'https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&q=80&w=1920', alt: 'Resort tropical en bord de mer' },
+  { src: 'https://images.unsplash.com/photo-1540555700478-4be289fbecef?auto=format&fit=crop&q=80&w=1920', alt: 'Spa et bien-être haut de gamme' },
+];
+
 const HomeView: React.FC = () => {
   const navigate = useNavigate();
   const [activeFilter, setActiveFilter] = useState('Tous');
+  const [currentSlide, setCurrentSlide] = useState(0);
+
+  // Hero carousel auto-advance every 7 seconds
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCurrentSlide((prev) => (prev + 1) % HERO_IMAGES.length);
+    }, 7000);
+    return () => clearInterval(timer);
+  }, []);
+
+  // Scroll reveal for sections
+  useEffect(() => {
+    const sections = document.querySelectorAll('.reveal-section');
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('visible');
+          }
+        });
+      },
+      { threshold: 0.12, rootMargin: '0px 0px -40px 0px' }
+    );
+    sections.forEach((s) => observer.observe(s));
+    return () => observer.disconnect();
+  }, []);
+
   return (
-    <div className="min-h-screen bg-cream">
+    <div className="min-h-screen bg-cream page-enter">
       {/* Hero Section */}
       <section className="relative min-h-[90vh] md:min-h-screen flex items-center justify-center overflow-hidden py-24 sm:py-32">
         <div className="absolute inset-0 bg-gradient-to-b from-[#031d0f]/70 via-[#031d0f]/40 to-[#031d0f]/95 z-10" />
-        <img src="https://images.unsplash.com/photo-1540555700478-4be289fbecef?auto=format&fit=crop&q=80&w=1600" alt="Premium Lifestyle Côte d'Ivoire" className="absolute inset-0 w-full h-full object-cover" />
+        {/* Carousel images */}
+        {HERO_IMAGES.map((img, i) => (
+          <img
+            key={i}
+            src={img.src}
+            alt={img.alt}
+            className={`hero-slide ${i === currentSlide ? 'active' : ''}`}
+          />
+        ))}
         <div className="relative z-20 container mx-auto px-4 sm:px-6 text-center text-white pt-16 md:pt-20">
           <div className="inline-block bg-green-dark/60 backdrop-blur-md border border-gold/30 px-5 sm:px-8 py-3 mb-8 sm:mb-10 rounded-sm max-w-xl mx-auto">
             <span className="text-gold text-[8px] sm:text-[10px] uppercase tracking-[0.15em] sm:tracking-[0.25em] font-bold block leading-tight">
               Le club privé des expériences locales
             </span>
             <span className="text-gold text-[8px] sm:text-[10px] uppercase tracking-[0.15em] sm:tracking-[0.25em] font-bold block mt-1 leading-tight">
-              & des établissements lifestyle en Côte d'Ivoire
+              et des établissements lifestyle en Côte d'Ivoire
             </span>
           </div>
           <h1 className="font-serif text-3xl sm:text-5xl md:text-7xl font-bold mb-6 sm:mb-10 leading-tight tracking-wide px-2 drop-shadow-lg">
@@ -265,11 +308,23 @@ const HomeView: React.FC = () => {
               <span className="text-[7px] sm:text-[8px] uppercase tracking-widest mt-1 opacity-90 font-medium text-center">Attirer • Générer du trafic • Fidéliser</span>
             </button>
           </div>
+
+          {/* Carousel indicator dots */}
+          <div className="flex items-center justify-center gap-2 mt-10 sm:mt-14">
+            {HERO_IMAGES.map((_, i) => (
+              <button
+                key={i}
+                onClick={() => setCurrentSlide(i)}
+                className={`hero-dot ${i === currentSlide ? 'active' : ''}`}
+                aria-label={`Slide ${i + 1}`}
+              />
+            ))}
+          </div>
         </div>
       </section>
 
       {/* Community Target Section */}
-      <section className="py-28 bg-[#092215] border-t border-b border-gold/20 relative overflow-hidden">
+      <section className="py-28 bg-[#092215] border-t border-b border-gold/20 relative overflow-hidden reveal-section">
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-gold/5 via-transparent to-transparent pointer-events-none" />
         <div className="container mx-auto px-6 max-w-5xl relative z-10">
           <div className="text-center mb-16 max-w-2xl mx-auto">
@@ -306,7 +361,7 @@ const HomeView: React.FC = () => {
               <div className="w-12 h-12 rounded-full bg-gold/10 border border-gold/20 flex items-center justify-center group-hover:bg-gold/20 group-hover:border-gold/30 transition-all duration-300">
                 <Briefcase className="text-gold" size={20} />
               </div>
-              <h4 className="font-serif text-lg font-bold text-white group-hover:text-gold transition-colors">Les professionnels & entrepreneurs</h4>
+              <h4 className="font-serif text-lg font-bold text-white group-hover:text-gold transition-colors">Les professionnels et entrepreneurs</h4>
               <p className="text-white/70 text-xs leading-relaxed font-light">Connectez-vous avec un réseau sélect d'affaires, participez à des événements privés et créez des opportunités de synergie professionnelle.</p>
             </div>
             <div className="sm:col-span-2 bg-white/[0.02] border border-gold/10 p-8 rounded hover:bg-[#0c2c1b]/30 hover:border-gold/30 transition-all duration-500 flex flex-col sm:flex-row items-start sm:items-center gap-6 group">
@@ -346,14 +401,14 @@ const HomeView: React.FC = () => {
       </section>
       
       {/* Partners Section */}
-      <section className="py-32 bg-green-dark">
+      <section className="py-32 bg-green-dark reveal-section">
         <div className="container mx-auto px-6">
-          <div className="flex items-end justify-between mb-16">
+          <div className="flex flex-col sm:flex-row sm:items-end justify-between mb-16 gap-6">
             <div>
               <span className="text-[10px] uppercase tracking-[0.4em] text-gold font-bold">LE RÉSEAU IBC</span>
-              <h2 className="font-serif text-4xl font-bold text-white mt-4">NOS DESTINATIONS & PARTENAIRES</h2>
+              <h2 className="font-serif text-4xl font-bold text-white mt-4">NOS DESTINATIONS ET PARTENAIRES</h2>
             </div>
-            <button onClick={() => navigate('/establishments')} className="btn-outline !text-white !border-white/30 hover:!border-gold text-xs md:text-sm px-4 py-2 md:px-6 md:py-3">VOIR TOUT LE CATALOGUE</button>
+            <button onClick={() => navigate('/establishments')} className="btn-outline !text-white !border-white/30 hover:!border-gold text-xs md:text-sm px-4 py-2 md:px-6 md:py-3 self-start sm:self-auto">VOIR TOUT LE CATALOGUE</button>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             {[{ name: 'Sofitel Abidjan', type: 'L’Hôtel Ivoire iconique', img: 'https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?auto=format&fit=crop&q=80&w=800' }, { name: 'Sky Lounge', type: 'Vue panoramique sur Abidjan', img: 'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&q=80&w=800' }, { name: 'Radisson Blu', type: 'Hub des affaires internationales', img: 'https://images.unsplash.com/photo-1445019980597-93fa8acb246c?auto=format&fit=crop&q=80&w=800' }, { name: 'Pullman Helios', type: 'Excellence au coeur du Plateau', img: '/assets/pullman-hotel.png' }].map((p, i) => (
@@ -378,11 +433,11 @@ const HomeView: React.FC = () => {
           </div>
           <div className="flex flex-col border border-[#1B5E35]/10 rounded-lg overflow-hidden divide-y divide-[#1B5E35]/10 shadow-premium">
             {[
-              { title: 'AFTER WORK & NIGHTLIFE', desc: 'Rooftops • DJ Sets • Networking • Lounges', icon: Headphones },
-              { title: 'DINING & GASTRONOMIE', desc: 'Restaurants • Cuisine ivoirienne • Diners signature', icon: Utensils },
-              { title: 'BEACH & LOISIRS', desc: 'Bassam • Assinie • Beach clubs • Sunset experiences', icon: Palmtree },
-              { title: 'SÉJOURS & ESCAPADES', desc: 'Day use • Week-end • Resorts • Villas privées', icon: Hotel },
-              { title: 'DIASPORA & HERITAGE', desc: 'Retour aux sources • Culture • Traditions', icon: Globe }
+              { title: 'AFTER WORK ET NIGHTLIFE', desc: 'Rooftops • DJ Sets • Networking • Lounges', icon: Headphones },
+              { title: 'DINING ET GASTRONOMIE', desc: 'Restaurants • Cuisine ivoirienne • Diners signature', icon: Utensils },
+              { title: 'BEACH ET LOISIRS', desc: 'Bassam • Assinie • Beach clubs • Sunset experiences', icon: Palmtree },
+              { title: 'SÉJOURS ET ESCAPADES', desc: 'Day use • Week-end • Resorts • Villas privées', icon: Hotel },
+              { title: 'DIASPORA ET HERITAGE', desc: 'Retour aux sources • Culture • Traditions', icon: Globe }
             ].map((exp, i) => {
               const Icon = exp.icon;
               return (
@@ -409,7 +464,7 @@ const HomeView: React.FC = () => {
       </section>
       
       {/* LOYALTY PROGRAM - Section 4: Le Programme Membre IBC */}
-      <section className="py-32 bg-white">
+      <section className="py-32 bg-white reveal-section">
         <div className="container mx-auto px-6 max-w-4xl">
           <div className="border border-gold/20 p-12 text-center mb-10">
             <span className="text-[10px] uppercase tracking-[0.4em] text-gold font-bold block mb-4">IBC MEMBERSHIP</span>
@@ -457,7 +512,7 @@ const HomeView: React.FC = () => {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-6">
                 <div>
                   <p className="font-bold text-green-dark text-sm mb-1 uppercase tracking-wider">Profil</p>
-                  <p className="text-text-muted text-sm mb-4">Membres découverte & lifestyle occasionnel</p>
+                  <p className="text-text-muted text-sm mb-4">Membres découverte et lifestyle occasionnel</p>
                   
                   <p className="font-bold text-green-dark text-sm mb-1 uppercase tracking-wider">Activité moyenne</p>
                   <p className="text-text-muted text-sm">10 000 FCFA à 40 000 FCFA / week-end</p>
@@ -532,7 +587,7 @@ const HomeView: React.FC = () => {
                   <div>
                     <p className="text-text-muted text-xs uppercase tracking-wider font-semibold mb-1">Avantages</p>
                     <ul className="text-text-muted text-sm space-y-1">
-                      <li>✔ accès expériences premium &amp; VIP</li>
+                      <li>✔ accès expériences premium et VIP</li>
                       <li>✔ réservations prioritaires</li>
                       <li>✔ accès lounge.</li>
                       <li>✔ cashback jusqu’à 7 %</li>
@@ -545,7 +600,7 @@ const HomeView: React.FC = () => {
         </div>
       </section>
           {/* Section 7: Inscription */}
-      <section className="py-24 bg-cream">
+      <section className="py-24 bg-cream reveal-section">
         <div className="container mx-auto px-6 max-w-4xl">
           <div className="border border-gold/20 p-12 text-center mb-10">
             <span className="text-[10px] uppercase tracking-[0.4em] text-gold font-bold block mb-6">Rejoignez gratuitement IBC</span>
@@ -572,7 +627,7 @@ const HomeView: React.FC = () => {
       </section>
       
       {/* Section 8: Devenir Partenaire */}
-      <section className="py-20 sm:py-32 bg-green-dark relative overflow-hidden">
+      <section className="py-20 sm:py-32 bg-green-dark relative overflow-hidden reveal-section">
         <div className="container mx-auto px-4 sm:px-6 relative z-10 flex flex-col lg:flex-row items-center gap-12 lg:gap-20">
           <div className="flex-1 text-center lg:text-left">
             <span className="text-[10px] uppercase tracking-[0.4em] text-gold font-bold block mb-4 sm:mb-6">LE RÉSEAU IBC</span>
@@ -614,7 +669,7 @@ const HomeView: React.FC = () => {
       </section>
 
       {/* Section 9: Mon Dashboard */}
-      <section className="py-24 bg-[#0a1f14]">
+      <section className="py-24 bg-[#0a1f14] reveal-section">
         <div className="container mx-auto px-6">
           <div className="text-center mb-12">
             <span className="text-[10px] uppercase tracking-[0.4em] text-gold font-bold block mb-4">MON DASHBOARD</span>
@@ -659,17 +714,17 @@ const HomeView: React.FC = () => {
         <div className="container mx-auto px-6">
           <div className="border border-gold/20 p-10 text-center mb-12">
             <span className="text-[10px] uppercase tracking-[0.4em] text-gold font-bold block mb-4">LE RÉSEAU IBC</span>
-            <h2 className="font-serif text-4xl font-bold text-green-dark">NOS DESTINATIONS & PARTENAIRES</h2>
+            <h2 className="font-serif text-4xl font-bold text-green-dark">NOS DESTINATIONS ET PARTENAIRES</h2>
           </div>
           {/* Filtres avec icones */}
           <div className="flex flex-wrap gap-3 justify-center mb-12">
             {[
               { id: 'Tous', label: 'Tous', emoji: '' },
-              { id: 'Hébergements & Séjours', label: 'Hébergements & Séjours', emoji: '🛏️' },
-              { id: 'Restaurants & Dining', label: 'Restaurants & Dining', emoji: '🍽️' },
-              { id: 'Lounges & Nightlife', label: 'Lounges & Nightlife', emoji: '🎧' },
-              { id: 'Beach Clubs & Loisirs', label: 'Beach Clubs & Loisirs', emoji: '🏖️' },
-              { id: 'Bien-être & Wellness', label: 'Bien-être & Wellness', emoji: '💆' }
+              { id: 'Hébergements et Séjours', label: 'Hébergements et Séjours', emoji: '🛏️' },
+              { id: 'Restaurants et Dining', label: 'Restaurants et Dining', emoji: '🍽️' },
+              { id: 'Lounges et Nightlife', label: 'Lounges et Nightlife', emoji: '🎧' },
+              { id: 'Beach Clubs et Loisirs', label: 'Beach Clubs et Loisirs', emoji: '🏖️' },
+              { id: 'Bien-être et Wellness', label: 'Bien-être et Wellness', emoji: '💆' }
             ].map((cat) => {
               const isActive = activeFilter === cat.id;
               return (
@@ -691,12 +746,12 @@ const HomeView: React.FC = () => {
           {/* Cards partenaires */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
             {[
-              { name: 'Sofitel Abidjan', cat: 'Hébergements & Séjours', zone: 'Cocody', cashback: '3-7%', img: 'https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?auto=format&fit=crop&q=80&w=600' },
-              { name: 'Sky Lounge', cat: 'Lounges & Nightlife', zone: 'Marcory', cashback: '5%', img: 'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&q=80&w=600' },
-              { name: 'Radisson Blu', cat: 'Hébergements & Séjours', zone: 'Port-Bouet', cashback: '3-7%', img: 'https://images.unsplash.com/photo-1445019980597-93fa8acb246c?auto=format&fit=crop&q=80&w=600' },
-              { name: 'Maison Akoula', cat: 'Beach Clubs & Loisirs', zone: 'Assinie', cashback: '5%', img: 'https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?auto=format&fit=crop&q=80&w=600' },
-              { name: 'Le Grand Large', cat: 'Restaurants & Dining', zone: 'Zone 4', cashback: '5%', img: 'https://images.unsplash.com/photo-1514362545857-3bc16c4c7d1b?auto=format&fit=crop&q=80&w=600' },
-              { name: 'Orchidée Spa', cat: 'Bien-être & Wellness', zone: 'Cocody', cashback: '5%', img: 'https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&q=80&w=600' }
+              { name: 'Sofitel Abidjan', cat: 'Hébergements et Séjours', zone: 'Cocody', cashback: '3-7%', img: 'https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?auto=format&fit=crop&q=80&w=600' },
+              { name: 'Sky Lounge', cat: 'Lounges et Nightlife', zone: 'Marcory', cashback: '5%', img: 'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&q=80&w=600' },
+              { name: 'Radisson Blu', cat: 'Hébergements et Séjours', zone: 'Port-Bouet', cashback: '3-7%', img: 'https://images.unsplash.com/photo-1445019980597-93fa8acb246c?auto=format&fit=crop&q=80&w=600' },
+              { name: 'Maison Akoula', cat: 'Beach Clubs et Loisirs', zone: 'Assinie', cashback: '5%', img: 'https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?auto=format&fit=crop&q=80&w=600' },
+              { name: 'Le Grand Large', cat: 'Restaurants et Dining', zone: 'Zone 4', cashback: '5%', img: 'https://images.unsplash.com/photo-1514362545857-3bc16c4c7d1b?auto=format&fit=crop&q=80&w=600' },
+              { name: 'Orchidée Spa', cat: 'Bien-être et Wellness', zone: 'Cocody', cashback: '5%', img: 'https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&q=80&w=600' }
             ]
               .filter(place => activeFilter === 'Tous' || place.cat === activeFilter)
               .map((place, i) => (
