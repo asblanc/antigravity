@@ -107,3 +107,28 @@ export async function getCurrentMemberProfile(uid: string): Promise<Member | nul
 export function subscribeToAuthState(callback: (user: User | null) => void) {
   return onAuthStateChanged(auth, callback);
 }
+
+// ─── Translate Firebase Auth error codes → French messages ───────────────────
+export function translateAuthError(code: string): string {
+  const messages: Record<string, string> = {
+    'auth/email-already-in-use':    'Cet e-mail est déjà associé à un compte.',
+    'auth/invalid-email':           'L\'adresse e-mail n\'est pas valide.',
+    'auth/user-not-found':          'Aucun compte trouvé avec cet e-mail.',
+    'auth/wrong-password':          'Mot de passe incorrect.',
+    'auth/invalid-credential':      'E-mail ou mot de passe incorrect.',
+    'auth/too-many-requests':       'Trop de tentatives. Veuillez réessayer dans quelques minutes.',
+    'auth/network-request-failed':  'Erreur réseau. Vérifiez votre connexion internet.',
+    'auth/user-disabled':           'Ce compte a été désactivé. Contactez le support IBC.',
+    'auth/weak-password':           'Le mot de passe doit contenir au moins 6 caractères.',
+    'auth/operation-not-allowed':   'Cette méthode de connexion n\'est pas activée.',
+    'auth/popup-closed-by-user':    'La fenêtre de connexion a été fermée.',
+    'auth/requires-recent-login':   'Veuillez vous reconnecter pour effectuer cette action.',
+  };
+  return messages[code] ?? 'Une erreur est survenue. Veuillez réessayer.';
+}
+
+// ─── Send password reset email ────────────────────────────────────────────────
+export async function sendPasswordReset(email: string): Promise<void> {
+  const { sendPasswordResetEmail } = await import('firebase/auth');
+  await sendPasswordResetEmail(auth, email);
+}

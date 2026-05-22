@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-        "build": "cp src/assets/ibc-logo.png public/ibc-logo.png && vite build",
+    "build": "mkdir -p public && cp src/assets/ibc-logo.png public/ibc-logo.png || true; vite build",
     "lint": "eslint .",
     "preview": "vite preview"
   },

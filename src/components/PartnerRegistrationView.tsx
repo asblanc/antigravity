@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Users, Eye, Heart, Megaphone, TrendingUp, Hotel, Utensils, Coffee, Sparkles } from 'lucide-react';
 
 export interface PartnerRegistrationViewProps {
   onRegister?: (data: any) => Promise<void>;
@@ -46,10 +47,81 @@ export const PartnerRegistrationView: React.FC<PartnerRegistrationViewProps> = (
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-green-dark via-white to-gold/10 flex items-center justify-center px-4 py-8">
-      <div className="w-full max-w-md">
-        <div className="bg-white rounded-lg shadow-2xl p-8">
-          <h2 className="text-2xl font-serif font-bold text-green-dark mb-2">Partenariat</h2>
-          <p className="text-gray-600 mb-6">Rejoignez notre réseau de partenaires</p>
+      <div className="w-full max-w-5xl grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
+        {/* Marketing Info */}
+        <div className="bg-white rounded-2xl shadow-xl p-8 xl:p-10 border border-gold/20">
+          <div className="text-center mb-8">
+            <span className="text-[10px] uppercase tracking-[0.4em] text-gold font-bold block mb-4">REJOIGNEZ LE RÉSEAU</span>
+            <h2 className="font-serif text-3xl md:text-4xl font-bold text-green-dark">Pourquoi devenir partenaire IBC ?</h2>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-8">
+             <div className="flex gap-4">
+                <Users className="text-gold shrink-0" size={24} />
+                <div>
+                   <h4 className="font-serif font-bold text-green-dark">Clientèle qualifiée</h4>
+                   <p className="text-xs text-gray-600 mt-1">Accédez à une communauté active et à fort pouvoir d'achat.</p>
+                </div>
+             </div>
+             <div className="flex gap-4">
+                <Eye className="text-gold shrink-0" size={24} />
+                <div>
+                   <h4 className="font-serif font-bold text-green-dark">Plus de visibilité</h4>
+                   <p className="text-xs text-gray-600 mt-1">Votre établissement mis en avant sur tous nos canaux.</p>
+                </div>
+             </div>
+             <div className="flex gap-4">
+                <Heart className="text-gold shrink-0" size={24} />
+                <div>
+                   <h4 className="font-serif font-bold text-green-dark">Fidélisation</h4>
+                   <p className="text-xs text-gray-600 mt-1">Attirez, fidélisez et engagez vos clients grâce au cashback.</p>
+                </div>
+             </div>
+             <div className="flex gap-4">
+                <Megaphone className="text-gold shrink-0" size={24} />
+                <div>
+                   <h4 className="font-serif font-bold text-green-dark">Communication</h4>
+                   <p className="text-xs text-gray-600 mt-1">Profitez de nos campagnes ciblées par SMS et Push.</p>
+                </div>
+             </div>
+             <div className="flex gap-4 sm:col-span-2 justify-center max-w-sm mx-auto">
+                <TrendingUp className="text-gold shrink-0" size={24} />
+                <div>
+                   <h4 className="font-serif font-bold text-green-dark">Suivi et performance</h4>
+                   <p className="text-xs text-gray-600 mt-1">Accédez à un tableau de bord analytique détaillé pour suivre votre ROI.</p>
+                </div>
+             </div>
+          </div>
+
+          <div className="bg-cream/50 rounded-xl p-6 border border-gold/20 mb-8">
+            <h3 className="font-serif text-xl font-bold text-green-dark text-center mb-6">Qui peut devenir partenaire ?</h3>
+            <div className="flex flex-wrap justify-center gap-3">
+               <span className="bg-white border border-gold/30 px-3 py-1.5 rounded-full text-xs text-green-dark font-medium flex items-center gap-2 shadow-sm"><Hotel size={14}/> Hébergements</span>
+               <span className="bg-white border border-gold/30 px-3 py-1.5 rounded-full text-xs text-green-dark font-medium flex items-center gap-2 shadow-sm"><Utensils size={14}/> Restaurants</span>
+               <span className="bg-white border border-gold/30 px-3 py-1.5 rounded-full text-xs text-green-dark font-medium flex items-center gap-2 shadow-sm"><Coffee size={14}/> Lounges</span>
+               <span className="bg-white border border-gold/30 px-3 py-1.5 rounded-full text-xs text-green-dark font-medium flex items-center gap-2 shadow-sm"><Sparkles size={14}/> Bien-être</span>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-3 gap-4 text-center border-t border-b border-gold/10 py-6">
+             <div>
+                <p className="font-serif text-3xl font-bold text-gold">10k+</p>
+                <p className="text-[9px] uppercase tracking-widest text-gray-500 font-bold mt-1">Membres</p>
+             </div>
+             <div>
+                <p className="font-serif text-3xl font-bold text-gold">500+</p>
+                <p className="text-[9px] uppercase tracking-widest text-gray-500 font-bold mt-1">Établissements</p>
+             </div>
+             <div>
+                <p className="font-serif text-3xl font-bold text-gold">100+</p>
+                <p className="text-[9px] uppercase tracking-widest text-gray-500 font-bold mt-1">Expériences</p>
+             </div>
+          </div>
+        </div>
+
+        {/* Form Container */}
+        <div className="bg-white rounded-2xl shadow-xl p-8 xl:p-10">
+          <h2 className="text-2xl font-serif font-bold text-green-dark mb-2">Créer votre compte Partenaire</h2>
+          <p className="text-gray-600 mb-8">Remplissez le formulaire ci-dessous pour postuler</p>
 
           <form onSubmit={handleSubmit} className="space-y-4">
             {step === 1 && (

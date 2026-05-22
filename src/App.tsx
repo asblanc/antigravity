@@ -36,6 +36,8 @@ import {
   Crown,
   Headphones,
   Palmtree,
+  Plane,
+  PiggyBank,
   Leaf,
 } from 'lucide-react';
 
@@ -43,9 +45,12 @@ import { Routes, Route, useNavigate, useLocation, Navigate, Link } from 'react-r
 import { QRCodeSVG } from 'qrcode.react';
 import type { Member, Transaction, Offer } from './lib/mock-api';
 import { loginUser, registerMember, logoutUser, subscribeToAuthState, getCurrentMemberProfile } from './lib/auth.service';
+import { fetchSignInMethodsForEmail } from 'firebase/auth';
+import { auth } from './lib/firebase';
 import { getMemberTransactions } from './lib/transaction.service';
 import { PartnerDashboardView } from './components/PartnerDashboardView';
 import { AdminDashboardView } from './components/AdminDashboardView';
+import { MemberDashboardView } from './components/MemberDashboardView';
 import ibcLogo from "./assets/ibc-logo.png";
 
 const formatPrice = (num: number): string => {
@@ -93,34 +98,30 @@ const App: React.FC = () => {
       if (role === 'partner') navigate('/partner-dashboard');
       else if (role === 'admin') navigate('/admin-dashboard');
       else navigate('/member-dashboard');
-      toast.success(`Bienvenue, ${userData.name}`);
+      toast.success(`Bienvenue, ${userData.name} !`);
     } catch (error: any) {
-      const msg = error?.code === 'auth/invalid-credential'
-        ? 'E-mail ou mot de passe incorrect'
-        : error?.message || 'Erreur de connexion';
-      toast.error(msg);
+      // Re-throw so LoginView can display inline error messages
+      throw error;
     }
   };
 
   const handleRegister = async (data: any) => {
     try {
       const userData = await registerMember({
-        name: data.name,
+        name: `${data.firstName} ${data.lastName}`.trim(),
         email: data.email,
-        password: data.password || 'IBC' + Math.random().toString(36).slice(2, 8).toUpperCase(),
-        whatsapp: data.whatsapp,
+        password: data.password,
+        whatsapp: data.phone || '',
         plan: data.plan || 'bronze',
         paymentMethod: data.paymentMethod,
-        photoFile: data.photoFile,
+        photoFile: data.photoFile || null,
       });
       setUser(userData);
       navigate('/member-dashboard');
       toast.success('Bienvenue dans le Club IBC !');
     } catch (error: any) {
-      const msg = error?.code === 'auth/email-already-in-use'
-        ? 'Cet e-mail est déjà utilisé'
-        : error?.message || 'Erreur lors de l’inscription';
-      toast.error(msg);
+      toast.error("Erreur lors de l'inscription. Veuillez réessayer.");
+      throw error;
     }
   };
 
@@ -692,12 +693,13 @@ const HomeView: React.FC = () => {
 const MemberRegistrationView: React.FC<{ onRegister: (data: any) => void }> = ({ onRegister }) => {
   const navigate = useNavigate();
   const [step, setStep] = useState(1);
-  const [formData, setFormData] = useState({ name: '', email: '', whatsapp: '', plan: 'bronze', paymentMethod: 'orange' });
+  const [formData, setFormData] = useState({ name: '', email: '', whatsapp: '', plan: 'bronze', paymentMethod: 'orange', password: '', confirmPassword: '' });
   const [photoFile, setPhotoFile] = useState<File | null>(null);
   const [photoPreview, setPhotoPreview] = useState<string | null>(null);
+  const [emailError, setEmailError] = useState('');
+  const [checkingEmail, setCheckingEmail] = useState(false);
   const stepLabels = ['Informations personnelles', 'Choix d’adhésion', 'Paiement sécurisé'];
 
-  const handleNext = () => setStep(Math.min(3, step + 1));
   const handleBack = () => setStep(Math.max(1, step - 1));
   const handlePhotoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0] ?? null;
@@ -715,11 +717,106 @@ const MemberRegistrationView: React.FC<{ onRegister: (data: any) => void }> = ({
     };
   }, [photoPreview]);
 
-  const handleSubmit = (e: React.FormEvent) => { e.preventDefault(); onRegister({ ...formData, photoFile }); };
+  const checkEmailExists = async (): Promise<boolean> => {
+    if (!formData.email) {
+      setEmailError('Veuillez saisir votre adresse email.');
+      return false;
+    }
+
+    try {
+      setCheckingEmail(true);
+      setEmailError('');
+      const methods = await fetchSignInMethodsForEmail(auth, formData.email);
+      if (methods.length > 0) {
+        setEmailError('Cet email est déjà utilisé.');
+        return false;
+      }
+      return true;
+    } catch (error: any) {
+      setEmailError(error?.message || 'Impossible de vérifier l’adresse email.');
+      return false;
+    } finally {
+      setCheckingEmail(false);
+    }
+  };
+
+  const handleNext = async () => {
+    if (step === 2) {
+      const isEmailAvailable = await checkEmailExists();
+      if (!isEmailAvailable) return;
+    }
+
+    setStep(Math.min(3, step + 1));
+  };
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+
+    if (formData.password.length < 6) {
+      alert('Le mot de passe doit contenir au moins 6 caractères.');
+      return;
+    }
+
+    if (formData.password !== formData.confirmPassword) {
+      alert('Les mots de passe ne correspondent pas.');
+      return;
+    }
+
+    onRegister({ ...formData, photoFile });
+  };
   return (
     <div className="min-h-screen bg-cream py-24">
-      <div className="container mx-auto px-6 max-w-2xl">
-        <div className="border border-gold/20 p-12 mb-6 flex flex-col gap-6">
+      <div className="container mx-auto px-6 max-w-5xl">
+        {/* Marketing Header */}
+        <div className="mb-16">
+          <div className="text-center mb-12">
+            <span className="text-[10px] uppercase tracking-[0.4em] text-gold font-bold block mb-4">LE CLUB PRIVÉ</span>
+            <h2 className="font-serif text-3xl md:text-5xl font-bold text-green-dark mb-6">Bienvenue dans votre univers IBC</h2>
+            <p className="text-text-muted max-w-2xl mx-auto text-lg">Rejoignez une communauté exclusive et profitez d'un écosystème d'avantages pensés pour vous.</p>
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-16">
+            {[
+              { title: 'Cashback & Cagnotte', desc: "Cumulez jusqu'à 7% sur vos dépenses chez nos partenaires. Utilisez votre cagnotte pour vos prochaines sorties.", icon: Banknote },
+              { title: 'Statuts Évolutifs', desc: 'Bronze, Or, Platinum. Plus vous explorez, plus vos privilèges et avantages exclusifs augmentent.', icon: Crown },
+              { title: 'Objectif Évasion', desc: 'Fixez-vous un objectif de voyage ou de loisir, et financez-le automatiquement grâce à votre cagnotte.', icon: Plane },
+              { title: 'Épargne Club', desc: "Une solution intelligente pour planifier vos dépenses loisirs tout au long de l'année.", icon: PiggyBank },
+              { title: 'Cercle Évasion', desc: 'Accédez à des séjours exclusifs et des escapades premium négociés spécialement pour les membres.', icon: Palmtree },
+            ].map((item, i) => (
+              <div key={i} className="bg-white p-6 border border-gold/10 hover:border-gold/30 hover:shadow-soft transition-all">
+                <item.icon size={24} className="text-gold mb-4" />
+                <h4 className="font-serif text-lg text-green-dark font-bold mb-2">{item.title}</h4>
+                <p className="text-text-muted text-sm">{item.desc}</p>
+              </div>
+            ))}
+          </div>
+
+          <div className="mb-16">
+            <h3 className="font-serif text-2xl font-bold text-green-dark mb-8 text-center">Recommandés pour vous</h3>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              {[
+                { title: 'Dîner Signature', location: 'Le Grand Large, Zone 4', badge: '-15%', img: 'https://images.unsplash.com/photo-1514362545857-3bc16c4c7d1b?auto=format&fit=crop&q=80&w=400' },
+                { title: 'Week-end Évasion', location: 'Maison Akoula, Assinie', badge: 'Cashback x2', img: 'https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?auto=format&fit=crop&q=80&w=400' },
+                { title: 'Sunset Lounge', location: 'Sky Lounge, Marcory', badge: 'Verre Offert', img: 'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&q=80&w=400' },
+              ].map((exp, i) => (
+                <div key={i} className="relative overflow-hidden rounded-xl group">
+                  <img src={exp.img} alt={exp.title} className="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-700" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-green-dark/90 to-transparent" />
+                  <div className="absolute top-3 right-3 bg-gold text-[#010a04] text-[10px] font-bold uppercase tracking-widest px-3 py-1 rounded">
+                    {exp.badge}
+                  </div>
+                  <div className="absolute bottom-0 p-5 w-full">
+                    <h4 className="font-serif text-white font-bold text-lg">{exp.title}</h4>
+                    <p className="text-gold/80 text-xs flex items-center gap-1 mt-1"><MapPin size={12} /> {exp.location}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        <div className="max-w-2xl mx-auto">
+        <div className="border border-gold/20 p-12 mb-6 flex flex-col gap-6 bg-white/50">
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
             <div>
               <span className="text-[10px] uppercase tracking-[0.4em] text-gold font-bold block mb-4">REJOIGNEZ GRATUITEMENT IBC</span>
@@ -745,8 +842,11 @@ const MemberRegistrationView: React.FC<{ onRegister: (data: any) => void }> = ({
             <h3 className="font-serif text-2xl text-green-dark">Informations Personnelles</h3>
             <div><label className="text-[10px] uppercase tracking-widest font-bold text-text-muted">Nom Complet</label>
               <input type="text" placeholder="M. / Mme Nom Prenom" className="w-full bg-transparent border-b border-gold/20 py-4 font-serif text-lg focus:border-gold outline-none transition-colors" value={formData.name} onChange={(e) => setFormData({...formData, name: e.target.value})} /></div>
-            <div><label className="text-[10px] uppercase tracking-widest font-bold text-text-muted">Email Professionnel</label>
-              <input type="email" placeholder="email@compagnie.ci" className="w-full bg-transparent border-b border-gold/20 py-4 font-serif text-lg focus:border-gold outline-none transition-colors" value={formData.email} onChange={(e) => setFormData({...formData, email: e.target.value})} /></div>
+            <div>
+              <label className="text-[10px] uppercase tracking-widest font-bold text-text-muted">Email Professionnel</label>
+              <input type="email" placeholder="email@compagnie.ci" className="w-full bg-transparent border-b border-gold/20 py-4 font-serif text-lg focus:border-gold outline-none transition-colors" value={formData.email} onChange={(e) => { setFormData({...formData, email: e.target.value}); setEmailError(''); }} />
+              {emailError && <p className="mt-2 text-sm text-red-600">{emailError}</p>}
+            </div>
             <div><label className="text-[10px] uppercase tracking-widest font-bold text-text-muted">Numero WhatsApp</label>
               <div className="flex items-center border-b border-gold/20">
                 <span className="text-text-muted text-sm pr-3">+225</span>
@@ -765,35 +865,206 @@ const MemberRegistrationView: React.FC<{ onRegister: (data: any) => void }> = ({
                 )}
               </div>
             </div>
-            <button onClick={handleNext} className="btn-gold w-full py-4">Continuer</button>
+            <button onClick={handleNext} disabled={checkingEmail} className="btn-gold w-full py-4 disabled:opacity-50">{checkingEmail ? 'Vérification...' : 'Continuer'}</button>
             <div className="text-center mt-4">
               <button type="button" onClick={() => navigate('/login')} className="text-[10px] uppercase tracking-[0.2em] text-text-muted hover:text-green-dark transition-colors">Déjà membre ? Connectez-vous</button>
             </div>
           </div>
         )}
         {step === 2 && (
-          <div className="space-y-8">
-            <h3 className="font-serif text-3xl text-green-dark">Devenez Membre IBC</h3>
-            <p className="text-text-muted leading-relaxed text-sm md:text-base">
-              Accédez à un univers d’expériences, d’avantages exclusifs et d’établissements sélectionnés à travers la Côte d’Ivoire.
-              Rejoignez une communauté active de passionnés de découvertes, de lifestyle et d’escapades locales.
-            </p>
-            <div className="p-8 bg-white border border-gold/20 rounded-xl shadow-sm">
-              <span className="text-[10px] uppercase tracking-[0.4em] text-gold font-bold">Bienvenue dans le statut Bronze</span>
-              <h4 className="font-serif text-2xl text-green-dark font-bold mt-4">Membre Bronze</h4>
-              <p className="text-text-muted mt-2">Discovery Member</p>
-              <ul className="mt-6 space-y-3 text-text-muted text-sm">
-                <li>✓ Accès aux expériences partenaires</li>
-                <li>✓ Avantages membres exclusifs</li>
-                <li>✓ Invitations événements découverte</li>
-                <li>✓ Jusqu’à 3% d’avantages cashback</li>
-              </ul>
-              <div className="mt-6 flex justify-between items-center border-t border-gold/10 pt-4">
-                <span className="text-xs uppercase tracking-wider text-text-muted">Tarif d'adhésion</span>
-                <span className="text-xl font-serif font-bold text-green-dark">500 FCFA / mois</span>
+          <div className="space-y-10">
+            {/* Bienvenue dans votre univers IBC */}
+            <div className="text-center md:text-left space-y-4">
+              <span className="text-[10px] uppercase tracking-[0.4em] text-gold font-bold">L'UNIVERS IVOIRE BUSINESS CLUB</span>
+              <h3 className="font-serif text-3xl font-bold text-green-dark">Bienvenue dans votre univers IBC</h3>
+              <p className="text-text-muted leading-relaxed text-sm md:text-base">
+                Découvrez une nouvelle façon de vivre vos escapades, voyages et sorties lifestyle. 
+                Avec Ivory Business Club, chaque dépense chez nos partenaires génère du <strong className="text-green-dark">cashback automatique</strong>, 
+                vous permettant de financer vos futures expériences et d'évoluer à travers nos statuts exclusifs.
+              </p>
+            </div>
+
+            {/* Statuts Tiers (Bronze, Or, Platinum) */}
+            <div className="grid gap-4 sm:grid-cols-3">
+              {/* Bronze */}
+              <div className="bg-white border border-[#8C6239]/20 rounded-2xl p-5 shadow-sm flex flex-col justify-between hover:border-[#8C6239] transition-all duration-300">
+                <div>
+                  <div className="flex items-center gap-2 mb-3">
+                    <span className="w-6 h-6 rounded-full bg-[#8C6239] text-white flex items-center justify-center text-xs shrink-0">
+                      <Star size={10} fill="currentColor" />
+                    </span>
+                    <h4 className="font-serif font-bold text-[#8C6239] text-sm">Bronze</h4>
+                  </div>
+                  <p className="text-[8px] uppercase tracking-wider text-text-muted mb-3 font-semibold">Discovery Member</p>
+                  <ul className="text-left text-[11px] text-text-muted space-y-1.5">
+                    <li>✓ Jusqu'à 3% de cashback</li>
+                    <li>✓ Accès aux expériences partenaires</li>
+                    <li>✓ Invitations événements découverte</li>
+                  </ul>
+                </div>
+                <div className="mt-4 border-t border-gold/10 pt-3 text-[10px] font-bold text-[#8C6239]">
+                  Inclus (500 FCFA/mois)
+                </div>
+              </div>
+
+              {/* Or */}
+              <div className="bg-white border border-gold/20 rounded-2xl p-5 shadow-sm flex flex-col justify-between hover:border-gold transition-all duration-300">
+                <div>
+                  <div className="flex items-center gap-2 mb-3">
+                    <span className="w-6 h-6 rounded-full bg-gold text-[#031d0f] flex items-center justify-center text-xs shrink-0">
+                      <Crown size={10} fill="currentColor" />
+                    </span>
+                    <h4 className="font-serif font-bold text-gold text-sm">Or</h4>
+                  </div>
+                  <p className="text-[8px] uppercase tracking-wider text-text-muted mb-3 font-semibold">Privilege Member</p>
+                  <ul className="text-left text-[11px] text-text-muted space-y-1.5">
+                    <li>✓ Jusqu'à 5% de cashback</li>
+                    <li>✓ Accès prioritaire réservations</li>
+                    <li>✓ Invitations cocktails VIP</li>
+                  </ul>
+                </div>
+                <div className="mt-4 border-t border-gold/10 pt-3 text-[10px] font-bold text-gold">
+                  Dès 15 000 pts cumulés
+                </div>
+              </div>
+
+              {/* Platinum */}
+              <div className="bg-white border border-slate-300 rounded-2xl p-5 shadow-sm flex flex-col justify-between hover:border-slate-500 transition-all duration-300">
+                <div>
+                  <div className="flex items-center gap-2 mb-3">
+                    <span className="w-6 h-6 rounded-full bg-slate-400 text-white flex items-center justify-center text-xs shrink-0">
+                      <Sparkles size={10} fill="currentColor" />
+                    </span>
+                    <h4 className="font-serif font-bold text-slate-500 text-sm">Platinum</h4>
+                  </div>
+                  <p className="text-[8px] uppercase tracking-wider text-text-muted mb-3 font-semibold">Elite Member</p>
+                  <ul className="text-left text-[11px] text-text-muted space-y-1.5">
+                    <li>✓ Jusqu'à 7% de cashback</li>
+                    <li>✓ Conciergerie privée WhatsApp</li>
+                    <li>✓ Surclassements hôteliers VIP</li>
+                  </ul>
+                </div>
+                <div className="mt-4 border-t border-gold/10 pt-3 text-[10px] font-bold text-slate-500">
+                  Dès 30 000 pts cumulés
+                </div>
               </div>
             </div>
-            <div className="flex gap-4">
+
+            {/* Comment ça marche - Les Avantages Clefs */}
+            <div className="space-y-6">
+              <div className="border-t border-gold/15 pt-8 text-left">
+                <span className="text-[10px] uppercase tracking-[0.4em] text-gold font-bold block mb-2">COMMENT ÇA MARCHE</span>
+                <h4 className="font-serif text-2xl font-bold text-green-dark">Une gestion intelligente de vos privilèges</h4>
+              </div>
+
+              <div className="grid gap-4 sm:grid-cols-2">
+                {/* Cashback */}
+                <div className="bg-white border border-gold/10 hover:border-gold/30 rounded-2xl p-5 flex items-start gap-4 transition-all duration-300 shadow-soft">
+                  <div className="w-10 h-10 rounded-xl bg-green-dark/5 text-green-dark flex items-center justify-center shrink-0 border border-gold/20">
+                    <Wallet size={20} className="text-gold" />
+                  </div>
+                  <div className="text-left">
+                    <h5 className="font-serif font-bold text-green-dark text-sm">Le Cashback Automatique</h5>
+                    <p className="text-[11px] text-text-muted mt-1 leading-relaxed">
+                      Chaque paiement chez nos partenaires crédite votre compte. Suivez vos gains accumulés en temps réel sur votre dashboard.
+                    </p>
+                  </div>
+                </div>
+
+                {/* Cagnotte */}
+                <div className="bg-white border border-gold/10 hover:border-gold/30 rounded-2xl p-5 flex items-start gap-4 transition-all duration-300 shadow-soft">
+                  <div className="w-10 h-10 rounded-xl bg-green-dark/5 text-green-dark flex items-center justify-center shrink-0 border border-gold/20">
+                    <Gift size={20} className="text-gold" />
+                  </div>
+                  <div className="text-left">
+                    <h5 className="font-serif font-bold text-green-dark text-sm">Ma Cagnotte IBC</h5>
+                    <p className="text-[11px] text-text-muted mt-1 leading-relaxed">
+                      Votre capital plaisir disponible. Utilisez-le en un clic pour régler tout ou partie de vos consommations chez nos partenaires.
+                    </p>
+                  </div>
+                </div>
+
+                {/* Objectifs */}
+                <div className="bg-white border border-gold/10 hover:border-gold/30 rounded-2xl p-5 flex items-start gap-4 transition-all duration-300 shadow-soft">
+                  <div className="w-10 h-10 rounded-xl bg-green-dark/5 text-green-dark flex items-center justify-center shrink-0 border border-gold/20">
+                    <TrendingUp size={20} className="text-gold" />
+                  </div>
+                  <div className="text-left">
+                    <h5 className="font-serif font-bold text-green-dark text-sm">Objectifs Évasion</h5>
+                    <p className="text-[11px] text-text-muted mt-1 leading-relaxed">
+                      Fixez-vous un but (séjour, weekend) et laissez votre épargne de cashback financer automatiquement l'escapade de vos rêves.
+                    </p>
+                  </div>
+                </div>
+
+                {/* Épargne Club */}
+                <div className="bg-white border border-gold/10 hover:border-gold/30 rounded-2xl p-5 flex items-start gap-4 transition-all duration-300 shadow-soft">
+                  <div className="w-10 h-10 rounded-xl bg-green-dark/5 text-green-dark flex items-center justify-center shrink-0 border border-gold/20">
+                    <Banknote size={20} className="text-gold" />
+                  </div>
+                  <div className="text-left">
+                    <h5 className="font-serif font-bold text-green-dark text-sm">Épargne Club</h5>
+                    <p className="text-[11px] text-text-muted mt-1 leading-relaxed">
+                      Allouez automatiquement un pourcentage de votre cashback vers votre tirelire de voyage privée pour épargner sans effort.
+                    </p>
+                  </div>
+                </div>
+
+                {/* Cercle Évasion */}
+                <div className="bg-white border border-gold/10 hover:border-gold/30 rounded-2xl p-5 flex items-start gap-4 transition-all duration-300 shadow-soft sm:col-span-2">
+                  <div className="w-10 h-10 rounded-xl bg-green-dark/5 text-green-dark flex items-center justify-center shrink-0 border border-gold/20">
+                    <Users size={20} className="text-gold" />
+                  </div>
+                  <div className="text-left">
+                    <h5 className="font-serif font-bold text-green-dark text-sm">Cercle Évasion</h5>
+                    <p className="text-[11px] text-text-muted mt-1 leading-relaxed">
+                      Épargnez à plusieurs ! Fusionnez vos cagnottes avec vos proches et amis pour réaliser ensemble des escapades collectives inoubliables.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Recommandés pour vous */}
+            <div className="space-y-6 border-t border-gold/15 pt-8">
+              <div className="text-left">
+                <span className="text-[10px] uppercase tracking-[0.4em] text-gold font-bold block mb-2">RECOMMANDÉS POUR VOUS</span>
+                <h4 className="font-serif text-2xl font-bold text-green-dark">Vivez des expériences d'exception</h4>
+                <p className="text-[11px] text-text-muted mt-1">Des réductions exclusives sur vos escapades et sorties lifestyle</p>
+              </div>
+
+              <div className="grid gap-4 grid-cols-2 md:grid-cols-4">
+                {[
+                  { name: 'Sunset Lounge', location: 'Abidjan, Cocody', discount: '-20%', img: 'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&q=80&w=300' },
+                  { name: 'Brunch & Chill', location: 'Bingerville', discount: '-15%', img: 'https://images.unsplash.com/photo-1514362545857-3bc16c4c7d1b?auto=format&fit=crop&q=80&w=300' },
+                  { name: 'Weekend Assinie', location: 'Assinie', discount: '-25%', img: 'https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?auto=format&fit=crop&q=80&w=300' },
+                  { name: 'Sofitel Abidjan', location: 'Abidjan, Cocody', discount: '-20%', img: 'https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?auto=format&fit=crop&q=80&w=300' },
+                ].map((place, idx) => (
+                  <div key={idx} className="bg-white border border-gold/10 rounded-2xl overflow-hidden hover:border-gold/30 hover:shadow-soft transition-all duration-300 group">
+                    <div className="relative overflow-hidden h-24">
+                      <img 
+                        src={place.img} 
+                        alt={place.name} 
+                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" 
+                      />
+                      <span className="absolute top-1.5 right-1.5 bg-gradient-to-r from-gold to-[#F0C040] text-green-darker text-[8px] uppercase tracking-wider font-extrabold px-1.5 py-0.5 rounded shadow-sm">
+                        {place.discount}
+                      </span>
+                    </div>
+                    <div className="p-3 text-left">
+                      <h5 className="font-serif text-[11px] font-bold text-green-dark truncate">{place.name}</h5>
+                      <p className="flex items-center gap-1 text-text-muted text-[8px] mt-0.5">
+                        <MapPin size={8} className="text-gold" />
+                        <span className="truncate">{place.location}</span>
+                      </p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Boutons de navigation */}
+            <div className="flex gap-4 border-t border-gold/15 pt-8">
               <button onClick={handleBack} className="flex-1 py-4 border border-green-dark text-green-dark font-bold uppercase tracking-widest text-[10px] hover:bg-green-dark hover:text-white transition-all">Retour</button>
               <button onClick={handleNext} className="flex-1 btn-gold py-4">Continuer</button>
             </div>
@@ -811,7 +1082,34 @@ const MemberRegistrationView: React.FC<{ onRegister: (data: any) => void }> = ({
               <div className="border-t border-gold/10 pt-6">
                 <p className="text-xs uppercase tracking-[0.2em] text-text-muted mb-2">Étape 3/3</p>
                 <h4 className="font-serif text-2xl text-green-dark font-bold">Finaliser mon adhésion</h4>
-                <p className="text-text-muted text-sm mt-2">Choisissez votre mode de paiement sécurisé.</p>
+                <p className="text-text-muted text-sm mt-2">Choisissez un mot de passe et un mode de paiement.
+                </p>
+              </div>
+            </div>
+            <div className="grid gap-4 md:grid-cols-2">
+              <div>
+                <label className="text-[10px] uppercase tracking-widest font-bold text-text-muted">Mot de passe</label>
+                <input
+                  type="password"
+                  placeholder="********"
+                  className="w-full bg-transparent border-b border-gold/20 py-4 font-serif text-lg focus:border-gold outline-none transition-colors"
+                  value={formData.password}
+                  onChange={(e) => setFormData({ ...formData, password: e.target.value })}
+                  minLength={6}
+                  required
+                />
+              </div>
+              <div>
+                <label className="text-[10px] uppercase tracking-widest font-bold text-text-muted">Confirmez le mot de passe</label>
+                <input
+                  type="password"
+                  placeholder="********"
+                  className="w-full bg-transparent border-b border-gold/20 py-4 font-serif text-lg focus:border-gold outline-none transition-colors"
+                  value={formData.confirmPassword}
+                  onChange={(e) => setFormData({ ...formData, confirmPassword: e.target.value })}
+                  minLength={6}
+                  required
+                />
               </div>
             </div>
             <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
@@ -832,222 +1130,12 @@ const MemberRegistrationView: React.FC<{ onRegister: (data: any) => void }> = ({
             <p className="text-text-muted text-xs text-center mt-4">En cliquant sur confirmer, vous acceptez notre Charte de Confidentialité et les Conditions Générales du Club.</p>
           </form>
         )}
+        </div>
       </div>
     </div>
   );
 };
 
-const MemberDashboardView: React.FC<{ user: Member, onLogout: () => void }> = ({ user, onLogout }) => {
-  const navigate = useNavigate();
-  const [showQR, setShowQR] = useState(false);
-  const [transactions, setTransactions] = useState<Transaction[]>([]);
-  const [offers, setOffers] = useState<Offer[]>([]);
-
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const txs = await getMemberTransactions(user.uid);
-        setTransactions(txs);
-      } catch (e) {
-        console.error(e);
-      }
-      setOffers([
-        { id: 'off_1', partnerName: 'Hôtel Tiama', description: '-20% sur les suites Junior', imageUrl: 'https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?auto=format&fit=crop&q=80&w=200' },
-        { id: 'off_2', partnerName: 'Azar Club', description: '-15% sur boissons premium', imageUrl: 'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&q=80&w=200' },
-        { id: 'off_3', partnerName: 'Assinie Lodge', description: '-20% sur séjour', imageUrl: 'https://images.unsplash.com/photo-1445019980597-93fa8acb246c?auto=format&fit=crop&q=80&w=200' }
-      ]);
-    };
-    fetchData();
-  }, [user.uid]);
-
-  const goalTarget = 50000;
-  const goalProgress = Math.min(1, user.balance / goalTarget);
-  const confirmedCashback = Math.max(0, Math.floor(user.balance * 0.82));
-  const bonusCashback = Math.max(0, user.balance - confirmedCashback);
-  const savings = Math.max(0, Math.floor(user.balance * 0.62));
-
-  return (
-    <div className="min-h-screen bg-cream pb-32">
-      <div className="bg-white border-b border-gold/10">
-        <div className="container mx-auto px-6 py-8 flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
-          <div>
-            <p className="text-[11px] uppercase tracking-[0.45em] text-text-muted font-bold">Bonjour</p>
-            <h1 className="font-serif text-4xl md:text-5xl font-bold text-green-dark mt-2">Bienvenue dans votre univers IBC <span className="text-gold">✧</span></h1>
-            <p className="text-text-muted mt-3 max-w-2xl">Votre tableau de bord regroupe votre cashback, votre QR Code et toutes vos statistiques IBC. Retrouvez vos offres, votre épargne et l’évolution de vos privilèges.</p>
-          </div>
-          <div className="flex flex-col gap-4 sm:flex-row sm:items-center">
-            <div className="flex items-center gap-3 rounded-full border border-gold/10 bg-white px-4 py-3 shadow-soft">
-              <img src={user.photoURL || `https://ui-avatars.com/api/?name=${encodeURIComponent(user.name)}&background=1B3A2D&color=C9A84C`} alt="Avatar" className="h-12 w-12 rounded-full border border-gold/20" />
-              <div className="text-left">
-                <p className="text-[10px] uppercase tracking-[0.3em] text-text-muted">{user.name}</p>
-                <p className="font-semibold text-green-dark">Membre IBC</p>
-                {user.paymentMethod && (
-                  <p className="text-[10px] text-text-muted">Mode de paiement : {user.paymentMethod === 'orange' ? 'Orange Money' : user.paymentMethod === 'wave' ? 'Wave' : user.paymentMethod === 'moov' ? 'Moov Money' : user.paymentMethod === 'mtn' ? 'MTN Money' : user.paymentMethod}</p>
-                )}
-              </div>
-            </div>
-            <div className="rounded-full bg-[#F3F1E6] border border-gold/20 px-5 py-3 text-center">
-              <p className="text-[10px] uppercase tracking-[0.35em] text-text-muted">Niveau</p>
-              <p className="font-serif text-lg font-bold text-green-dark">{user.tier === 'gold' ? 'Platinum' : user.tier === 'silver' ? 'Or' : 'Bronze'}</p>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div className="container mx-auto px-6 py-10 max-w-7xl space-y-8">
-        <div className="grid gap-6 xl:grid-cols-[1.7fr_1fr]">
-          <div className="rounded-[40px] bg-green-dark p-8 text-white border border-gold/20 shadow-gold">
-            <div className="flex items-center justify-between mb-6">
-              <div>
-                <p className="text-[10px] uppercase tracking-[0.4em] text-gold font-bold">MON COMPTE CASHBACK IBC</p>
-                <p className="text-[10px] uppercase tracking-[0.3em] text-white/70 mt-3">Votre cashback augmente avec votre niveau</p>
-              </div>
-              <div className="rounded-3xl bg-white/10 px-4 py-2 text-[10px] uppercase tracking-[0.4em] text-gold border border-white/10">Mon compte</div>
-            </div>
-            <p className="font-serif text-6xl font-bold">{formatPrice(user.balance)}</p>
-            <p className="text-gold text-2xl mt-2">FCFA</p>
-            <p className="text-white/70 mt-5 leading-7">Cashback crédité automatiquement après chaque visite validée.</p>
-            <button onClick={() => navigate('/transactions')} className="mt-8 inline-flex items-center gap-2 rounded-full bg-white px-6 py-3 text-[10px] uppercase tracking-[0.35em] font-bold text-green-dark hover:bg-[#f8f6eb] transition-colors">Voir l'historique <ArrowRight size={16} /></button>
-          </div>
-
-          <div className="grid gap-6">
-            <div className="rounded-[40px] bg-white border border-gold/10 p-6 shadow-soft">
-              <p className="text-[10px] uppercase tracking-[0.4em] text-text-muted font-bold mb-4">MON QR CODE</p>
-              <div className="rounded-3xl bg-cream p-6 border border-gold/10 flex justify-center">
-                <QRCodeSVG value={user.qrCode} size={160} />
-              </div>
-              <p className="text-center text-green-dark font-semibold mt-5">Présentez ce QR Code chez nos partenaires pour cumuler vos avantages.</p>
-              <button onClick={() => setShowQR(true)} className="mt-6 w-full rounded-full bg-green-dark px-5 py-3 text-[10px] uppercase tracking-[0.35em] font-bold text-white hover:bg-[#163b22] transition-colors">Voir mon pass IBC</button>
-            </div>
-
-            <div className="rounded-[40px] bg-white border border-gold/10 p-6 shadow-soft">
-              <div className="flex items-center justify-between mb-6">
-                <div>
-                  <p className="text-[10px] uppercase tracking-[0.4em] text-text-muted font-bold">MES STATISTIQUES</p>
-                  <p className="text-[10px] uppercase tracking-[0.35em] text-green-dark mt-2">Toutes mes performances IBC</p>
-                </div>
-                <button onClick={() => navigate('/stats')} className="text-[10px] uppercase tracking-[0.35em] font-bold text-text-muted hover:text-gold transition-colors">Voir détails</button>
-              </div>
-              <div className="grid gap-4">
-                <div className="rounded-3xl bg-cream p-5 border border-gold/10">
-                  <p className="text-[10px] uppercase tracking-[0.4em] text-text-muted">Total dépenses</p>
-                  <p className="font-serif text-3xl font-bold text-green-dark mt-3">{formatPrice(user.totalSpent)} FCFA</p>
-                </div>
-                <div className="rounded-3xl bg-cream p-5 border border-gold/10">
-                  <p className="text-[10px] uppercase tracking-[0.4em] text-text-muted">Visites ce mois</p>
-                  <p className="font-serif text-3xl font-bold text-green-dark mt-3">{user.visitsThisMonth}</p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div className="grid gap-6 lg:grid-cols-4">
-          <div className="rounded-[32px] bg-white border border-gold/10 p-6 shadow-soft">
-            <p className="text-[10px] uppercase tracking-[0.4em] text-text-muted font-bold mb-4">MA CAGNOTTE IBC</p>
-            <p className="font-serif text-3xl font-bold text-green-dark">{formatPrice(user.balance)} FCFA</p>
-            <div className="mt-4 text-sm text-text-muted space-y-2">
-              <p>Cashback confirmé {formatPrice(confirmedCashback)} FCFA</p>
-              <p>Bonus & privilèges {formatPrice(bonusCashback)} FCFA</p>
-            </div>
-            <button className="mt-6 w-full rounded-full bg-[#F3F1E6] text-green-dark py-3 text-[10px] uppercase tracking-[0.35em] font-bold">Utiliser ma cagnotte</button>
-          </div>
-
-          <div className="rounded-[32px] bg-white border border-gold/10 p-6 shadow-soft">
-            <div className="flex items-center justify-between mb-4">
-              <p className="text-[10px] uppercase tracking-[0.4em] text-text-muted font-bold">MON OBJECTIF ÉVASION</p>
-              <span className="text-[10px] uppercase tracking-[0.35em] text-gold font-bold">62%</span>
-            </div>
-            <p className="font-serif text-2xl font-bold text-green-dark">Weekend Assinie</p>
-            <p className="text-text-muted text-sm mt-2">Objectif : {formatPrice(goalTarget)} FCFA</p>
-            <div className="mt-5 h-3 rounded-full bg-gold/10 overflow-hidden">
-              <div className="h-full rounded-full bg-green-dark" style={{ width: `${goalProgress * 100}%` }} />
-            </div>
-            <p className="text-[10px] uppercase tracking-[0.35em] text-text-muted mt-3">{formatPrice(Math.floor(goalProgress * goalTarget))} / {formatPrice(goalTarget)} FCFA</p>
-          </div>
-
-          <div className="rounded-[32px] bg-white border border-gold/10 p-6 shadow-soft">
-            <p className="text-[10px] uppercase tracking-[0.4em] text-text-muted font-bold mb-4">ÉPARGNE CLUB</p>
-            <p className="font-serif text-3xl font-bold text-green-dark">{formatPrice(savings)} FCFA</p>
-            <p className="text-text-muted text-sm mt-3">Épargnez automatiquement votre cashback pour financer vos prochaines expériences.</p>
-            <button className="mt-6 w-full rounded-full bg-[#F3F1E6] text-green-dark py-3 text-[10px] uppercase tracking-[0.35em] font-bold">Gérer mon épargne</button>
-          </div>
-
-          <div className="rounded-[32px] bg-white border border-gold/10 p-6 shadow-soft">
-            <div className="flex items-center justify-between mb-4">
-              <p className="text-[10px] uppercase tracking-[0.4em] text-text-muted font-bold">CERCLE ÉVASION IBC</p>
-              <span className="text-[10px] uppercase tracking-[0.35em] text-green-dark font-bold">+8</span>
-            </div>
-            <div className="flex -space-x-3 mb-4">
-              {['AA','BB','CC','DD'].map((initial, idx) => (
-                <span key={idx} className="inline-flex h-10 w-10 items-center justify-center rounded-full border-2 border-white bg-green-dark text-[10px] text-white">{initial}</span>
-              ))}
-            </div>
-            <p className="text-text-muted text-sm">Épargner à plusieurs, voyager loin. Rejoignez ou créez votre cercle privé.</p>
-            <button className="mt-6 w-full rounded-full bg-[#F3F1E6] text-green-dark py-3 text-[10px] uppercase tracking-[0.35em] font-bold">Voir mes cercles</button>
-          </div>
-        </div>
-
-        <div className="grid gap-6 lg:grid-cols-2">
-          <div className="rounded-[32px] bg-white border border-gold/10 p-6 shadow-soft">
-            <div className="flex items-center justify-between mb-6">
-              <h2 className="font-serif text-xl font-bold text-green-dark">Mes privilèges actifs</h2>
-              <button onClick={() => navigate('/offers')} className="text-[10px] uppercase tracking-[0.35em] font-bold text-text-muted hover:text-gold transition-colors">Voir tous</button>
-            </div>
-            <div className="grid gap-4">
-              {offers.map((offer) => (
-                <div key={offer.id} className="rounded-3xl bg-cream border border-gold/10 p-4">
-                  <p className="font-bold text-sm text-green-dark">{offer.partnerName}</p>
-                  <p className="text-text-muted text-xs mt-1">{offer.description}</p>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          <div className="rounded-[32px] bg-white border border-gold/10 p-6 shadow-soft">
-            <div className="flex items-center justify-between mb-6">
-              <h2 className="font-serif text-xl font-bold text-green-dark">Mes expériences à venir</h2>
-              <button onClick={() => navigate('/agenda')} className="text-[10px] uppercase tracking-[0.35em] font-bold text-text-muted hover:text-gold transition-colors">Voir agenda</button>
-            </div>
-            <div className="space-y-4">
-              <div className="rounded-3xl bg-cream border border-gold/10 p-4">
-                <p className="font-bold text-sm text-green-dark">Sunset Lounge</p>
-                <p className="text-text-muted text-xs">Vendredi 24 Mai • 18h00</p>
-              </div>
-              <div className="rounded-3xl bg-cream border border-gold/10 p-4">
-                <p className="font-bold text-sm text-green-dark">Brunch & Chill</p>
-                <p className="text-text-muted text-xs">Dimanche 26 Mai • 11h00</p>
-              </div>
-              <div className="rounded-3xl bg-cream border border-gold/10 p-4">
-                <p className="font-bold text-sm text-green-dark">Weekend Assinie</p>
-                <p className="text-text-muted text-xs">1er - 2 Juin • 2 jours</p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {showQR && (
-        <div className="fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-6" onClick={() => setShowQR(false)}>
-          <div className="bg-white p-8 max-w-xs w-full text-center relative" onClick={(e) => e.stopPropagation()}>
-            <button onClick={() => setShowQR(false)} className="absolute top-4 right-4 text-green-dark"><X size={20} /></button>
-            <h3 className="font-serif text-xl text-green-dark mb-2">Votre Pass IBC</h3>
-            <p className="text-text-muted text-xs mb-6">{user.name} - Membre {user.tier.toUpperCase()}</p>
-            <QRCodeSVG value={user.qrCode} size={180} className="mx-auto" />
-            <p className="text-text-muted text-xs mt-6">Présentez ce code à l’accueil de l’établissement.</p>
-          </div>
-        </div>
-      )}
-
-      <div className="fixed bottom-0 left-0 right-0 bg-green-dark border-t border-gold/20 flex justify-around py-4 z-40">
-        <button className="flex flex-col items-center gap-1 text-gold"><LayoutDashboard size={20} /><span className="text-[9px] uppercase tracking-widest">Dashboard</span></button>
-        <button onClick={() => navigate('/establishments')} className="flex flex-col items-center gap-1 text-white/50 hover:text-gold transition-colors"><MapPin size={20} /><span className="text-[9px] uppercase tracking-widest">Lieux</span></button>
-        <button onClick={() => navigate('/offers')} className="flex flex-col items-center gap-1 text-white/50 hover:text-gold transition-colors"><Gift size={20} /><span className="text-[9px] uppercase tracking-widest">Offres</span></button>
-        <button onClick={onLogout} className="flex flex-col items-center gap-1 text-white/50 hover:text-gold transition-colors"><LogOut size={20} /><span className="text-[9px] uppercase tracking-widest">Compte</span></button>
-      </div>
-    </div>
-  );
-};
 
 const EstablishmentsView: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState('');

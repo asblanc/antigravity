@@ -5,7 +5,7 @@ import ibcLogo from '../assets/ibc-logo.png';
 export interface MemberPublicView {
   firstName: string;
   lastInitial: string;
-  status: 'BRONZE' | 'SILVER' | 'GOLD';
+  status: 'BRONZE' | 'SILVER' | 'GOLD' | 'OR' | 'PLATINUM';
   isActive: boolean;
   maskedId: string;
 }
@@ -29,7 +29,7 @@ export const buildMemberPublicView = (userData: any): MemberPublicView => {
   return {
     firstName,
     lastInitial,
-    status: userData.status || userData.plan?.toUpperCase() || 'BRONZE',
+    status: userData.status || userData.tier?.toUpperCase() || userData.plan?.toUpperCase() || 'BRONZE',
     isActive: userData.subscription?.active ?? (userData.status !== 'inactive'),
     maskedId: maskMemberId(userData.memberId || userData.uid || userData.id),
   };
@@ -77,6 +77,8 @@ export const MemberIdentityCard: React.FC<Props> = ({ memberData }) => {
     BRONZE: 'text-orange-400',
     SILVER: 'text-gray-300',
     GOLD: 'text-yellow-400',
+    OR: 'text-yellow-500',
+    PLATINUM: 'text-slate-300',
   };
 
   return (
@@ -98,7 +100,7 @@ export const MemberIdentityCard: React.FC<Props> = ({ memberData }) => {
 
       <div className="space-y-4 relative z-10">
         <div className="flex items-center gap-2 bg-black/20 px-3 py-2 rounded">
-          <div className={`w-2 h-2 rounded-full bg-current ${statusColors[publicView.status as keyof typeof statusColors] || 'text-gold'}`}></div>
+          <div className={`w-2 h-2 rounded-full bg-current ${statusColors[publicView.status] || 'text-gold'}`}></div>
           <span className="font-medium tracking-widest text-sm uppercase text-white/90">
             Niveau {publicView.status}
           </span>
