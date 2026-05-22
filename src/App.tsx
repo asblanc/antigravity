@@ -433,17 +433,18 @@ const HomeView: React.FC = () => {
           </div>
           <div className="flex flex-col border border-[#1B5E35]/10 rounded-lg overflow-hidden divide-y divide-[#1B5E35]/10 shadow-premium">
             {[
-              { title: 'AFTER WORK ET NIGHTLIFE', desc: 'Rooftops • DJ Sets • Networking • Lounges', icon: Headphones },
-              { title: 'DINING ET GASTRONOMIE', desc: 'Restaurants • Cuisine ivoirienne • Diners signature', icon: Utensils },
-              { title: 'BEACH ET LOISIRS', desc: 'Bassam • Assinie • Beach clubs • Sunset experiences', icon: Palmtree },
-              { title: 'SÉJOURS ET ESCAPADES', desc: 'Day use • Week-end • Resorts • Villas privées', icon: Hotel },
-              { title: 'DIASPORA ET HERITAGE', desc: 'Retour aux sources • Culture • Traditions', icon: Globe }
+              { title: 'AFTER WORK ET NIGHTLIFE', desc: 'Rooftops • DJ Sets • Networking • Lounges', icon: Headphones, filterCat: 'Lounges & Nightlife' },
+              { title: 'DINING ET GASTRONOMIE', desc: 'Restaurants • Cuisine ivoirienne • Diners signature', icon: Utensils, filterCat: 'Restaurants & Dining' },
+              { title: 'BEACH ET LOISIRS', desc: 'Bassam • Assinie • Beach clubs • Sunset experiences', icon: Palmtree, filterCat: 'Beach Clubs & Loisirs' },
+              { title: 'SÉJOURS ET ESCAPADES', desc: 'Day use • Week-end • Resorts • Villas privées', icon: Hotel, filterCat: 'Hébergements & Séjours' },
+              { title: 'DIASPORA ET HERITAGE', desc: 'Retour aux sources • Culture • Traditions', icon: Globe, filterCat: 'Diaspora & Héritage' }
             ].map((exp, i) => {
               const Icon = exp.icon;
               return (
                 <div
                   key={i}
-                  className="p-6 md:p-8 bg-[#F5F3EE] hover:bg-[#F2EFE8] transition-colors flex flex-col md:flex-row items-center md:items-start text-center md:text-left gap-6 group"
+                  onClick={() => navigate('/establishments', { state: { filter: exp.filterCat } })}
+                  className="p-6 md:p-8 bg-[#F5F3EE] hover:bg-[#F2EFE8] transition-colors flex flex-col md:flex-row items-center md:items-start text-center md:text-left gap-6 group cursor-pointer"
                 >
                   <div className="flex-shrink-0 w-16 h-16 rounded-full bg-[#1B5E35] flex items-center justify-center shadow-md group-hover:scale-110 transition-transform duration-300">
                     <Icon size={24} className="text-gold" />
@@ -1232,9 +1233,12 @@ const MemberRegistrationView: React.FC<{ onRegister: (data: any) => void }> = ({
 
 
 const EstablishmentsView: React.FC = () => {
+  const location = useLocation();
+  const initialFilter = location.state?.filter || 'Tous';
   const [searchTerm, setSearchTerm] = useState('');
-  const [filter, setFilter] = useState('Tous');
+  const [filter, setFilter] = useState(initialFilter);
   const places = [
+    { name: 'Domaine Bini', cat: 'Diaspora & Héritage', zone: 'Autoroute du Nord', cashback: '5%', img: 'https://images.unsplash.com/photo-1516026672322-bc52d61a55d5?auto=format&fit=crop&q=80&w=400' },
     { name: 'Sofitel Abidjan', cat: 'Hébergements & Séjours', zone: 'Cocody', cashback: '3-7%', img: 'https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?auto=format&fit=crop&q=80&w=400' },
     { name: 'Pullman Helios', cat: 'Hébergements & Séjours', zone: 'Plateau', cashback: '3-7%', img: '/assets/pullman-hotel.png' },
     { name: 'Sky Lounge', cat: 'Lounges & Nightlife', zone: 'Marcory', cashback: '5%', img: 'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&q=80&w=400' },
@@ -1247,7 +1251,7 @@ const EstablishmentsView: React.FC = () => {
     (filter === 'Tous' || p.cat === filter) &&
     (p.name.toLowerCase().includes(searchTerm.toLowerCase()) || p.zone.toLowerCase().includes(searchTerm.toLowerCase()))
   );
-  const filterIcons: Record<string, React.ReactNode> = { 'Hébergements & Séjours': <Hotel size={14} />, 'Restaurants & Dining': <Utensils size={14} />, 'Lounges & Nightlife': <Coffee size={14} />, 'Beach Clubs & Loisirs': <Gamepad2 size={14} />, 'Bien-être & Wellness': <Heart size={14} /> };
+  const filterIcons: Record<string, React.ReactNode> = { 'Hébergements & Séjours': <Hotel size={14} />, 'Restaurants & Dining': <Utensils size={14} />, 'Lounges & Nightlife': <Coffee size={14} />, 'Beach Clubs & Loisirs': <Gamepad2 size={14} />, 'Bien-être & Wellness': <Heart size={14} />, 'Diaspora & Héritage': <Globe size={14} /> };
   return (
     <div className="min-h-screen bg-cream pt-24">
       <div className="container mx-auto px-6 py-16">
@@ -1260,7 +1264,7 @@ const EstablishmentsView: React.FC = () => {
           <input type="text" placeholder="Rechercher un lieu ou une zone..." className="w-full bg-white border border-gold/10 py-5 pl-16 pr-6 font-serif text-lg focus:border-gold outline-none shadow-premium transition-all" value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} />
         </div>
         <div className="flex flex-wrap gap-3 mb-12">
-          {['Tous', 'Hébergements & Séjours', 'Restaurants & Dining', 'Lounges & Nightlife', 'Beach Clubs & Loisirs', 'Bien-être & Wellness'].map((f) => (
+          {['Tous', 'Hébergements & Séjours', 'Restaurants & Dining', 'Lounges & Nightlife', 'Beach Clubs & Loisirs', 'Bien-être & Wellness', 'Diaspora & Héritage'].map((f) => (
             <button key={f} onClick={() => setFilter(f)} className={`px-8 py-2 text-[10px] font-bold uppercase tracking-widest whitespace-nowrap transition-all flex items-center gap-2 ${filter === f ? 'bg-green-dark text-gold border border-gold shadow-gold' : 'bg-white text-text-muted border border-gold/10'}`}>
               {filterIcons[f]}{f}
             </button>
