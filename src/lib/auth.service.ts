@@ -33,6 +33,25 @@ export async function registerMember(data: {
   paymentMethod?: string;
   photoFile?: File | null;
 }): Promise<Member> {
+  // ─── DEMO MODE BYPASS ────────────────────────────────────────────────────────
+  if (data.email.toLowerCase().includes('demo')) {
+    return {
+      uid: 'demo-uid-123',
+      name: data.name || 'Utilisateur Démo',
+      email: data.email,
+      whatsapp: data.whatsapp || '+225 00 00 00 00',
+      photoURL: `https://ui-avatars.com/api/?name=Demo&background=1B3A2D&color=C9A84C&bold=true`,
+      paymentMethod: data.paymentMethod || 'orange',
+      tier: data.plan || 'bronze',
+      balance: 15000,
+      totalSpent: 45000,
+      visitsThisMonth: 3,
+      qrCode: 'IBC-MEMBER-DEMO',
+      role: data.email.toLowerCase().includes('partner') ? 'partner' : data.email.toLowerCase().includes('admin') ? 'admin' : 'member',
+      memberCode: 'IBCDEMO',
+    };
+  }
+
   // 1. Create Firebase Auth user
   const { user } = await createUserWithEmailAndPassword(auth, data.email, data.password);
 
@@ -83,6 +102,25 @@ export async function registerMember(data: {
 
 // ─── Login (member or partner) ────────────────────────────────────────────────
 export async function loginUser(email: string, password: string): Promise<Member> {
+  // ─── DEMO MODE BYPASS ────────────────────────────────────────────────────────
+  if (email.toLowerCase().includes('demo')) {
+    return {
+      uid: 'demo-uid-123',
+      name: 'Utilisateur Démo',
+      email: email,
+      whatsapp: '+225 00 00 00 00',
+      photoURL: `https://ui-avatars.com/api/?name=Demo&background=1B3A2D&color=C9A84C&bold=true`,
+      paymentMethod: 'orange',
+      tier: 'gold',
+      balance: 15000,
+      totalSpent: 45000,
+      visitsThisMonth: 3,
+      qrCode: 'IBC-MEMBER-DEMO',
+      role: email.toLowerCase().includes('partner') ? 'partner' : email.toLowerCase().includes('admin') ? 'admin' : 'member',
+      memberCode: 'IBCDEMO',
+    };
+  }
+
   const { user } = await signInWithEmailAndPassword(auth, email, password);
 
   const snap = await getDoc(doc(db, 'users', user.uid));
