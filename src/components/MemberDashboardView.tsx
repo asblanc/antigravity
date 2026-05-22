@@ -790,7 +790,13 @@ export const MemberDashboardView: React.FC<MemberDashboardViewProps> = ({ user, 
                       setActiveTab('parrainage');
                       window.scrollTo({ top: 0, behavior: 'smooth' });
                     }}
-                    className="mt-4 text-center text-green-dark hover:text-gold text-[9px] uppercase tracking-widest font-bold flex items-center justify-center gap-1 transi                {/* CARD 9: MON ÉVOLUTION MEMBRE (SPENDING POWER TRACKER) */}
+                    className="mt-4 text-center text-green-dark hover:text-gold text-[9px] uppercase tracking-widest font-bold flex items-center justify-center gap-1 transition-colors border-t border-gold/10 pt-3 cursor-pointer"
+                  >
+                    <span>Voir mon programme de parrainage →</span>
+                  </button>
+                </div>
+
+                {/* CARD 9: MON ÉVOLUTION MEMBRE (SPENDING POWER TRACKER) */}
                 <div className="rounded-[36px] bg-white border border-gold/15 p-6 shadow-soft flex flex-col justify-between min-h-[260px]">
                   
                   {/* Header Line */}
@@ -865,11 +871,6 @@ export const MemberDashboardView: React.FC<MemberDashboardViewProps> = ({ user, 
                   <button 
                     onClick={() => toast('Votre statut est déterminé par votre pouvoir d’achat mensuel moyen chez nos partenaires : Bronze (10 000–40 000 F), Or (50 000–90 000 F), Platinum (100 000 F et plus).', { icon: '⭐' })}
                     className="text-center text-green-dark hover:text-gold text-[9px] uppercase tracking-widest font-bold flex items-center justify-center gap-1 transition-colors border-t border-gold/10 pt-3"
-                  >
-                    <span>Comprendre les niveaux</span>
-                    <ArrowRight size={10} />
-                  </button>
-                </div>n-colors border-t border-gold/10 pt-3"
                   >
                     <span>Comprendre les niveaux</span>
                     <ArrowRight size={10} />
@@ -1051,7 +1052,7 @@ export const MemberDashboardView: React.FC<MemberDashboardViewProps> = ({ user, 
                 </div>
               </div>
 
-              {/* ─── BOTTOM SECTION: RECOMMANDÉS POUR VOUS CAROUSEL ─── */}}
+              {/* ─── BOTTOM SECTION: RECOMMANDÉS POUR VOUS CAROUSEL ─── */}
               <div className="border-t border-gold/15 pt-8 space-y-6">
                 
                 <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
