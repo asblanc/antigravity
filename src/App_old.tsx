@@ -205,28 +205,14 @@ PLATEFORME D'EXPÉRIENCES TOURISTIQUES<br />& CLUB PRIVÉ D'AVANTAGES
         </div>
         <button className="md:hidden" onClick={() => setMobileMenuOpen(!mobileMenuOpen)}>{mobileMenuOpen ? <X size={24} className={isSolid ? 'text-green-dark' : 'text-white'} /> : <Menu size={24} className={isSolid ? 'text-green-dark' : 'text-white'} />}</button>
       </div>
-      {/* Premium Mobile Menu Overlay */}
-      <div className={`md:hidden absolute top-full left-0 right-0 bg-[#031d0f]/95 backdrop-blur-xl border-t border-gold/20 overflow-hidden transition-all duration-300 shadow-2xl ${mobileMenuOpen ? 'max-h-[600px] opacity-100' : 'max-h-0 opacity-0 pointer-events-none'}`}>
-        <div className="px-6 py-8 flex flex-col gap-6">
+      {mobileMenuOpen && (
+        <div className="md:hidden bg-green-dark px-6 py-8 flex flex-col gap-6">
           {[{ name: 'Accueil', path: '/' }, { name: 'Partenaires', path: '/establishments' }, { name: 'Avantages', path: '/offers' }].map((item) => (
-            <Link key={item.path} to={item.path} onClick={() => setMobileMenuOpen(false)} className={`text-[11px] uppercase tracking-[0.2em] font-bold ${currentView === item.path ? 'text-gold' : 'text-white/90 hover:text-gold transition-colors'}`}>{item.name}</Link>
+            <Link key={item.path} to={item.path} onClick={() => setMobileMenuOpen(false)} className={`text-sm uppercase tracking-widest font-bold ${currentView === item.path ? 'text-gold' : 'text-white hover:text-gold'}`}>{item.name}</Link>
           ))}
-          <button type="button" onClick={() => { setMobileMenuOpen(false); navigate('/'); setTimeout(() => document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' }), 100); }} className="text-[11px] uppercase tracking-[0.2em] font-bold text-white/90 hover:text-gold transition-colors text-left">Contact</button>
-          
-          <div className="h-px bg-gold/20 w-full my-2" />
-          
-          <div className="flex flex-col gap-4">
-            {user ? (
-              <button onClick={() => { setMobileMenuOpen(false); navigate('/member-dashboard'); }} className="btn-gold w-full py-3.5 text-[10px] uppercase tracking-[0.2em] font-bold text-center rounded-sm">Mon Dashboard</button>
-            ) : (
-              <>
-                <button onClick={() => { setMobileMenuOpen(false); navigate('/login'); }} className="border border-white/30 text-white hover:bg-white hover:text-green-dark transition-all duration-300 w-full py-3.5 text-[10px] font-bold uppercase tracking-[0.2em] rounded-sm">Connexion</button>
-                <button onClick={() => { setMobileMenuOpen(false); navigate('/member-registration'); }} className="btn-gold w-full py-3.5 text-[10px] uppercase tracking-[0.2em] font-bold text-center rounded-sm">Devenir Membre</button>
-              </>
-            )}
-          </div>
+          <button type="button" onClick={() => { setMobileMenuOpen(false); navigate('/'); setTimeout(() => document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' }), 100); }} className="text-sm uppercase tracking-widest font-bold text-white hover:text-gold text-left">Contact</button>
         </div>
-      </div>
+      )}
     </nav>
   );
 };
@@ -237,32 +223,32 @@ const HomeView: React.FC = () => {
   return (
     <div className="min-h-screen bg-cream">
       {/* Hero Section */}
-      <section className="relative min-h-[90vh] md:min-h-screen flex items-center justify-center overflow-hidden py-24 sm:py-32">
-        <div className="absolute inset-0 bg-gradient-to-b from-[#031d0f]/70 via-[#031d0f]/40 to-[#031d0f]/95 z-10" />
-        <img src="https://images.unsplash.com/photo-1540555700478-4be289fbecef?auto=format&fit=crop&q=80&w=1600" alt="Premium Lifestyle Côte d'Ivoire" className="absolute inset-0 w-full h-full object-cover" />
-        <div className="relative z-20 container mx-auto px-4 sm:px-6 text-center text-white pt-16 md:pt-20">
-          <div className="inline-block bg-green-dark/60 backdrop-blur-md border border-gold/30 px-5 sm:px-8 py-3 mb-8 sm:mb-10 rounded-sm max-w-xl mx-auto">
-            <span className="text-gold text-[8px] sm:text-[10px] uppercase tracking-[0.15em] sm:tracking-[0.25em] font-bold block leading-tight">
+      <section className="relative min-h-screen flex items-center justify-center overflow-hidden py-32">
+        <div className="absolute inset-0 bg-gradient-to-b from-green-dark/95 via-green-dark/80 to-green-dark/95 z-10" />
+        <img src="https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?auto=format&fit=crop&q=80&w=1600" alt="Premium Hotel Abidjan" className="absolute inset-0 w-full h-full object-cover" />
+        <div className="relative z-20 container mx-auto px-6 text-center text-white pt-16">
+          <div className="inline-block bg-green-dark/60 backdrop-blur-md border border-gold/30 px-8 py-3.5 mb-10 rounded-sm max-w-xl mx-auto">
+            <span className="text-gold text-[10px] uppercase tracking-[0.25em] font-bold block leading-tight">
               Le club privé des expériences locales
             </span>
-            <span className="text-gold text-[8px] sm:text-[10px] uppercase tracking-[0.15em] sm:tracking-[0.25em] font-bold block mt-1 leading-tight">
+            <span className="text-gold text-[10px] uppercase tracking-[0.25em] font-bold block mt-1 leading-tight">
               & des établissements lifestyle en Côte d'Ivoire
             </span>
           </div>
-          <h1 className="font-serif text-3xl sm:text-5xl md:text-7xl font-bold mb-6 sm:mb-10 leading-tight tracking-wide px-2 drop-shadow-lg">
+          <h1 className="font-serif text-4xl sm:text-6xl md:text-7xl font-bold mb-10 leading-tight tracking-wide">
             Transformez vos loisirs<br />
             <span className="italic text-gold">en opportunités d'affaires.</span>
           </h1>
-          <p className="text-white/90 text-sm sm:text-base md:text-lg max-w-2xl mx-auto mb-10 sm:mb-16 leading-relaxed font-light px-2">Découvrez des lieux uniques, vivez des expériences exclusives et profitez d'avantages réservés aux membres.</p>
+          <p className="text-white/85 text-sm sm:text-base max-w-2xl mx-auto mb-16 leading-relaxed font-light">Découvrez des lieux uniques, vivez des expériences exclusives et profitez d'avantages réservés aux membres.</p>
           
-          <div className="flex flex-col sm:flex-row gap-4 sm:gap-6 justify-center max-w-2xl mx-auto px-2">
-            <button onClick={() => navigate('/member-registration')} className="btn-gold w-full sm:w-1/2 shadow-2xl flex flex-col items-center py-3.5 sm:py-4 px-4 sm:px-6 rounded-sm hover:scale-[1.02] transition-transform duration-300">
-              <span className="text-sm sm:text-base font-bold tracking-wider">DEVENIR MEMBRE</span>
-              <span className="text-[7px] sm:text-[8px] uppercase tracking-widest mt-1 opacity-90 font-medium text-center">Découvrir • Sortir • Voyager • Profiter</span>
+          <div className="flex flex-col sm:flex-row gap-6 justify-center max-w-2xl mx-auto">
+            <button onClick={() => navigate('/member-registration')} className="btn-gold w-full sm:w-1/2 shadow-2xl flex flex-col items-center py-4 px-6 rounded-sm hover:scale-[1.02] transition-transform duration-300">
+              <span className="text-base font-bold tracking-wider">DEVENIR MEMBRE</span>
+              <span className="text-[8px] uppercase tracking-widest mt-1.5 opacity-90 font-medium">Découvrir • Sortir • Voyager • Profiter</span>
             </button>
-            <button onClick={() => navigate('/partner-registration')} className="btn-outline w-full sm:w-1/2 !border-gold/50 !text-white hover:!bg-gold hover:!text-green-dark flex flex-col items-center py-3.5 sm:py-4 px-4 sm:px-6 rounded-sm hover:scale-[1.02] transition-all duration-300">
-              <span className="text-sm sm:text-base font-bold tracking-wider">DEVENIR PARTENAIRE</span>
-              <span className="text-[7px] sm:text-[8px] uppercase tracking-widest mt-1 opacity-90 font-medium text-center">Attirer • Générer du trafic • Fidéliser</span>
+            <button onClick={() => navigate('/partner-registration')} className="btn-outline w-full sm:w-1/2 !border-gold/50 !text-white hover:!bg-gold hover:!text-green-dark flex flex-col items-center py-4 px-6 rounded-sm hover:scale-[1.02] transition-all duration-300">
+              <span className="text-base font-bold tracking-wider">DEVENIR PARTENAIRE</span>
+              <span className="text-[8px] uppercase tracking-widest mt-1.5 opacity-90 font-medium text-center">Attirer une clientèle qualifiée • Générer du trafic • Rejoindre le réseau</span>
             </button>
           </div>
         </div>
@@ -572,44 +558,21 @@ const HomeView: React.FC = () => {
       </section>
       
       {/* Section 8: Devenir Partenaire */}
-      <section className="py-20 sm:py-32 bg-green-dark relative overflow-hidden">
-        <div className="container mx-auto px-4 sm:px-6 relative z-10 flex flex-col lg:flex-row items-center gap-12 lg:gap-20">
-          <div className="flex-1 text-center lg:text-left">
-            <span className="text-[10px] uppercase tracking-[0.4em] text-gold font-bold block mb-4 sm:mb-6">LE RÉSEAU IBC</span>
-            <h2 className="font-serif text-3xl sm:text-4xl md:text-5xl font-bold text-white mb-6 sm:mb-8">Devenir Partenaire</h2>
-            <p className="text-white/80 text-sm sm:text-base mb-8 sm:mb-12 leading-relaxed max-w-xl mx-auto lg:mx-0">
-              Rejoignez le réseau des établissements premium et connectez-vous à une clientèle active, fidèle et à la recherche d'expériences uniques en Côte d'Ivoire. Développez votre activité !
-            </p>
-            <div className="grid grid-cols-2 gap-3 sm:gap-6 mb-10 sm:mb-12 max-w-lg mx-auto lg:mx-0">
-               <div className="bg-white/5 border border-gold/10 rounded-xl p-4 sm:p-6 text-center">
-                  <p className="font-serif text-2xl sm:text-4xl font-bold text-gold">10k+</p>
-                  <p className="text-[8px] sm:text-[10px] uppercase tracking-widest text-white/50 font-bold mt-2">Membres Actifs</p>
-               </div>
-               <div className="bg-white/5 border border-gold/10 rounded-xl p-4 sm:p-6 text-center">
-                  <p className="font-serif text-2xl sm:text-4xl font-bold text-gold">500+</p>
-                  <p className="text-[8px] sm:text-[10px] uppercase tracking-widest text-white/50 font-bold mt-2">Établissements</p>
-               </div>
-            </div>
-            <button
-              onClick={() => navigate('/partner-registration')}
-              className="w-full sm:w-auto bg-[#C9A84C] text-[#1B5E35] font-bold rounded-[4px] px-8 sm:px-12 py-4 uppercase tracking-widest text-[10px] sm:text-xs hover:bg-[#F0C040] transition-colors"
-            >
-              REJOINDRE LE RÉSEAU IBC
-            </button>
-          </div>
-          
-          <div className="flex-1 w-full relative">
-            <div className="grid grid-cols-2 gap-3 sm:gap-6 relative">
-              <div className="space-y-3 sm:space-y-6 mt-8 sm:mt-12">
-                <img src="https://images.unsplash.com/photo-1514362545857-3bc16c4c7d1b?auto=format&fit=crop&q=80&w=600" alt="Restaurant gastronomique" className="rounded-2xl w-full h-32 sm:h-64 object-cover shadow-lg" />
-                <img src="https://images.unsplash.com/photo-1540555700478-4be289fbecef?auto=format&fit=crop&q=80&w=600" alt="Beach Club Assinie" className="rounded-2xl w-full h-24 sm:h-48 object-cover shadow-lg" />
-              </div>
-              <div className="space-y-3 sm:space-y-6">
-                <img src="https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?auto=format&fit=crop&q=80&w=600" alt="Hôtel Premium" className="rounded-2xl w-full h-24 sm:h-48 object-cover shadow-lg" />
-                <img src="https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&q=80&w=600" alt="Rooftop Lounge" className="rounded-2xl w-full h-32 sm:h-64 object-cover shadow-lg" />
-              </div>
-            </div>
-          </div>
+      <section className="py-32 bg-green-dark">
+        <div className="container mx-auto px-6 text-center">
+          <span className="text-[10px] uppercase tracking-[0.4em] text-gold font-bold block mb-6">LE RÉSEAU IBC</span>
+          <h2 className="font-serif text-4xl md:text-5xl font-bold text-white mb-6">Devenir Partenaire</h2>
+          <p className="text-white/80 max-w-2xl mx-auto mb-10 leading-relaxed">
+            Intégrez un réseau d'établissements lifestyle sélectionnés et connectez-vous à une communauté active à la recherche d'expériences locales, de loisirs et d'escapades premium.
+            <br className="hidden md:block" />
+            IVOIRE BUSINESS CLUB transforme les sorties, séjours et expériences en opportunités de fréquentation et de fidélisation pour ses partenaires.
+          </p>
+          <button
+            onClick={() => navigate('/partner-registration')}
+            className="bg-[#C9A84C] text-[#1B5E35] font-bold rounded-[4px] px-12 py-4 uppercase tracking-widest text-[10px] hover:bg-[#F0C040] transition-colors"
+          >
+            REJOINDRE LE RÉSEAU IBC
+          </button>
         </div>
       </section>
 
@@ -691,25 +654,25 @@ const HomeView: React.FC = () => {
           {/* Cards partenaires */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
             {[
-              { name: 'Sofitel Abidjan', cat: 'Hébergements & Séjours', zone: 'Cocody', cashback: '3-7%', img: 'https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?auto=format&fit=crop&q=80&w=600' },
-              { name: 'Sky Lounge', cat: 'Lounges & Nightlife', zone: 'Marcory', cashback: '5%', img: 'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&q=80&w=600' },
-              { name: 'Radisson Blu', cat: 'Hébergements & Séjours', zone: 'Port-Bouet', cashback: '3-7%', img: 'https://images.unsplash.com/photo-1445019980597-93fa8acb246c?auto=format&fit=crop&q=80&w=600' },
-              { name: 'Maison Akoula', cat: 'Beach Clubs & Loisirs', zone: 'Assinie', cashback: '5%', img: 'https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?auto=format&fit=crop&q=80&w=600' },
-              { name: 'Le Grand Large', cat: 'Restaurants & Dining', zone: 'Zone 4', cashback: '5%', img: 'https://images.unsplash.com/photo-1514362545857-3bc16c4c7d1b?auto=format&fit=crop&q=80&w=600' },
-              { name: 'Orchidée Spa', cat: 'Bien-être & Wellness', zone: 'Cocody', cashback: '5%', img: 'https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&q=80&w=600' }
+              { name: 'Sofitel Abidjan', cat: 'Hébergements & Séjours', zone: 'Cocody', cashback: '3-7%', img: 'https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?auto=format&fit=crop&q=80&w=400' },
+              { name: 'Sky Lounge', cat: 'Lounges & Nightlife', zone: 'Marcory', cashback: '5%', img: 'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&q=80&w=400' },
+              { name: 'Radisson Blu', cat: 'Hébergements & Séjours', zone: 'Port-Bouet', cashback: '3-7%', img: 'https://images.unsplash.com/photo-1445019980597-93fa8acb246c?auto=format&fit=crop&q=80&w=400' },
+              { name: 'Maison Akoula', cat: 'Beach Clubs & Loisirs', zone: 'Assinie', cashback: '5%', img: 'https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?auto=format&fit=crop&q=80&w=400' },
+              { name: 'Le Grand Large', cat: 'Restaurants & Dining', zone: 'Zone 4', cashback: '5%', img: 'https://images.unsplash.com/photo-1514362545857-3bc16c4c7d1b?auto=format&fit=crop&q=80&w=400' },
+              { name: 'Orchidée Spa', cat: 'Bien-être & Wellness', zone: 'Cocody', cashback: '5%', img: 'https://images.unsplash.com/photo-1540555700478-4be289fbecef?auto=format&fit=crop&q=80&w=400' }
             ]
               .filter(place => activeFilter === 'Tous' || place.cat === activeFilter)
               .map((place, i) => (
-                <div key={i} className="bg-white border border-gold/10 rounded-xl overflow-hidden hover:border-gold/30 hover:shadow-premium transition-all duration-500 group cursor-pointer" onClick={() => navigate('/offers')}>
-                  <div className="relative overflow-hidden h-40 sm:h-48">
+                <div key={i} className="bg-white border border-gold/10 overflow-hidden hover:border-gold/30 hover:shadow-premium transition-all group">
+                  <div className="relative overflow-hidden h-48">
                     <img src={place.img} alt={place.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
-                    <span className="absolute top-3 left-3 bg-green-dark/90 backdrop-blur-sm text-gold text-[8px] sm:text-[9px] uppercase tracking-widest font-bold px-3 py-1 rounded-sm">{place.cat}</span>
+                    <span className="absolute top-3 left-3 bg-green-dark text-gold text-[9px] uppercase tracking-widest font-bold px-3 py-1">{place.cat}</span>
                   </div>
-                  <div className="p-4 sm:p-6 text-left">
-                    <h4 className="font-serif text-lg sm:text-xl text-green-dark font-bold mb-2">{place.name}</h4>
-                    <div className="flex items-center justify-between mt-4">
-                      <span className="flex items-center gap-1.5 text-text-muted text-[10px] sm:text-xs"><MapPin size={14} className="text-gold" />{place.zone}</span>
-                      <span className="bg-green-dark/5 text-green-dark text-[9px] sm:text-[10px] font-bold px-3 py-1.5 rounded-sm border border-green-dark/10">Cashback {place.cashback}</span>
+                  <div className="p-6">
+                    <h4 className="font-serif text-green-dark font-bold mb-2">{place.name}</h4>
+                    <div className="flex items-center justify-between">
+                      <span className="flex items-center gap-1 text-text-muted text-xs"><MapPin size={12} />{place.zone}</span>
+                      <span className="bg-green-dark/10 text-green-dark text-[10px] font-bold px-3 py-1">Cashback {place.cashback}</span>
                     </div>
                   </div>
                 </div>
