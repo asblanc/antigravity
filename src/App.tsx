@@ -51,6 +51,8 @@ import { getMemberTransactions } from './lib/transaction.service';
 import { PartnerDashboardView } from './components/PartnerDashboardView';
 import { AdminDashboardView } from './components/AdminDashboardView';
 import { MemberDashboardView } from './components/MemberDashboardView';
+import { MembersListView } from './components/MembersListView';
+import { AdminImportView } from './components/AdminImportView';
 import ibcLogo from "./assets/ibc-logo.png";
 
 const formatPrice = (num: number): string => {
@@ -167,6 +169,8 @@ const App: React.FC = () => {
         <Route path="/member-dashboard" element={user ? <MemberDashboardView user={user} onLogout={handleLogout} /> : <Navigate to="/login" />} />
         <Route path="/partner-dashboard" element={<PartnerDashboardView onLogout={handleLogout} />} />
         <Route path="/admin-dashboard" element={<AdminDashboardView onLogout={handleLogout} />} />
+        <Route path="/admin-members" element={<MembersListView onLogout={handleLogout} />} />
+        <Route path="/admin-import" element={<AdminImportView onLogout={handleLogout} />} />
         <Route path="*" element={<Navigate to="/" />} />
       </Routes>
       {!isDashboard && <Footer />}
