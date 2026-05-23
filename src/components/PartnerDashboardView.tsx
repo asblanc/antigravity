@@ -311,14 +311,14 @@ export const PartnerDashboardView: React.FC<{ onLogout: () => void }> = ({ onLog
             {/* PIN access lock */}
             <button 
               onClick={() => accessLevel === 'STAFF' ? setShowPinModal(true) : setAccessLevel('STAFF')}
-              className={`flex items-center gap-2 border px-4 py-1.5 rounded-full text-xs font-bold transition-all ${
+              className={`flex items-center gap-2 border px-2 sm:px-4 py-1.5 rounded-full text-xs font-bold transition-all ${
                 accessLevel === 'OWNER' 
                   ? 'border-gold bg-gold/25 text-gold' 
                   : 'border-white/20 text-white/50 hover:text-white'
               }`}
             >
               {accessLevel === 'OWNER' ? <Unlock size={12} /> : <Lock size={12} />}
-              <span className="uppercase tracking-widest text-[9px]">
+              <span className="uppercase tracking-widest text-[9px] hidden sm:inline">
                 Mode {accessLevel === 'OWNER' ? 'Propriétaire' : 'Staff'}
               </span>
             </button>
@@ -366,7 +366,7 @@ export const PartnerDashboardView: React.FC<{ onLogout: () => void }> = ({ onLog
             <div className="space-y-8 animate-in fade-in duration-500">
               
               {/* KPI Cards Row */}
-              <div className="grid grid-cols-2 lg:grid-cols-5 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
                 {/* KPI 1 */}
                 <div className="bg-white/5 border border-gold/15 rounded-2xl p-4 shadow-soft relative overflow-hidden group hover:border-gold/35 transition-all">
                   <div className="absolute top-0 right-0 w-24 h-24 bg-gold/5 rounded-full blur-2xl pointer-events-none" />
@@ -587,18 +587,66 @@ export const PartnerDashboardView: React.FC<{ onLogout: () => void }> = ({ onLog
                     </button>
                   </div>
 
-                  {/* Parrainage Partenaires Widget */}
+                  {/* Répartition des transactions */}
                   <div className="bg-white/5 border border-gold/15 rounded-3xl p-6 shadow-soft">
                     <div className="flex items-center justify-between border-b border-white/5 pb-3 mb-3">
-                      <h4 className="font-serif text-gold text-sm uppercase tracking-wider">Parrainage partenaires</h4>
-                      <button onClick={() => setActiveTab('parrainage')} className="text-[9px] font-bold text-white/40 hover:text-gold uppercase tracking-wider">Gérer</button>
+                      <h4 className="font-serif text-gold text-sm uppercase tracking-wider">RÉPARTITION DES TRANSACTIONS</h4>
+                      <select className="text-[8px] font-bold text-white/40 bg-transparent border border-white/10 rounded px-2 py-1 outline-none focus:border-gold uppercase tracking-wider cursor-pointer">
+                        <option className="bg-[#02170c] text-white">Par catégorie</option>
+                        <option className="bg-[#02170c] text-white">Par établissement</option>
+                        <option className="bg-[#02170c] text-white">Par mois</option>
+                      </select>
                     </div>
-                    <div className="flex items-center justify-between bg-black/20 p-3 rounded-xl border border-white/5">
-                      <div>
-                        <p className="text-[10px] text-white/50">Bonus Gagnés</p>
-                        <p className="font-serif text-lg font-bold text-gold">25 000 FCFA</p>
+
+                    <div className="flex flex-col sm:flex-row items-center gap-6 mt-2">
+                      {/* Donut SVG Chart */}
+                      <div className="relative shrink-0">
+                        <svg width="140" height="140" viewBox="0 0 160 160">
+                          {/* Restauration 45% — or */}
+                          <circle cx="80" cy="80" r="60" fill="none" stroke="#C9A84C" strokeWidth="24"
+                            strokeDasharray="169.6 376.8" strokeDashoffset="94.2" />
+                          {/* Boissons 25% — bronze */}
+                          <circle cx="80" cy="80" r="60" fill="none" stroke="#8C6239" strokeWidth="24"
+                            strokeDasharray="94.2 452.2" strokeDashoffset="-75.4" />
+                          {/* Location & transats 15% — vert clair */}
+                          <circle cx="80" cy="80" r="60" fill="none" stroke="#2D7A4F" strokeWidth="24"
+                            strokeDasharray="56.5 489.9" strokeDashoffset="-169.6" />
+                          {/* Activités 10% — or clair */}
+                          <circle cx="80" cy="80" r="60" fill="none" stroke="#D4AF37" strokeWidth="24"
+                            strokeDasharray="37.7 508.7" strokeDashoffset="-226.1" />
+                          {/* Autres 5% — gris */}
+                          <circle cx="80" cy="80" r="60" fill="none" stroke="#4a3b22" strokeWidth="24"
+                            strokeDasharray="18.8 527.6" strokeDashoffset="-263.9" />
+                          {/* Cercle central foncé */}
+                          <circle cx="80" cy="80" r="48" fill="#010a04" />
+                          <text x="80" y="85" textAnchor="middle" style={{fontFamily:'serif', fontWeight:700, fontSize:15, fill:'#C9A84C'}}>Mois</text>
+                        </svg>
                       </div>
-                      <Building size={24} className="text-gold/50" />
+
+                      {/* Légende */}
+                      <div className="flex-1 space-y-2.5 w-full">
+                        {[
+                          { label: 'Restauration', pct: 45, color: '#C9A84C' },
+                          { label: 'Boissons', pct: 25, color: '#8C6239' },
+                          { label: 'Location & transats', pct: 15, color: '#2D7A4F' },
+                          { label: 'Activités', pct: 10, color: '#D4AF37' },
+                          { label: 'Autres', pct: 5, color: '#4a3b22' },
+                        ].map((item) => (
+                          <div key={item.label} className="flex items-center justify-between">
+                            <div className="flex items-center gap-2">
+                              <span className="w-2 h-2 rounded-full shrink-0" style={{ background: item.color }} />
+                              <span className="text-[10px] text-white/80">{item.label}</span>
+                            </div>
+                            <span className="text-[10px] font-bold text-white">{item.pct}%</span>
+                          </div>
+                        ))}
+                        <button
+                          onClick={() => toast('Détail des catégories bientôt disponible !', { icon: '📊' })}
+                          className="mt-2 w-full text-[9px] font-bold text-gold hover:text-white uppercase tracking-widest flex items-center justify-center gap-1 transition-colors border-t border-white/5 pt-3"
+                        >
+                          Voir le détail des catégories →
+                        </button>
+                      </div>
                     </div>
                   </div>
 

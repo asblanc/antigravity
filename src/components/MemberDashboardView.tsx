@@ -284,7 +284,7 @@ export const MemberDashboardView: React.FC<MemberDashboardViewProps> = ({ user, 
           {/* Right Controls */}
           <div className="flex items-center gap-4">
             {/* Bronze Badge */}
-            <div className="flex items-center gap-2 border border-gold/20 bg-[#FAF5E9] px-4 py-1.5 rounded-full text-xs">
+            <div className="hidden sm:flex items-center gap-2 border border-gold/20 bg-[#FAF5E9] px-4 py-1.5 rounded-full text-xs">
               <div className="w-5 h-5 rounded-full bg-[#8C6239] flex items-center justify-center text-white border border-gold/20">
                 <Star size={10} fill="currentColor" />
               </div>
@@ -1072,7 +1072,7 @@ export const MemberDashboardView: React.FC<MemberDashboardViewProps> = ({ user, 
                   </button>
                 </div>
 
-                <div className="grid gap-4 grid-cols-2 md:grid-cols-4 xl:grid-cols-[1fr_1fr_1fr_1fr_0.8fr]">
+                <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 md:grid-cols-4 xl:grid-cols-[1fr_1fr_1fr_1fr_0.8fr]">
                   
                   {recommendations.map((place) => (
                     <div 
@@ -1353,7 +1353,7 @@ export const MemberDashboardView: React.FC<MemberDashboardViewProps> = ({ user, 
                 </div>
 
                 {/* Stats summary row */}
-                <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 mt-6">
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 mt-6">
                   <div className="bg-cream/50 border border-gold/15 rounded-2xl p-4">
                     <p className="text-[9px] text-text-muted uppercase font-bold tracking-wider mb-1">Mes filleuls</p>
                     {isLoadingReferrals ? (
