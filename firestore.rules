@@ -43,6 +43,14 @@ service cloud.firestore {
       allow delete: if isAdmin();
     }
 
+    // ── members collection (same data as users, for admin queries) ──────────
+    match /members/{uid} {
+      allow read: if isOwner(uid) || isAdmin();
+      allow create: if isOwner(uid);
+      allow update: if isOwner(uid) || isAdmin();
+      allow delete: if isAdmin();
+    }
+
     // ── transactions collection ───────────────────────────────────────────────
     match /transactions/{txId} {
       // Members can read their own transactions; partners can read txns they created; admins can read all

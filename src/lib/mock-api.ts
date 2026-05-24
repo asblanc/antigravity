@@ -5,7 +5,7 @@ export interface Member {
   uid: string;
   name: string;
   email: string;
-  whatsapp: string;
+  whatsapp?: string;
   photoURL?: string;
   paymentMethod?: string;
   tier: 'bronze' | 'silver' | 'gold';
@@ -13,6 +13,13 @@ export interface Member {
   totalSpent: number;
   visitsThisMonth: number;
   qrCode: string;
+  role?: 'member' | 'partner' | 'admin';
+  memberCode?: string;
+  provider?: string;
+  phone?: string;
+  company?: string;
+  points?: number;
+  active?: boolean;
 }
 
 export interface Transaction {

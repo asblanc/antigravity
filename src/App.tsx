@@ -44,7 +44,7 @@ import {
 import { Routes, Route, useNavigate, useLocation, Navigate, Link } from 'react-router-dom';
 import { QRCodeSVG } from 'qrcode.react';
 import type { Member, Transaction, Offer } from './lib/mock-api';
-import { loginUser, registerMember, logoutUser, subscribeToAuthState, getCurrentMemberProfile } from './lib/auth.service';
+import { loginUser, registerMember, logoutUser, subscribeToAuthState, getCurrentMemberProfile, loginWithGoogle, loginWithFacebook, loginWithMicrosoft, sendPhoneOTP, verifyPhoneOTP, sendPasswordReset, initRecaptcha } from './lib/auth.service';
 import { fetchSignInMethodsForEmail } from 'firebase/auth';
 import { auth } from './lib/firebase';
 import { getMemberTransactions } from './lib/transaction.service';
@@ -53,6 +53,7 @@ import { AdminDashboardView } from './components/AdminDashboardView';
 import { MemberDashboardView } from './components/MemberDashboardView';
 import { MembersListView } from './components/MembersListView';
 import { AdminImportView } from './components/AdminImportView';
+import { LoginView } from './components/LoginView';
 import ibcLogo from "./assets/ibc-logo.png";
 
 const formatPrice = (num: number): string => {
@@ -165,7 +166,15 @@ const App: React.FC = () => {
         <Route path="/partner-registration" element={<PartnerRegistrationView />} />
         <Route path="/establishments" element={<EstablishmentsView />} />
         <Route path="/offers" element={<EstablishmentsView />} />
-        <Route path="/login" element={<LoginView onLogin={handleLogin} />} />
+        <Route path="/login" element={<LoginView
+          onLogin={handleLogin}
+          onLoginGoogle={async () => { const u = await loginWithGoogle(); setUser(u); navigate(u.role === 'partner' ? '/partner-dashboard' : u.role === 'admin' ? '/admin-dashboard' : '/member-dashboard'); toast.success(`Bienvenue, ${u.name} !`); }}
+          onLoginFacebook={async () => { const u = await loginWithFacebook(); setUser(u); navigate('/member-dashboard'); toast.success(`Bienvenue, ${u.name} !`); }}
+          onLoginMicrosoft={async () => { const u = await loginWithMicrosoft(); setUser(u); navigate('/member-dashboard'); toast.success(`Bienvenue, ${u.name} !`); }}
+          onSendPhoneOTP={async (phone) => { initRecaptcha(); const c = await sendPhoneOTP(phone); return c; }}
+          onVerifyPhoneOTP={async (c, otp) => { const u = await verifyPhoneOTP(c, otp); setUser(u); navigate('/member-dashboard'); toast.success(`Bienvenue, ${u.name} !`); }}
+          onResetPassword={async (email) => { await sendPasswordReset(email); }}
+        />} />
         <Route path="/member-dashboard" element={user ? <MemberDashboardView user={user} onLogout={handleLogout} /> : <Navigate to="/login" />} />
         <Route path="/partner-dashboard" element={<PartnerDashboardView onLogout={handleLogout} />} />
         <Route path="/admin-dashboard" element={<AdminDashboardView onLogout={handleLogout} />} />
@@ -1300,39 +1309,6 @@ const EstablishmentsView: React.FC = () => {
             <p className="text-text-muted">Essayez d'élargir votre recherche.</p>
           </div>
         )}
-      </div>
-    </div>
-  );
-};
-
-const LoginView: React.FC<{ onLogin: (email: string, password?: string) => void }> = ({ onLogin }) => {
-  const navigate = useNavigate();
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const handleSubmit = (e: React.FormEvent) => { e.preventDefault(); if (!email) return toast.error('Veuillez entrer votre email'); onLogin(email, password); };
-  return (
-    <div className="min-h-screen bg-cream flex items-center justify-center py-24">
-      <div className="w-full max-w-md px-6">
-        <div className="text-center mb-6">
-          <div className="flex flex-col items-center gap-4">
-            <img src={ibcLogo} alt="IBC Logo" className="w-16 h-16" />
-            <button type="button" onClick={() => navigate('/')} className="text-[10px] uppercase tracking-[0.3em] font-bold text-green-dark border-b border-green-dark hover:text-gold transition-colors">Retour à l'accueil</button>
-          </div>
-          <span className="text-[10px] uppercase tracking-[0.4em] text-gold font-bold block mb-2">Acces Prive</span>
-          <h2 className="font-serif text-3xl font-bold text-green-dark">Portail des Membres</h2>
-        </div>
-        <form onSubmit={handleSubmit} className="space-y-8">
-          <div><label className="text-[10px] uppercase tracking-widest font-bold text-text-muted">Email</label>
-            <input type="email" className="w-full bg-transparent border-b border-gold/20 py-3 font-serif focus:border-gold outline-none transition-colors" placeholder="Votre email professionnel" value={email} onChange={(e) => setEmail(e.target.value)} /></div>
-          <div><label className="text-[10px] uppercase tracking-widest font-bold text-text-muted">Mot de passe</label>
-            <input type="password" className="w-full bg-transparent border-b border-gold/20 py-3 font-serif focus:border-gold outline-none transition-colors" placeholder="" value={password} onChange={(e) => setPassword(e.target.value)} /></div>
-          <button type="submit" className="btn-gold w-full py-4">Entrer dans le Club</button>
-        </form>
-        <p className="text-center mt-8 text-text-muted text-sm">Pas encore membre ?</p>
-        <div className="flex flex-col gap-3 mt-3">
-          <button onClick={() => navigate('/member-registration')} className="w-full text-center text-green-dark text-xs font-bold uppercase tracking-[0.2em] border-b border-gold hover:text-gold transition-colors">Rejoindre LE RÉSEAU IBC</button>
-          <button onClick={() => navigate('/partner-registration')} className="w-full text-center text-gold text-xs font-bold uppercase tracking-[0.2em] border-b border-gold hover:text-green-dark transition-colors">Devenir partenaire</button>
-        </div>
       </div>
     </div>
   );
