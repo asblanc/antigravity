@@ -335,12 +335,20 @@ const HomeView: React.FC = () => {
             ))}
           </div>
         </div>
+        <div className="absolute inset-x-0 bottom-[-1px] z-20 pointer-events-none text-green-dark" aria-hidden="true">
+          <svg
+            className="block h-12 w-full sm:h-16 md:h-20"
+            viewBox="0 0 1440 120"
+            preserveAspectRatio="none"
+            fill="currentColor"
+          >
+            <path d="M0,72 C180,104 360,108 540,82 C720,56 900,10 1080,28 C1240,44 1340,78 1440,88 L1440,120 L0,120 Z" />
+          </svg>
+        </div>
       </section>
 
-      <div className="h-12 bg-cream sm:h-16 md:h-20" aria-hidden="true" />
-
       {/* Community Target Section */}
-      <section className="relative overflow-hidden bg-[#092215] py-28 border-b border-gold/20 reveal-section">
+      <section className="relative overflow-hidden bg-green-dark py-28 border-b border-gold/20 reveal-section">
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-gold/5 via-transparent to-transparent pointer-events-none" />
         <div className="container mx-auto px-6 max-w-5xl relative z-10">
           <div className="text-center mb-16 max-w-2xl mx-auto">
