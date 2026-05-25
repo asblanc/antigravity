@@ -96,24 +96,24 @@ const MemberCard: React.FC<{ tier: TierInfo }> = ({ tier }) => {
         <div className={`flex h-12 w-20 items-center justify-center rounded-md border ${logoBoxClass} px-2 shadow-sm`}>
           <img src={ibcLogo} alt="IBC" className="max-h-8 w-auto object-contain" />
         </div>
-        <span className={`rounded-full border px-3.5 py-1.5 text-[11px] font-extrabold uppercase tracking-[0.16em] ${badgeClass}`}>
+        <span className={`rounded-full border px-3.5 py-1.5 text-[10px] font-bold uppercase tracking-[0.2em] ${badgeClass}`}>
           {tier.badge}
         </span>
       </div>
 
       <div className="relative z-10 mt-7 flex-1">
-        <p className="font-serif text-2xl font-bold leading-tight tracking-wide sm:text-[1.7rem]">{tier.title}</p>
-        <p className={`mt-3 text-sm font-semibold leading-relaxed ${mutedClass}`}>Profil : {tier.profile}</p>
+        <p className="font-serif text-xl font-bold leading-tight tracking-wide sm:text-2xl">{tier.title}</p>
+        <p className={`mt-3 text-sm font-medium leading-relaxed ${mutedClass}`}>Profil : {tier.profile}</p>
 
         <div className={`mt-5 rounded-lg border ${borderClass} ${isDarkText ? 'bg-white/20' : 'bg-white/10'} p-4`}>
-          <p className={`text-[11px] font-bold uppercase tracking-[0.18em] ${mutedClass}`}>Activité moyenne</p>
-          <p className="mt-1.5 text-base font-bold leading-snug">{tier.activity}</p>
+          <p className={`text-[10px] font-bold uppercase tracking-[0.2em] ${mutedClass}`}>Activité moyenne</p>
+          <p className="mt-1.5 text-sm font-semibold leading-relaxed">{tier.activity}</p>
         </div>
 
-        <ul className="mt-5 grid grid-cols-1 gap-3 text-sm font-semibold leading-snug sm:text-[15px]">
+        <ul className="mt-5 grid grid-cols-1 gap-3 text-sm font-medium leading-relaxed">
           {tier.benefits.map((benefit) => (
             <li key={benefit} className="flex items-start gap-3">
-              <span className={`mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full text-xs font-bold ${isDarkText ? 'bg-[#142017] text-white' : 'bg-white text-[#142017]'}`}>✓</span>
+              <span className={`mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full text-[11px] font-bold ${isDarkText ? 'bg-[#142017] text-white' : 'bg-white text-[#142017]'}`}>✓</span>
               <span>{benefit}</span>
             </li>
           ))}
@@ -123,11 +123,11 @@ const MemberCard: React.FC<{ tier: TierInfo }> = ({ tier }) => {
       <div className={`relative z-10 mt-7 flex items-end justify-between gap-4 border-t ${borderClass} pt-5`}>
         {tier.price ? (
           <div>
-            <p className={`text-[11px] font-bold uppercase tracking-[0.18em] ${mutedClass}`}>Tarif d'adhésion</p>
-            <p className="mt-1.5 font-serif text-2xl font-bold leading-none">{tier.price}</p>
+            <p className={`text-[10px] font-bold uppercase tracking-[0.2em] ${mutedClass}`}>Tarif d'adhésion</p>
+            <p className="mt-1.5 font-serif text-xl font-bold leading-tight tracking-wide">{tier.price}</p>
           </div>
         ) : (
-          <span className={`text-[11px] font-bold uppercase tracking-[0.18em] ${mutedClass}`}>Statut évolutif IBC</span>
+          <span className={`text-[10px] font-bold uppercase tracking-[0.2em] ${mutedClass}`}>Statut évolutif IBC</span>
         )}
         <div className="flex shrink-0 items-center gap-1.5 opacity-50">
           <span className={`h-2.5 w-2.5 rounded-full ${isDarkText ? 'bg-[#142017]/50' : 'bg-white/60'}`} />

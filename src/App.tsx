@@ -335,6 +335,16 @@ const HomeView: React.FC = () => {
             ))}
           </div>
         </div>
+        <div className="absolute inset-x-0 bottom-[-1px] z-20 pointer-events-none text-[#092215]" aria-hidden="true">
+          <svg
+            className="block h-12 w-full sm:h-16 md:h-20"
+            viewBox="0 0 1440 120"
+            preserveAspectRatio="none"
+            fill="currentColor"
+          >
+            <path d="M0,72 C180,104 360,108 540,82 C720,56 900,10 1080,28 C1240,44 1340,78 1440,88 L1440,120 L0,120 Z" />
+          </svg>
+        </div>
       </section>
 
       {/* Community Target Section */}
