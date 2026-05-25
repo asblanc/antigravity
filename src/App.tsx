@@ -335,9 +335,9 @@ const HomeView: React.FC = () => {
             ))}
           </div>
         </div>
-        <div className="absolute inset-x-0 bottom-[-1px] z-20 pointer-events-none text-[#092215]" aria-hidden="true">
+        <div className="absolute inset-x-0 bottom-[-1px] z-20 pointer-events-none text-[#092215] drop-shadow-[0_-18px_38px_rgba(0,0,0,0.45)]" aria-hidden="true">
           <svg
-            className="block h-12 w-full sm:h-16 md:h-20"
+            className="block h-16 w-full sm:h-20 md:h-24"
             viewBox="0 0 1440 120"
             preserveAspectRatio="none"
             fill="currentColor"
@@ -348,7 +348,9 @@ const HomeView: React.FC = () => {
       </section>
 
       {/* Community Target Section */}
-      <section className="py-28 bg-[#092215] border-t border-b border-gold/20 relative overflow-hidden reveal-section">
+      <section className="relative overflow-hidden bg-[#092215] pt-36 pb-28 border-t border-b border-gold/20 shadow-[0_-26px_70px_rgba(0,0,0,0.35)] reveal-section">
+        <div className="absolute inset-x-0 top-0 h-px bg-gold/35" aria-hidden="true" />
+        <div className="absolute inset-x-0 top-0 h-20 bg-gradient-to-b from-gold/10 via-transparent to-transparent pointer-events-none" aria-hidden="true" />
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-gold/5 via-transparent to-transparent pointer-events-none" />
         <div className="container mx-auto px-6 max-w-5xl relative z-10">
           <div className="text-center mb-16 max-w-2xl mx-auto">
