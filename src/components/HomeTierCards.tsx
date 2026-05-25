@@ -1,30 +1,27 @@
 import React from 'react';
+import ibcLogo from '../assets/ibc-logo.png';
 
 // ─── Tier configuration ────────────────────────────────────────────────────
 
 interface TierInfo {
   id: string;
-  name: string;
+  badge: string;
   title: string;
   gradient: string;
-  textColor: string;
-  badgeBg: string;
-  chipColor: string;
+  tone: 'light' | 'dark';
   profile: string;
   activity: string;
-  price: string;
+  price?: string;
   benefits: string[];
 }
 
 const TIERS: TierInfo[] = [
   {
     id: 'bronze',
-    name: 'BRONZE',
+    badge: 'BRONZE',
     title: 'Discovery Member',
-    gradient: 'linear-gradient(135deg, #CD7F32 0%, #B8860B 40%, #8B4513 100%)',
-    textColor: '#FFF8E7',
-    badgeBg: 'rgba(255,248,231,0.15)',
-    chipColor: '#B8860B',
+    gradient: 'linear-gradient(135deg, #CD7F32 0%, #8B4513 100%)',
+    tone: 'light',
     profile: 'Membres découverte et lifestyle occasionnel',
     activity: '10 000 – 40 000 FCFA / week-end',
     price: '500 FCFA / mois',
@@ -38,15 +35,12 @@ const TIERS: TierInfo[] = [
   },
   {
     id: 'gold',
-    name: 'OR',
+    badge: 'OR',
     title: 'Prestige Member',
-    gradient: 'linear-gradient(135deg, #FFD700 0%, #DAA520 40%, #B8860B 100%)',
-    textColor: '#1A1A1A',
-    badgeBg: 'rgba(0,0,0,0.15)',
-    chipColor: '#DAA520',
+    gradient: 'linear-gradient(135deg, #FFD700 0%, #B8860B 100%)',
+    tone: 'light',
     profile: 'Membres à forte activité et consommation régulière',
     activity: '50 000 – 90 000 FCFA / week-end',
-    price: '—',
     benefits: [
       'Accès aux expériences prestige',
       'Invitations événements privés',
@@ -57,15 +51,12 @@ const TIERS: TierInfo[] = [
   },
   {
     id: 'platinum',
-    name: 'PLATINUM',
+    badge: 'PLATINUM',
     title: 'Elite Member',
-    gradient: 'linear-gradient(135deg, #E8E8E8 0%, #C0C0C0 40%, #A9A9A9 100%)',
-    textColor: '#1A1A2E',
-    badgeBg: 'rgba(26,26,46,0.1)',
-    chipColor: '#A9A9A9',
-    profile: 'Membres premium et grands consommateurs',
+    gradient: 'linear-gradient(135deg, #E8E8E8 0%, #A9A9A9 100%)',
+    tone: 'dark',
+    profile: 'Membres premium et grands consommateurs d’expériences',
     activity: '100 000 FCFA et plus / week-end',
-    price: '—',
     benefits: [
       'Accès expériences premium et VIP',
       'Réservations prioritaires',
@@ -75,100 +66,74 @@ const TIERS: TierInfo[] = [
   },
 ];
 
-// ─── Single Card ────────────────────────────────────────────────────────────
+// ─── Single Member Card ─────────────────────────────────────────────────────
 
-const TierCard: React.FC<{ tier: TierInfo }> = ({ tier }) => {
+const MemberCard: React.FC<{ tier: TierInfo }> = ({ tier }) => {
+  const isDarkText = tier.tone === 'dark';
+  const textClass = isDarkText ? 'text-[#142017]' : 'text-white';
+  const mutedClass = isDarkText ? 'text-[#142017]/70' : 'text-white/75';
+  const borderClass = isDarkText ? 'border-black/10' : 'border-white/20';
+  const badgeClass = isDarkText
+    ? 'bg-black/10 text-[#142017] border-black/10'
+    : 'bg-white/15 text-white border-white/25';
+  const logoBoxClass = isDarkText ? 'bg-white/60 border-black/10' : 'bg-white/90 border-white/40';
+
   return (
-    <div
-      className="relative overflow-hidden rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-500 hover:-translate-y-1 select-none group"
-      style={{ background: tier.gradient, color: tier.textColor }}
+    <article
+      className={`group relative mx-auto flex aspect-[1.586/1] w-full max-w-[380px] flex-col overflow-hidden rounded-[18px] border ${borderClass} p-5 shadow-[0_18px_45px_rgba(3,29,15,0.14)] transition-all duration-300 md:hover:-translate-y-1 md:hover:shadow-[0_26px_60px_rgba(3,29,15,0.24)] ${textClass}`}
+      style={{ background: tier.gradient }}
     >
-      {/* Decorative SVG pattern */}
-      <div className="absolute inset-0 pointer-events-none opacity-8">
-        <svg width="100%" height="100%" viewBox="0 0 400 500" xmlns="http://www.w3.org/2000/svg">
-          <circle cx="350" cy="-50" r="140" fill="white" opacity="0.12" />
-          <circle cx="400" cy="400" r="120" fill="white" opacity="0.08" />
-          <circle cx="-60" cy="250" r="100" fill="white" opacity="0.06" />
-          <line x1="0" y1="450" x2="400" y2="450" stroke="white" strokeWidth="0.5" opacity="0.1" />
-          <line x1="0" y1="460" x2="400" y2="460" stroke="white" strokeWidth="0.5" opacity="0.05" />
-        </svg>
+      <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(115deg,rgba(255,255,255,0.2)_0%,rgba(255,255,255,0.04)_32%,rgba(255,255,255,0)_58%)]" />
+      <div className={`pointer-events-none absolute -right-14 -top-12 h-36 w-36 rounded-full border ${borderClass}`} />
+      <div className={`pointer-events-none absolute -bottom-20 right-8 h-40 w-40 rounded-full border ${borderClass}`} />
+      <div className={`pointer-events-none absolute bottom-5 right-5 h-12 w-20 rounded-full border ${borderClass} opacity-50`} />
+
+      <div className="relative z-10 flex items-start justify-between gap-4">
+        <div className={`flex h-10 w-16 items-center justify-center rounded-md border ${logoBoxClass} px-2 shadow-sm`}>
+          <img src={ibcLogo} alt="IBC" className="max-h-8 w-auto object-contain" />
+        </div>
+        <span className={`rounded-full border px-3 py-1 text-[9px] font-extrabold uppercase tracking-[0.22em] ${badgeClass}`}>
+          {tier.badge}
+        </span>
       </div>
 
-      {/* Subtle shine overlay */}
-      <div className="absolute inset-0 pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-700" style={{
-        background: `linear-gradient(105deg, transparent 30%, ${tier.id === 'gold' ? 'rgba(255,255,255,0.1)' : 'rgba(255,255,255,0.06)'} 35%, transparent 40%)`,
-      }} />
+      <div className="relative z-10 mt-5 min-h-0 flex-1">
+        <p className="font-serif text-xl font-bold leading-tight tracking-wide sm:text-2xl">{tier.title}</p>
+        <p className={`mt-1 text-[11px] font-medium leading-snug ${mutedClass}`}>Profil : {tier.profile}</p>
 
-      <div className="relative z-10 p-6 flex flex-col h-full">
-        {/* Top: Logo + Badge */}
-        <div className="flex items-start justify-between mb-4">
-          <div className="flex items-center gap-1.5">
-            <span className="font-serif text-xl font-black tracking-tighter drop-shadow-sm" style={{ color: tier.id === 'gold' ? '#1A1A1A' : '#FFD700' }}>IBC</span>
-            <span className="text-sm">🌴</span>
-          </div>
-          <span
-            className="text-[9px] font-extrabold uppercase tracking-[0.15em] px-3 py-1 rounded-full"
-            style={{
-              background: tier.badgeBg,
-              backdropFilter: 'blur(4px)',
-              border: '1px solid rgba(255,255,255,0.25)',
-              color: tier.textColor,
-            }}
-          >
-            {tier.name}
-          </span>
+        <div className="mt-3">
+          <p className={`text-[8px] font-bold uppercase tracking-[0.24em] ${mutedClass}`}>Activité moyenne</p>
+          <p className="mt-0.5 text-xs font-semibold leading-snug">{tier.activity}</p>
         </div>
 
-        {/* Card chip */}
-        <div className="flex items-center gap-2 mb-3">
-          <div className="w-8 h-6 rounded-[3px] flex items-center justify-center shadow-inner" style={{ background: tier.chipColor }}>
-            <div className="w-6 h-4 rounded-[2px] border border-white/25" />
-          </div>
-          <div className="flex gap-1 opacity-30">
-            <span className="w-1.5 h-1.5 rounded-full bg-white/60" />
-            <span className="w-1.5 h-1.5 rounded-full bg-white/60" />
-          </div>
-        </div>
-
-        {/* Title + profile */}
-        <div className="mb-3">
-          <p className="text-[10px] uppercase tracking-[0.3em] font-light opacity-75 mb-1">{tier.title}</p>
-          <p className="text-[11px] leading-snug opacity-70 italic">{tier.profile}</p>
-        </div>
-
-        {/* Activity */}
-        <div className="mb-3">
-          <p className="text-[7px] uppercase tracking-[0.25em] font-bold opacity-60">Activité moyenne</p>
-          <p className="text-xs font-medium mt-0.5">{tier.activity}</p>
-        </div>
-
-        {/* Benefits */}
-        <div className="flex-1">
-          <p className="text-[7px] uppercase tracking-[0.25em] font-bold opacity-60 mb-1.5">Avantages</p>
-          <div className="space-y-1">
-            {tier.benefits.map((b, i) => (
-              <div key={i} className="flex items-start gap-1.5">
-                <span className="text-[9px] shrink-0 mt-0.5" style={{ color: tier.id === 'bronze' ? '#CD7F32' : '#FFD700' }}>✓</span>
-                <span className="text-[10px] leading-snug opacity-85">{b}</span>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        {/* Price */}
-        {tier.price !== '—' && (
-          <div className="mt-4 pt-3 border-t border-white/15 flex items-center justify-between">
-            <span className="text-[8px] uppercase tracking-wider opacity-50">Adhésion</span>
-            <span className="font-serif text-base font-bold drop-shadow-sm">{tier.price}</span>
-          </div>
-        )}
-
-        {/* Empty price placeholder for tiers without price */}
-        {tier.price === '—' && (
-          <div className="mt-4 pt-3 border-t border-white/10" />
-        )}
+        <ul className="mt-3 grid grid-cols-1 gap-1 text-[10px] font-medium leading-tight sm:text-[11px]">
+          {tier.benefits.map((benefit) => (
+            <li key={benefit} className="flex items-start gap-1.5">
+              <span className="mt-[-1px] font-bold">✓</span>
+              <span>{benefit}</span>
+            </li>
+          ))}
+        </ul>
       </div>
-    </div>
+
+      <div className={`relative z-10 mt-4 flex items-end justify-between border-t ${borderClass} pt-3`}>
+        {tier.price ? (
+          <div>
+            <p className={`text-[8px] font-bold uppercase tracking-[0.24em] ${mutedClass}`}>Tarif d'adhésion</p>
+            <p className="mt-0.5 font-serif text-lg font-bold leading-none">{tier.price}</p>
+          </div>
+        ) : (
+          <span className={`text-[8px] font-bold uppercase tracking-[0.24em] ${mutedClass}`}>Statut évolutif IBC</span>
+        )}
+        <div className="flex items-center gap-1.5 opacity-70">
+          <span className={`h-2.5 w-2.5 rounded-full ${isDarkText ? 'bg-[#142017]/50' : 'bg-white/60'}`} />
+          <span className={`h-2.5 w-2.5 rounded-full ${isDarkText ? 'bg-[#142017]/35' : 'bg-white/40'}`} />
+          <div className={`ml-1 h-7 w-10 rounded ${isDarkText ? 'bg-[#142017]/15' : 'bg-white/15'} border ${borderClass}`}>
+            <div className={`mx-auto mt-1.5 h-3.5 w-7 rounded-sm border ${borderClass}`} />
+          </div>
+        </div>
+      </div>
+    </article>
   );
 };
 
@@ -204,9 +169,9 @@ export const HomeTierCards: React.FC = () => {
         </div>
 
         {/* 3 cards grid */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-5 lg:gap-6">
+        <div className="grid grid-cols-1 justify-items-center gap-6 md:grid-cols-3 md:gap-5 lg:gap-6">
           {TIERS.map((tier) => (
-            <TierCard key={tier.id} tier={tier} />
+            <MemberCard key={tier.id} tier={tier} />
           ))}
         </div>
       </div>
