@@ -66,33 +66,43 @@ ALTER TABLE public.profiles ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.establishments ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.transactions ENABLE ROW LEVEL SECURITY;
 
--- Politiques RLS de base
--- Un utilisateur peut lire et modifier son propre profil
-CREATE POLICY "Les utilisateurs peuvent voir leur propre profil" ON public.profiles FOR SELECT USING (auth.uid() = id);
-CREATE POLICY "Les utilisateurs peuvent modifier leur propre profil" ON public.profiles FOR UPDATE USING (auth.uid() = id);
-
--- Tout le monde peut voir les établissements actifs
-CREATE POLICY "Les établissements sont publics" ON public.establishments FOR SELECT USING (active = true);
-
--- Un membre peut voir ses transactions, un partenaire peut voir les transactions de son établissement
-CREATE POLICY "Les membres voient leurs transactions" ON public.transactions FOR SELECT USING (auth.uid() = member_id);
--- (D'autres règles plus complexes pour les partenaires/admins seront ajoutées plus tard)
+-- ⚠️ Les politiques RLS, privilèges colonne et fonctions RPC de sécurité
+--    sont définis dans scripts/security_hardening.sql (script idempotent).
+--    Exécuter CE schéma puis security_hardening.sql sur une base neuve.
+--    Voir scripts/security_hardening.sql pour :
+--      - Privilèges colonne (membre ne peut PAS modifier role/balance/tier/points)
+--      - is_admin(), record_transaction(), get_member_card()
+--      - Policies select member/partner/admin sur les 3 tables
 
 -- Création d'un trigger pour insérer automatiquement un profil lorsqu'un utilisateur s'inscrit via Auth
-CREATE OR REPLACE FUNCTION public.handle_new_user() 
-RETURNS TRIGGER AS $$
+CREATE OR REPLACE FUNCTION public.handle_new_user()
+RETURNS TRIGGER
+LANGUAGE plpgsql
+SECURITY DEFINER
+SET search_path = public
+AS $$
+DECLARE
+  requested_role TEXT := COALESCE(NEW.raw_user_meta_data->>'role', 'member');
+  safe_role TEXT;
 BEGIN
+  -- ⚠️ 'admin' ne peut JAMAIS provenir des métadonnées client (anti-escalade).
+  IF requested_role = 'partner' THEN
+    safe_role := 'partner';
+  ELSE
+    safe_role := 'member';
+  END IF;
+
   INSERT INTO public.profiles (id, name, email, role, tier)
   VALUES (
     NEW.id,
     COALESCE(NEW.raw_user_meta_data->>'name', 'Utilisateur'),
     NEW.email,
-    COALESCE(NEW.raw_user_meta_data->>'role', 'member'),
-    COALESCE(NEW.raw_user_meta_data->>'tier', 'bronze')
+    safe_role,
+    'bronze'  -- tier jamais défini par le client à l'inscription
   );
   RETURN NEW;
 END;
-$$ LANGUAGE plpgsql SECURITY DEFINER;
+$$;
 
 CREATE TRIGGER on_auth_user_created
   AFTER INSERT ON auth.users

@@ -39,17 +39,14 @@ const App: React.FC = () => {
   }, []);
 
   useEffect(() => {
-    const unsubscribe = subscribeToAuthState(async (firebaseUser: any) => {
-      if (firebaseUser) {
+    const unsubscribe = subscribeToAuthState(async (authUser: any) => {
+      if (authUser) {
         try {
-          const profile = await getCurrentMemberProfile(firebaseUser.uid);
-          if (profile) {
-            setUser(profile);
-            const role = (profile as any).role;
-            if (role === 'partner') navigate('/partner-dashboard');
-            else if (role === 'admin') navigate('/admin-dashboard');
-            else navigate('/member-dashboard');
-          }
+          // Restaure la session sans forcer de redirection : l'utilisateur
+          // reste sur la page consultée (les redirections post-login sont
+          // gérées par handleLogin / handleRegister / les handlers OAuth).
+          const profile = await getCurrentMemberProfile(authUser.uid);
+          if (profile) setUser(profile);
         } catch (e) { console.error('Profile load error:', e); }
       } else { setUser(null); }
       setAuthLoading(false);

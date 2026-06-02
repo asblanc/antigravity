@@ -20,7 +20,7 @@ export const Navbar: React.FC<NavbarProps> = ({ scrolled, mobileMenuOpen, setMob
     <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${isSolid ? 'bg-white shadow-premium py-3' : 'bg-transparent py-6'}`}>
       <div className="container mx-auto px-6 flex items-center justify-between">
         <button type="button" onClick={() => navigate('/')} className="flex items-center gap-3">
-          <img src={ibcLogo} alt="IBC Logo" className="w-10 h-10" />
+          <img src={ibcLogo} alt="IBC Logo" width={40} height={40} decoding="async" className="w-10 h-10" />
           <div className="flex flex-col items-start text-left">
             <span className={`font-serif text-lg font-bold italic block leading-none ${isSolid ? 'text-green-dark' : 'text-white'}`}>Ivoire Business Club</span>
             <span className="hidden lg:block text-gold text-[7px] uppercase tracking-[0.15em] font-bold mt-1 leading-tight max-w-[280px]">

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-hot-toast';
+import { Seo } from '../components/Seo';
 import { ArrowRight, CheckCircle2 } from 'lucide-react';
 
 export const PartnerRegistrationView: React.FC = () => {
@@ -25,6 +26,11 @@ export const PartnerRegistrationView: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-cream py-24">
+      <Seo
+        title="Devenir Partenaire — Ivoire Business Club"
+        description="Rejoignez le réseau IBC en tant qu'établissement partenaire : visibilité auprès d'une clientèle premium et nouveaux clients fidélisés."
+        path="/partner-registration"
+      />
       <div className="container mx-auto px-6 max-w-2xl">
         <div className="border border-gold/20 p-12 mb-12">
           <span className="text-[10px] uppercase tracking-[0.4em] text-gold font-bold block mb-4">LE RÉSEAU IBC</span>

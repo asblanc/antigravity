@@ -49,8 +49,8 @@ export async function registerMember(data: {
   paymentMethod?: string;
   photoFile?: File | null;
 }): Promise<Member> {
-  // DEMO MODE BYPASS
-  if (data.email.toLowerCase().includes('demo')) {
+  // DEMO MODE BYPASS — uniquement en développement (jamais en production)
+  if (import.meta.env.DEV && data.email.toLowerCase().includes('demo')) {
     return {
       uid: 'demo-uid-123',
       name: data.name || 'Utilisateur Démo',
@@ -134,7 +134,8 @@ export async function registerMember(data: {
 
 // ─── 2. Email & Password Login ────────────────────────────────────────────
 export async function loginUser(email: string, password: string): Promise<Member> {
-  if (email.toLowerCase().includes('demo')) {
+  // DEMO MODE BYPASS — uniquement en développement (jamais en production)
+  if (import.meta.env.DEV && email.toLowerCase().includes('demo')) {
     return {
       uid: 'demo-uid-123',
       name: 'Utilisateur Démo',

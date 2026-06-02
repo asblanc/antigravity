@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-hot-toast';
+import { Seo } from '../components/Seo';
 import { MapPin, Crown, Plane, PiggyBank, Palmtree, Banknote, Wallet, Gift, TrendingUp, Users, Star, Sparkles, Smartphone, CheckCircle2 } from 'lucide-react';
 import { supabase } from '../lib/supabase';
 
@@ -89,6 +90,11 @@ export const MemberRegistrationView: React.FC<{ onRegister: (data: any) => Promi
   };
   return (
     <div className="min-h-screen bg-cream py-24">
+      <Seo
+        title="Devenir Membre — Ivoire Business Club"
+        description="Rejoignez le club privé IBC : adhésion Bronze, Silver ou Gold, cashback sur vos sorties et avantages exclusifs en Côte d'Ivoire."
+        path="/member-registration"
+      />
       <div className="container mx-auto px-6 max-w-5xl">
         {/* Marketing Header */}
         <div className="mb-16">

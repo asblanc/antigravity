@@ -104,14 +104,17 @@ export async function validateMemberQR(qrContent: string): Promise<{
   const uid = parts[parts.length - 1];
 
   try {
-    const { data, error } = await supabase.from('profiles').select('*').eq('id', uid).single();
-    if (data) {
+    // RPC sécurisée : renvoie le strict nécessaire, réservée partenaires/admins.
+    // Évite d'exposer toute la table profiles à un partenaire.
+    const { data, error } = await supabase.rpc('get_member_card', { p_uid: uid });
+    const card = Array.isArray(data) ? data[0] : data;
+    if (!error && card) {
       return {
         uid,
-        name: data.name,
-        tier: data.tier,
-        status: data.tier,
-        balance: data.balance || 0,
+        name: card.name,
+        tier: card.tier,
+        status: card.tier,
+        balance: card.balance || 0,
         valid: true,
       };
     }

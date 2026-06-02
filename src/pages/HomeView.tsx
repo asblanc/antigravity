@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { MapPin, Compass, Sparkles, Briefcase, Crown, Users, Utensils, CreditCard, BookOpen, Headphones, Palmtree, Hotel, Globe, Smartphone } from 'lucide-react';
 import { HomeTierCards } from '../components/HomeTierCards';
+import { Seo } from '../components/Seo';
 
 const HERO_IMAGES = [
   { src: '/hero-lounge.jpg', alt: 'Rooftop lounge vue sur Abidjan' },
@@ -43,6 +44,11 @@ export const HomeView: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-cream page-enter">
+      <Seo
+        title="Ivoire Business Club — Expériences & Avantages Exclusifs en Côte d'Ivoire"
+        description="Rejoignez le club privé des expériences touristiques et lifestyle en Côte d'Ivoire. Cashback, événements privés et privilèges membres."
+        path="/"
+      />
       {/* Hero Section */}
       <section className="relative min-h-[90vh] md:min-h-screen flex items-center justify-center overflow-hidden py-24 sm:py-32">
         <div className="absolute inset-0 bg-gradient-to-b from-[#031d0f]/70 via-[#031d0f]/40 to-[#031d0f]/95 z-10" />
@@ -52,6 +58,9 @@ export const HomeView: React.FC = () => {
             key={i}
             src={img.src}
             alt={img.alt}
+            loading={i === 0 ? 'eager' : 'lazy'}
+            fetchPriority={i === 0 ? 'high' : 'low'}
+            decoding="async"
             className={`hero-slide ${i === currentSlide ? 'active' : ''}`}
           />
         ))}

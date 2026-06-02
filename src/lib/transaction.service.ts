@@ -38,66 +38,39 @@ export async function getMemberTransactions(uid: string, maxItems = 20): Promise
 }
 
 // ─── Record a new cashback transaction ───────────────────────────────────────
+// La création de la transaction ET le crédit du solde sont effectués de façon
+// ATOMIQUE et sécurisée côté serveur par la fonction RPC `record_transaction`
+// (SECURITY DEFINER). Le client ne peut plus écrire directement balance/transactions.
 export async function recordTransaction(data: {
   memberId: string;
   partnerId: string;
   partnerName: string;
   amount: number;
 }): Promise<string> {
-  
-  // For demo, standard cashback is 5%
-  const cashbackRate = 0.05;
-  const memberCashback = Math.round(data.amount * cashbackRate);
-
-  // We need to fetch the establishment ID from the partnerId to be clean, 
-  // but let's assume we can fetch it or just get the first establishment of this partner
-  const { data: estData } = await supabase
+  // Résoudre l'établissement du partenaire (RLS: le partenaire voit le sien)
+  const { data: estData, error: estError } = await supabase
     .from('establishments')
     .select('id')
     .eq('partner_id', data.partnerId)
     .limit(1)
     .single();
 
-  if (!estData) {
+  if (estError || !estData) {
     throw new Error('Establishment not found for this partner');
   }
 
-  const { data: txData, error } = await supabase
-    .from('transactions')
-    .insert({
-      member_id: data.memberId,
-      establishment_id: estData.id,
-      amount: data.amount,
-      cashback_earned: memberCashback,
-      status: 'confirmed'
-    })
-    .select('id')
-    .single();
+  const { data: txId, error } = await supabase.rpc('record_transaction', {
+    p_member_id: data.memberId,
+    p_establishment_id: estData.id,
+    p_amount: data.amount,
+  });
 
   if (error) {
     console.error('Error recording transaction:', error);
     throw error;
   }
 
-  // Use an RPC (stored procedure) or two separate queries to update the user's balance
-  // Since we don't have an RPC setup in our schema yet, we'll fetch then update.
-  const { data: profile } = await supabase
-    .from('profiles')
-    .select('balance, total_spent')
-    .eq('id', data.memberId)
-    .single();
-
-  if (profile) {
-    await supabase
-      .from('profiles')
-      .update({
-        balance: (profile.balance || 0) + memberCashback,
-        total_spent: (profile.total_spent || 0) + data.amount,
-      })
-      .eq('id', data.memberId);
-  }
-
-  return txData.id;
+  return txId as string;
 }
 
 // ─── Get partner's recent validated transactions ──────────────────────────────

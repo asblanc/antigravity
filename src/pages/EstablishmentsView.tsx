@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import { Search, MapPin, Star, Hotel, Utensils, Coffee, Gamepad2, Heart, Globe } from 'lucide-react';
+import { Seo } from '../components/Seo';
 
 export const EstablishmentsView: React.FC = () => {
   const location = useLocation();
@@ -35,6 +36,11 @@ export const EstablishmentsView: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-cream pt-24">
+      <Seo
+        title="Le Réseau IBC — Établissements & Partenaires | Ivoire Business Club"
+        description="Découvrez les hôtels, restaurants, lounges, beach clubs et spas partenaires du club IBC en Côte d'Ivoire et profitez de cashback exclusif."
+        path="/establishments"
+      />
       <div className="container mx-auto px-6 py-16">
         <div className="text-center mb-16">
           <span className="text-[10px] uppercase tracking-[0.4em] text-gold font-bold">LE RÉSEAU IBC</span>

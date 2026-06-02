@@ -1,6 +1,7 @@
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { ArrowLeft } from 'lucide-react';
+import { Seo } from './Seo';
 
 interface LegalPageViewProps {
   title: string;
@@ -10,9 +11,11 @@ interface LegalPageViewProps {
 
 export const LegalPageView: React.FC<LegalPageViewProps> = ({ title, lastUpdated, content }) => {
   const navigate = useNavigate();
+  const location = useLocation();
 
   return (
     <div className="min-h-screen bg-cream py-24">
+      <Seo title={`${title} — Ivoire Business Club`} path={location.pathname} />
       <div className="container mx-auto px-6 max-w-3xl">
         <button 
           onClick={() => navigate(-1)} 
