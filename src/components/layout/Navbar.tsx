@@ -2,7 +2,7 @@ import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Menu, X } from 'lucide-react';
 import type { Member } from '../../lib/mock-api';
-import ibcLogo from '../../assets/ibc-logo.png';
+import ibcLogo from '../../assets/ibc-logo.webp';
 
 interface NavbarProps {
   scrolled: boolean;

@@ -5,7 +5,7 @@ import {
   Mail, Lock, Smartphone, Eye, EyeOff, Loader2, ArrowLeft,
   ChevronRight, MessageSquare, Shield
 } from 'lucide-react';
-import ibcLogo from '../assets/ibc-logo.png';
+import ibcLogo from '../assets/ibc-logo.webp';
 
 export interface LoginViewProps {
   onLogin: (email: string, password?: string) => Promise<void>;

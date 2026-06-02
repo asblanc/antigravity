@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Globe, Share2, MessageSquare, MapPin, Briefcase, Star } from 'lucide-react';
-import ibcLogo from '../../assets/ibc-logo.png';
+import ibcLogo from '../../assets/ibc-logo.webp';
 
 export const Footer: React.FC = () => {
   return (

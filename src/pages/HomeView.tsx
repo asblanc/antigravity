@@ -4,10 +4,10 @@ import { MapPin, Compass, Sparkles, Briefcase, Crown, Users, Utensils, CreditCar
 import { HomeTierCards } from '../components/HomeTierCards';
 import { Seo } from '../components/Seo';
 
-const HERO_IMAGES = [
-  { src: '/hero-lounge.jpg', alt: 'Rooftop lounge vue sur Abidjan' },
-  { src: '/hero-restaurant.jpg', alt: 'Restaurant gastronomique premium' },
-  { src: '/hero-beach.jpg', alt: 'Beach Club Assinie en bord de mer' },
+const HERO_IMAGES: { src: string; webp?: string; alt: string }[] = [
+  { src: '/hero-lounge.jpg', webp: '/hero-lounge.webp', alt: 'Rooftop lounge vue sur Abidjan' },
+  { src: '/hero-restaurant.jpg', webp: '/hero-restaurant.webp', alt: 'Restaurant gastronomique premium' },
+  { src: '/hero-beach.jpg', webp: '/hero-beach.webp', alt: 'Beach Club Assinie en bord de mer' },
   { src: 'https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&q=80&w=1920', alt: 'Resort tropical en bord de mer' },
   { src: 'https://images.unsplash.com/photo-1540555700478-4be289fbecef?auto=format&fit=crop&q=80&w=1920', alt: 'Spa et bien-être haut de gamme' },
 ];
@@ -54,15 +54,17 @@ export const HomeView: React.FC = () => {
         <div className="absolute inset-0 bg-gradient-to-b from-[#031d0f]/70 via-[#031d0f]/40 to-[#031d0f]/95 z-10" />
         {/* Carousel images */}
         {HERO_IMAGES.map((img, i) => (
-          <img
-            key={i}
-            src={img.src}
-            alt={img.alt}
-            loading={i === 0 ? 'eager' : 'lazy'}
-            fetchPriority={i === 0 ? 'high' : 'low'}
-            decoding="async"
-            className={`hero-slide ${i === currentSlide ? 'active' : ''}`}
-          />
+          <picture key={i}>
+            {img.webp && <source srcSet={img.webp} type="image/webp" />}
+            <img
+              src={img.src}
+              alt={img.alt}
+              loading={i === 0 ? 'eager' : 'lazy'}
+              fetchPriority={i === 0 ? 'high' : 'low'}
+              decoding="async"
+              className={`hero-slide ${i === currentSlide ? 'active' : ''}`}
+            />
+          </picture>
         ))}
         <div className="relative z-20 container mx-auto px-4 sm:px-6 text-center text-white pt-16 md:pt-20">
           <div className="inline-block bg-green-dark/60 backdrop-blur-md border border-gold/30 px-5 sm:px-8 py-3 mb-8 sm:mb-10 rounded-sm max-w-xl mx-auto">

@@ -14,7 +14,7 @@ import { MemberRegistrationView } from './pages/MemberRegistrationView';
 import { PartnerRegistrationView } from './pages/PartnerRegistrationView';
 import { NotFoundView } from './pages/NotFoundView';
 import { LegalPageView } from './components/LegalPageView';
-import ibcLogo from "./assets/ibc-logo.png";
+import ibcLogo from "./assets/ibc-logo.webp";
 
 // Code splitting
 const PartnerDashboardView = React.lazy(() => import('./components/PartnerDashboardView').then(module => ({ default: module.PartnerDashboardView })));
