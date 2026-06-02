@@ -28,7 +28,9 @@ function detectRole(email: string): 'member' | 'partner' | 'admin' {
 }
 
 async function writeMemberProfile(uid: string, data: Record<string, any>): Promise<void> {
-  const { error } = await supabase.from('profiles').upsert({ id: uid, ...data });
+  // On utilise update() au lieu de upsert() car le trigger SQL a déjà créé la ligne.
+  // upsert() requiert une politique RLS "INSERT" qui n'existe pas.
+  const { error } = await supabase.from('profiles').update(data).eq('id', uid);
   if (error) {
     console.error('Error writing profile:', error);
     throw new Error("Erreur lors de la création du profil: " + error.message);
