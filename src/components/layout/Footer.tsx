@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Globe, Share2, MessageSquare, MapPin, Briefcase, Star } from 'lucide-react';
-import ibcLogo from '../../assets/ibc-logo.png';
+import ibcLogo from '../../assets/ibc-logo.webp';
 
 export const Footer: React.FC = () => {
   return (
@@ -10,7 +10,7 @@ export const Footer: React.FC = () => {
         <div className="grid grid-cols-1 md:grid-cols-12 gap-16 mb-24">
           <div className="md:col-span-5">
             <div className="flex items-center gap-4 mb-8">
-              <img src={ibcLogo} alt="IBC Logo" className="w-16 h-16 border border-gold/30 p-1" />
+              <img src={ibcLogo} alt="IBC Logo" width={64} height={64} loading="lazy" decoding="async" className="w-16 h-16 border border-gold/30 p-1" />
               <div>
                 <span className="font-serif text-2xl font-bold italic block leading-none">Ivoire Business Club</span>
                 <span className="text-gold text-[7px] uppercase tracking-[0.2em] font-bold">PLATEFORME D'EXPÉRIENCES TOURISTIQUES & CLUB PRIVÉ D'AVANTAGES</span>

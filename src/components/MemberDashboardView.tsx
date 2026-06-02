@@ -15,7 +15,7 @@ import { getMemberTransactions } from '../lib/transaction.service';
 import { getReferralStats, getMemberReferrals } from '../lib/referral.service';
 import type { Referral, ReferralStats } from '../lib/referral.service';
 import { MemberCard } from './MemberCard';
-import ibcLogo from '../assets/ibc-logo.png';
+import ibcLogo from '../assets/ibc-logo.webp';
 
 interface MemberDashboardViewProps {
   user: Member;

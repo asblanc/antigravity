@@ -1,5 +1,5 @@
 import React from 'react';
-import ibcLogo from '../assets/ibc-logo.png';
+import ibcLogo from '../assets/ibc-logo.webp';
 
 // ─── Tier configuration ────────────────────────────────────────────────────
 

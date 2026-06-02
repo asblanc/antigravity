@@ -1,0 +1,12 @@
+User-agent: *
+Allow: /
+
+# Espaces privés / authentifiés — ne pas indexer
+Disallow: /login
+Disallow: /member-dashboard
+Disallow: /partner-dashboard
+Disallow: /admin-dashboard
+Disallow: /admin-members
+Disallow: /admin-import
+
+Sitemap: https://ibc.ci/sitemap.xml

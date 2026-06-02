@@ -1,6 +1,6 @@
 import React from 'react';
 import { CheckCircle2, XCircle } from 'lucide-react';
-import ibcLogo from '../assets/ibc-logo.png';
+import ibcLogo from '../assets/ibc-logo.webp';
 
 export interface MemberPublicView {
   firstName: string;
