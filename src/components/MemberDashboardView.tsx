@@ -14,6 +14,7 @@ import type { Member, Transaction, Offer } from '../lib/mock-api';
 import { getMemberTransactions } from '../lib/transaction.service';
 import { getReferralStats, getMemberReferrals } from '../lib/referral.service';
 import type { Referral, ReferralStats } from '../lib/referral.service';
+import { MemberCard } from './MemberCard';
 import ibcLogo from '../assets/ibc-logo.png';
 
 interface MemberDashboardViewProps {
@@ -283,16 +284,6 @@ export const MemberDashboardView: React.FC<MemberDashboardViewProps> = ({ user, 
 
           {/* Right Controls */}
           <div className="flex items-center gap-4">
-            {/* Bronze Badge */}
-            <div className="hidden sm:flex items-center gap-2 border border-gold/20 bg-[#FAF5E9] px-4 py-1.5 rounded-full text-xs">
-              <div className="w-5 h-5 rounded-full bg-[#8C6239] flex items-center justify-center text-white border border-gold/20">
-                <Star size={10} fill="currentColor" />
-              </div>
-              <div className="text-left leading-tight">
-                <p className="text-[9px] uppercase tracking-wider text-[#8C6239] font-bold">NIVEAU BRONZE</p>
-                <p className="text-[8px] text-text-muted">Discovery Member</p>
-              </div>
-            </div>
 
             {/* Notification Bell */}
             <div className="relative">
@@ -402,6 +393,21 @@ export const MemberDashboardView: React.FC<MemberDashboardViewProps> = ({ user, 
           
           {activeTab === 'dashboard' && (
             <div className="space-y-8 animate-in fade-in duration-500">
+
+              {/* ─── MEMBER CARD HERO ─── */}
+              <div className="w-full max-w-md sm:max-w-lg md:max-w-2xl lg:max-w-3xl mx-auto">
+                <MemberCard
+                  data={{
+                    name: displayName,
+                    tier: (user.tier as 'bronze' | 'silver' | 'gold') || 'bronze',
+                    cardNumber: user.memberCode || user.qrCode?.slice(0, 16),
+                    memberCode: user.memberCode,
+                    expireDate: '12/27',
+                    points: user.points || memberPoints,
+                  }}
+                  className="w-full aspect-[1.586/1] min-h-[180px] sm:min-h-[200px] max-h-[280px]"
+                />
+              </div>
               
               {/* ─── ROW 1: CORE GRID (3 CARDS) ─── */}
               <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-[1.6fr_1fr_1.1fr]">

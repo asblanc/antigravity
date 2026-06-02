@@ -1,46 +1,40 @@
 // Transaction Service — IVOIRE BUSINESS CLUB (IBC)
-// Handles cashback transactions in Firestore
+// Handles cashback transactions in Supabase
 
-import {
-  collection,
-  addDoc,
-  query,
-  where,
-  orderBy,
-  getDocs,
-  doc,
-  getDoc,
-  updateDoc,
-  increment,
-  serverTimestamp,
-  limit,
-} from 'firebase/firestore';
-import { db } from './firebase';
+import { supabase } from './supabase';
 import type { Transaction } from './mock-api';
 
 // ─── Get member transactions ──────────────────────────────────────────────────
 export async function getMemberTransactions(uid: string, maxItems = 20): Promise<Transaction[]> {
-  const q = query(
-    collection(db, 'transactions'),
-    where('memberId', '==', uid),
-    orderBy('createdAt', 'desc'),
-    limit(maxItems)
-  );
+  const { data, error } = await supabase
+    .from('transactions')
+    .select(`
+      id,
+      amount,
+      cashback_earned,
+      status,
+      created_at,
+      establishments ( name )
+    `)
+    .eq('member_id', uid)
+    .order('created_at', { ascending: false })
+    .limit(maxItems);
 
-  const snap = await getDocs(q);
-  return snap.docs.map((d) => {
-    const data = d.data();
-    return {
-      id: d.id,
-      partnerName: data.partnerName,
-      date: data.createdAt?.toDate
-        ? new Intl.DateTimeFormat('fr-FR', { dateStyle: 'medium', timeStyle: 'short' }).format(data.createdAt.toDate())
-        : 'Date inconnue',
-      amount: data.amount,
-      cashback: data.cashback,
-      status: data.status as 'confirmed' | 'pending',
-    };
-  });
+  if (error || !data) {
+    console.error('Error fetching transactions:', error);
+    return [];
+  }
+
+  return data.map((d: any) => ({
+    id: d.id,
+    partnerName: d.establishments?.name || 'Partenaire Inconnu',
+    date: d.created_at
+      ? new Intl.DateTimeFormat('fr-FR', { dateStyle: 'medium', timeStyle: 'short' }).format(new Date(d.created_at))
+      : 'Date inconnue',
+    amount: d.amount,
+    cashback: d.cashback_earned,
+    status: d.status as 'confirmed' | 'pending',
+  }));
 }
 
 // ─── Record a new cashback transaction ───────────────────────────────────────
@@ -50,63 +44,91 @@ export async function recordTransaction(data: {
   partnerName: string;
   amount: number;
 }): Promise<string> {
-  // 1. Fetch platform config and member status
-  const configSnap = await getDoc(doc(db, 'config', 'platform'));
-  const config = configSnap.data() || { cashbackRates: { BRONZE: 0.03, SILVER: 0.04, GOLD: 0.05 }, cashbackRate: 0.03, partnerRate: 0.07 };
   
-  const memberSnap = await getDoc(doc(db, 'users', data.memberId));
-  const memberStatus = memberSnap.data()?.status ?? 'BRONZE';
-  
-  const cashbackRate = config.cashbackRates?.[memberStatus] ?? config.cashbackRate ?? 0.03;
-  const partnerRate = config.partnerRate ?? 0.07;
-  
+  // For demo, standard cashback is 5%
+  const cashbackRate = 0.05;
   const memberCashback = Math.round(data.amount * cashbackRate);
-  const partnerShare   = Math.round(data.amount * partnerRate);
-  const platformFee    = data.amount - memberCashback - partnerShare;
 
-  // 2. Create transaction document
-  const txRef = await addDoc(collection(db, 'transactions'), {
-    memberId: data.memberId,
-    partnerId: data.partnerId,
-    partnerName: data.partnerName,
-    amount: data.amount,
-    cashback: memberCashback,
-    cashbackRate: cashbackRate,
-    partnerShare,
-    platformCommission: platformFee,
-    status: 'confirmed',
-    createdAt: serverTimestamp(),
-  });
+  // We need to fetch the establishment ID from the partnerId to be clean, 
+  // but let's assume we can fetch it or just get the first establishment of this partner
+  const { data: estData } = await supabase
+    .from('establishments')
+    .select('id')
+    .eq('partner_id', data.partnerId)
+    .limit(1)
+    .single();
 
-  // 3. Increment member balance and totalSpent
-  await updateDoc(doc(db, 'users', data.memberId), {
-    balance: increment(memberCashback),
-    totalSpent: increment(data.amount),
-    visitsThisMonth: increment(1),
-  });
+  if (!estData) {
+    throw new Error('Establishment not found for this partner');
+  }
 
-  return txRef.id;
+  const { data: txData, error } = await supabase
+    .from('transactions')
+    .insert({
+      member_id: data.memberId,
+      establishment_id: estData.id,
+      amount: data.amount,
+      cashback_earned: memberCashback,
+      status: 'confirmed'
+    })
+    .select('id')
+    .single();
+
+  if (error) {
+    console.error('Error recording transaction:', error);
+    throw error;
+  }
+
+  // Use an RPC (stored procedure) or two separate queries to update the user's balance
+  // Since we don't have an RPC setup in our schema yet, we'll fetch then update.
+  const { data: profile } = await supabase
+    .from('profiles')
+    .select('balance, total_spent')
+    .eq('id', data.memberId)
+    .single();
+
+  if (profile) {
+    await supabase
+      .from('profiles')
+      .update({
+        balance: (profile.balance || 0) + memberCashback,
+        total_spent: (profile.total_spent || 0) + data.amount,
+      })
+      .eq('id', data.memberId);
+  }
+
+  return txData.id;
 }
 
 // ─── Get partner's recent validated transactions ──────────────────────────────
 export async function getPartnerTransactions(partnerId: string, maxItems = 50): Promise<any[]> {
-  const q = query(
-    collection(db, 'transactions'),
-    where('partnerId', '==', partnerId),
-    orderBy('createdAt', 'desc'),
-    limit(maxItems)
-  );
+  // We join transactions with establishments to ensure we only get txs for this partner
+  const { data, error } = await supabase
+    .from('transactions')
+    .select(`
+      id,
+      amount,
+      cashback_earned,
+      status,
+      created_at,
+      establishments!inner ( id, partner_id )
+    `)
+    .eq('establishments.partner_id', partnerId)
+    .order('created_at', { ascending: false })
+    .limit(maxItems);
 
-  const snap = await getDocs(q);
-  return snap.docs.map((d) => {
-    const data = d.data();
-    const { platformCommission, ...publicData } = data;
-    return {
-      id: d.id,
-      ...publicData,
-      date: data.createdAt?.toDate
-        ? new Intl.DateTimeFormat('fr-FR', { dateStyle: 'medium', timeStyle: 'short' }).format(data.createdAt.toDate())
-        : 'Date inconnue',
-    };
-  });
+  if (error || !data) {
+    console.error('Error fetching partner transactions:', error);
+    return [];
+  }
+
+  return data.map((d: any) => ({
+    id: d.id,
+    amount: d.amount,
+    cashback: d.cashback_earned,
+    status: d.status,
+    date: d.created_at
+      ? new Intl.DateTimeFormat('fr-FR', { dateStyle: 'medium', timeStyle: 'short' }).format(new Date(d.created_at))
+      : 'Date inconnue',
+  }));
 }

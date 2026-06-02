@@ -1,20 +1,4 @@
-// Partner Service — IVOIRE BUSINESS CLUB (IBC)
-// Manages partner registration and QR code validation
-
-import {
-  collection,
-  addDoc,
-  doc,
-  getDoc,
-  getDocs,
-  query,
-  where,
-  serverTimestamp,
-} from 'firebase/firestore';
-import {
-  createUserWithEmailAndPassword,
-} from 'firebase/auth';
-import { auth, db } from './firebase';
+import { supabase } from './supabase';
 
 export interface Partner {
   uid: string;
@@ -37,37 +21,65 @@ export async function registerPartner(data: {
   address: string;
   cashbackRate?: number;
 }): Promise<Partner> {
-  const { user } = await createUserWithEmailAndPassword(auth, data.email, data.password);
+  const { data: authData, error: signUpError } = await supabase.auth.signUp({
+    email: data.email,
+    password: data.password,
+    options: {
+      data: {
+        name: data.businessName,
+        role: 'partner',
+      }
+    }
+  });
 
-  const partnerData = {
+  if (signUpError) throw signUpError;
+  if (!authData.user) throw new Error('Failed to create partner user');
+
+  const user = authData.user;
+
+  // Insert into establishments for the partner
+  const { error: estError } = await supabase.from('establishments').insert({
+    partner_id: user.id,
+    name: data.businessName,
+    category: data.category,
+    zone: data.address,
+    cashback_rate: data.cashbackRate ?? 5.0,
+    active: false // Needs admin approval
+  });
+
+  if (estError) console.error('Error creating establishment:', estError);
+
+  return {
+    uid: user.id,
     businessName: data.businessName,
     email: data.email,
     whatsapp: data.whatsapp,
     category: data.category,
     address: data.address,
-    cashbackRate: data.cashbackRate ?? 0.1, // default 10%
-    role: 'partner' as const,
-    status: 'pending', // admin must approve
-    createdAt: serverTimestamp(),
+    cashbackRate: data.cashbackRate ?? 5.0,
+    role: 'partner'
   };
-
-  await addDoc(doc(db, 'users', user.uid) as any, partnerData);
-  // Use setDoc instead:
-  const { setDoc } = await import('firebase/firestore');
-  await setDoc(doc(db, 'users', user.uid), partnerData);
-
-  return { uid: user.uid, ...partnerData };
 }
 
 // ─── Get all active partners (for homepage / offers) ─────────────────────────
 export async function getActivePartners(): Promise<Partner[]> {
-  const q = query(
-    collection(db, 'users'),
-    where('role', '==', 'partner'),
-    where('status', '==', 'active')
-  );
-  const snap = await getDocs(q);
-  return snap.docs.map((d) => ({ uid: d.id, ...d.data() } as Partner));
+  const { data, error } = await supabase
+    .from('establishments')
+    .select('*, profiles(email, whatsapp)')
+    .eq('active', true);
+
+  if (error || !data) return [];
+
+  return data.map((d: any) => ({
+    uid: d.partner_id,
+    businessName: d.name,
+    email: d.profiles?.email || '',
+    whatsapp: d.profiles?.whatsapp || '',
+    category: d.category,
+    cashbackRate: d.cashback_rate,
+    address: d.zone,
+    role: 'partner'
+  }));
 }
 
 // ─── Validate a QR code scanned by a partner ─────────────────────────────────
@@ -81,39 +93,32 @@ export async function validateMemberQR(qrContent: string): Promise<{
 } | null> {
   let normalizedQr = qrContent.trim();
   
-  // If the user typed a name or ID directly without the IBC-MEMBER prefix, format it into a demo QR string
   if (!normalizedQr.startsWith('IBC-MEMBER-')) {
     const formattedName = normalizedQr.replace(/\s+/g, '_');
     normalizedQr = `IBC-MEMBER-${formattedName}-BRONZE-demo`;
   }
 
-  // QR format: IBC-MEMBER-NAME-TIER-UID
   const parts = normalizedQr.split('-');
   if (parts[0] !== 'IBC' || parts[1] !== 'MEMBER') return null;
 
   const uid = parts[parts.length - 1];
 
   try {
-    const snap = await getDoc(doc(db, 'users', uid));
-    if (snap.exists()) {
-      const data = snap.data();
-      const statusValue = data.tier || data.status || data.plan || 'BRONZE';
+    const { data, error } = await supabase.from('profiles').select('*').eq('id', uid).single();
+    if (data) {
       return {
         uid,
-        name: data.name || `${data.firstName || 'Membre'} ${data.lastName || ''}`.trim(),
-        tier: statusValue,
-        status: statusValue,
+        name: data.name,
+        tier: data.tier,
+        status: data.tier,
         balance: data.balance || 0,
         valid: true,
       };
     }
   } catch (error) {
-    console.warn("Firestore fetch failed or offline, falling back to mock parser for demo.", error);
+    console.warn("Supabase fetch failed or offline, falling back to mock parser for demo.", error);
   }
 
-  // Fallback to parsing from the QR code directly (useful for local / demo / offline testing)
-  // e.g. IBC-MEMBER-Yao_Kouassi-BRONZE-demo
-  // parts: ["IBC", "MEMBER", "Yao_Kouassi", "BRONZE", "demo"]
   const rawName = parts[2] ? parts[2].replace(/_/g, ' ') : 'Membre Démo';
   const tier = parts[3] ? parts[3].toUpperCase() : 'BRONZE';
 
@@ -122,7 +127,7 @@ export async function validateMemberQR(qrContent: string): Promise<{
     name: rawName,
     tier: tier,
     status: tier,
-    balance: 12500, // mock balance matching Yao K. screenshot
+    balance: 12500,
     valid: true,
   };
 }

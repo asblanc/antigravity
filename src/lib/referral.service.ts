@@ -1,14 +1,7 @@
 // Referral Service — IVOIRE BUSINESS CLUB (IBC)
 // Handles referral stats and listing from Firestore with premium mock fallback
 
-import {
-  collection,
-  query,
-  where,
-  getDocs,
-  limit,
-} from 'firebase/firestore';
-import { db } from './firebase';
+import { supabase } from './supabase';
 
 export interface Referral {
   id: string;
@@ -32,34 +25,31 @@ export function generateReferralLink(displayName: string, uid: string): string {
   return `https://ibc.ci/parrain/${cleanName || uid.slice(0, 5)}`;
 }
 
-// ─── Get member's detailed list of invited referees ──────────────────────────
 export async function getMemberReferrals(uid: string): Promise<Referral[]> {
   try {
-    const q = query(
-      collection(db, 'referrals'),
-      where('referrerId', '==', uid)
-    );
-    const snap = await getDocs(q);
-    
-    if (snap.empty) {
+    const { data, error } = await supabase
+      .from('referrals')
+      .select('*')
+      .eq('referrerId', uid);
+      
+    if (error || !data || data.length === 0) {
       return getMockReferrals(uid);
     }
 
-    return snap.docs.map((d) => {
-      const data = d.data();
+    return data.map((d: any) => {
       return {
         id: d.id,
-        refereeName: data.refereeName || 'Membre invité',
-        email: data.refereeEmail || '',
-        date: data.createdAt?.toDate
-          ? new Intl.DateTimeFormat('fr-FR', { dateStyle: 'medium' }).format(data.createdAt.toDate())
+        refereeName: d.refereeName || 'Membre invité',
+        email: d.refereeEmail || '',
+        date: d.created_at
+          ? new Intl.DateTimeFormat('fr-FR', { dateStyle: 'medium' }).format(new Date(d.created_at))
           : 'Récemment',
-        status: data.status as 'active' | 'pending',
-        bonus: data.bonus || 0,
+        status: d.status as 'active' | 'pending',
+        bonus: d.bonus || 0,
       };
     });
   } catch (error) {
-    console.warn("Firestore error in getMemberReferrals, falling back to mock:", error);
+    console.warn("Supabase error in getMemberReferrals, falling back to mock:", error);
     return getMockReferrals(uid);
   }
 }

@@ -1,68 +1,25 @@
 /**
  * Authentication Service — IVOIRE BUSINESS CLUB (IBC)
- * Supports: Email/Password, Google, Facebook, Microsoft, Phone/OTP
- *
- * Architecture:
- *   Firebase Auth = authentication (who you are)
- *   Firestore users/{uid} = profile data (role, tier, balance, etc.)
- *   Firestore members/{uid} = same document, for admin querying
+ * Supabase Migration Implementation
  */
 
-import {
-  createUserWithEmailAndPassword,
-  signInWithEmailAndPassword,
-  signInWithPopup,
-  signInWithPhoneNumber,
-  signOut,
-  onAuthStateChanged,
-  updateProfile,
-  sendPasswordResetEmail,
-  GoogleAuthProvider,
-  FacebookAuthProvider,
-  OAuthProvider,
-  RecaptchaVerifier,
-  type User,
-  type ConfirmationResult,
-} from 'firebase/auth';
-import {
-  doc,
-  setDoc,
-  getDoc,
-  serverTimestamp,
-} from 'firebase/firestore';
-import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
-import { auth, db, storage } from './firebase';
+import { supabase } from './supabase';
 import type { Member } from './mock-api';
-
-// ─── Providers ─────────────────────────────────────────────────────────────
-
-const googleProvider = new GoogleAuthProvider();
-googleProvider.setCustomParameters({ prompt: 'select_account' });
-
-const facebookProvider = new FacebookAuthProvider();
-facebookProvider.setCustomParameters({ display: 'popup' });
-
-const microsoftProvider = new OAuthProvider('microsoft.com');
-microsoftProvider.setCustomParameters({ prompt: 'select_account', tenant: 'consumers' });
 
 // ─── Helpers ───────────────────────────────────────────────────────────────
 
-/** Generate a unique member code */
 function generateMemberCode(uid: string): string {
   return `IBC${uid.slice(0, 5).toUpperCase()}`;
 }
 
-/** Generate QR Code payload */
 function generateQrCode(name: string, plan: string, uid: string): string {
   return `IBC-MEMBER-${name.toUpperCase().replace(/\s+/g, '-')}-${plan.toUpperCase()}-${uid}`;
 }
 
-/** Get default avatar URL */
 function defaultAvatar(name: string): string {
   return `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&background=1B3A2D&color=C9A84C&bold=true&size=256`;
 }
 
-/** Detect role from email (admin/partner patterns) */
 function detectRole(email: string): 'member' | 'partner' | 'admin' {
   const e = email.toLowerCase();
   if (e.includes('+admin') || e.endsWith('@ibc.ci') || e.endsWith('@ivoirebusinessclub.com')) return 'admin';
@@ -70,66 +27,12 @@ function detectRole(email: string): 'member' | 'partner' | 'admin' {
   return 'member';
 }
 
-/** Extract provider name from User object */
-function getProviderName(user: User): string {
-  const p = user.providerData?.[0]?.providerId;
-  if (p === 'password') return 'email';
-  if (p === 'google.com') return 'google';
-  if (p === 'facebook.com') return 'facebook';
-  if (p === 'microsoft.com') return 'microsoft';
-  if (p === 'phone') return 'phone';
-  return p || 'unknown';
-}
-
-/** Write (or merge) a member profile to Firestore in both users/{uid} and members/{uid} */
 async function writeMemberProfile(uid: string, data: Record<string, any>): Promise<void> {
-  const profile = {
-    uid,
-    ...data,
-    updatedAt: serverTimestamp(),
-  };
-
-  // Write to both collections for flexible querying
-  await setDoc(doc(db, 'users', uid), profile, { merge: true });
-  await setDoc(doc(db, 'members', uid), profile, { merge: true });
-}
-
-/** Ensure a Firestore profile exists for a social login user */
-async function ensureProfileExists(user: User): Promise<Member> {
-  const snap = await getDoc(doc(db, 'users', user.uid));
-  if (snap.exists()) {
-    return { uid: user.uid, ...snap.data() } as Member;
+  const { error } = await supabase.from('profiles').upsert({ id: uid, ...data });
+  if (error) {
+    console.error('Error writing profile:', error);
+    throw new Error("Erreur lors de la création du profil: " + error.message);
   }
-
-  // First-time social login → create profile
-  const name = user.displayName || user.email?.split('@')[0] || 'Membre IBC';
-  const email = user.email || '';
-  const photoURL = user.photoURL || defaultAvatar(name);
-  const provider = getProviderName(user);
-  const role = detectRole(email);
-  const memberCode = generateMemberCode(user.uid);
-  const qrCode = generateQrCode(name, 'bronze', user.uid);
-
-  const profile = {
-    name,
-    email,
-    photoURL,
-    provider,
-    role,
-    memberCode,
-    qrCode,
-    tier: 'bronze',
-    balance: 0,
-    totalSpent: 0,
-    visitsThisMonth: 0,
-    whatsapp: user.phoneNumber || '',
-    phone: user.phoneNumber || '',
-    active: true,
-    createdAt: serverTimestamp(),
-  };
-
-  await writeMemberProfile(user.uid, profile);
-  return { uid: user.uid, ...profile } as Member;
 }
 
 // ─── Public API ────────────────────────────────────────────────────────────
@@ -144,7 +47,7 @@ export async function registerMember(data: {
   paymentMethod?: string;
   photoFile?: File | null;
 }): Promise<Member> {
-  // ─── DEMO MODE BYPASS ──────────────────────────────────────────────────
+  // DEMO MODE BYPASS
   if (data.email.toLowerCase().includes('demo')) {
     return {
       uid: 'demo-uid-123',
@@ -160,61 +63,75 @@ export async function registerMember(data: {
       qrCode: 'IBC-MEMBER-DEMO',
       role: detectRole(data.email),
       memberCode: 'IBCDEMO',
-    };
+    } as any;
   }
 
-  // 1. Create Firebase Auth user
-  const { user } = await createUserWithEmailAndPassword(auth, data.email, data.password);
-
-  // 2. Prepare profile data
-  const memberCode = generateMemberCode(user.uid);
-  const qrCode = generateQrCode(data.name, data.plan, user.uid);
-  const photoURL = data.photoFile ? defaultAvatar(data.name) : defaultAvatar(data.name);
   const role = detectRole(data.email);
+  const photoURL = defaultAvatar(data.name);
+
+  // 1. Create Supabase Auth user
+  const { data: authData, error: signUpError } = await supabase.auth.signUp({
+    email: data.email,
+    password: data.password,
+    options: {
+      data: {
+        name: data.name,
+        role: role,
+        tier: data.plan
+      }
+    }
+  });
+
+  if (signUpError) throw signUpError;
+  if (!authData.user) throw new Error('Failed to create user');
+
+  const user = authData.user;
+  const memberCode = generateMemberCode(user.id);
+  const qrCode = generateQrCode(data.name, data.plan, user.id);
   const paymentMethod = data.paymentMethod || 'orange';
 
-  // 3. Upload photo if provided
+  // 2. Upload photo if provided
   let finalPhotoURL = photoURL;
   if (data.photoFile) {
     try {
       const extension = data.photoFile.name.split('.').pop()?.toLowerCase() || 'jpg';
-      const storageRef = ref(storage, `users/${user.uid}/profile-photo.${extension}`);
-      await uploadBytes(storageRef, data.photoFile);
-      finalPhotoURL = await getDownloadURL(storageRef);
+      const fileName = `${user.id}/profile-photo.${extension}`;
+      const { error: uploadError } = await supabase.storage.from('avatars').upload(fileName, data.photoFile, { upsert: true });
+      if (!uploadError) {
+        const { data: { publicUrl } } = supabase.storage.from('avatars').getPublicUrl(fileName);
+        finalPhotoURL = publicUrl;
+      }
     } catch { /* fallback to default */ }
   }
 
-  // 4. Update Auth profile
-  try {
-    await updateProfile(user, { displayName: data.name, photoURL: finalPhotoURL });
-  } catch { /* non-critical */ }
-
-  // 5. Build and write Firestore document
+  // 3. Write profile (Supabase trigger handle_new_user should have inserted it, we just update it)
   const profile = {
     name: data.name,
     email: data.email,
     whatsapp: data.whatsapp,
-    photoURL: finalPhotoURL,
-    paymentMethod,
-    provider: 'email',
+    photo_url: finalPhotoURL,
+    payment_method: paymentMethod,
     role,
-    memberCode,
-    qrCode,
+    qr_code: qrCode,
     tier: data.plan,
+  };
+
+  await writeMemberProfile(user.id, profile);
+  
+  return { 
+    uid: user.id, 
+    ...profile, 
+    photoURL: finalPhotoURL,
+    memberCode,
     balance: 0,
     totalSpent: 0,
     visitsThisMonth: 0,
-    active: true,
-    createdAt: serverTimestamp(),
-  };
-
-  await writeMemberProfile(user.uid, profile);
-  return { uid: user.uid, ...profile } as Member;
+    active: true 
+  } as unknown as Member;
 }
 
 // ─── 2. Email & Password Login ────────────────────────────────────────────
 export async function loginUser(email: string, password: string): Promise<Member> {
-  // ─── DEMO MODE BYPASS ──────────────────────────────────────────────────
   if (email.toLowerCase().includes('demo')) {
     return {
       uid: 'demo-uid-123',
@@ -230,117 +147,115 @@ export async function loginUser(email: string, password: string): Promise<Member
       qrCode: 'IBC-MEMBER-DEMO',
       role: detectRole(email),
       memberCode: 'IBCDEMO',
-    };
+    } as any;
   }
 
-  const { user } = await signInWithEmailAndPassword(auth, email, password);
-  return ensureProfileExists(user);
+  const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+  if (error) throw error;
+  if (!data.user) throw new Error('Login failed');
+
+  const profile = await getCurrentMemberProfile(data.user.id);
+  if (!profile) throw new Error('Profile not found');
+  return profile;
 }
 
 // ─── 3. Social Login (Google, Facebook, Microsoft) ────────────────────────
 export async function loginWithGoogle(): Promise<Member> {
-  const result = await signInWithPopup(auth, googleProvider);
-  return ensureProfileExists(result.user);
+  const { error } = await supabase.auth.signInWithOAuth({ provider: 'google' });
+  if (error) throw error;
+  // Page will redirect, profile will be fetched on load
+  return {} as Member;
 }
 
 export async function loginWithFacebook(): Promise<Member> {
-  const result = await signInWithPopup(auth, facebookProvider);
-  return ensureProfileExists(result.user);
+  const { error } = await supabase.auth.signInWithOAuth({ provider: 'facebook' });
+  if (error) throw error;
+  return {} as Member;
 }
 
 export async function loginWithMicrosoft(): Promise<Member> {
-  const result = await signInWithPopup(auth, microsoftProvider);
-  return ensureProfileExists(result.user);
+  const { error } = await supabase.auth.signInWithOAuth({ provider: 'azure' });
+  if (error) throw error;
+  return {} as Member;
 }
 
 // ─── 4. Phone / OTP Authentication ────────────────────────────────────────
-let recaptchaVerifier: RecaptchaVerifier | null = null;
-
 export function initRecaptcha(containerId: string = 'recaptcha-container'): void {
-  if (!recaptchaVerifier) {
-    recaptchaVerifier = new RecaptchaVerifier(auth, containerId, {
-      size: 'invisible',
-      callback: () => { /* reCAPTCHA solved */ },
-    });
-  }
+  // Not natively supported by Supabase like Firebase RecaptchaVerifier
 }
 
-export async function sendPhoneOTP(phoneNumber: string): Promise<ConfirmationResult> {
-  if (!recaptchaVerifier) {
-    initRecaptcha();
-  }
-  const confirmation = await signInWithPhoneNumber(auth, phoneNumber, recaptchaVerifier!);
-  return confirmation;
+export async function sendPhoneOTP(phoneNumber: string): Promise<any> {
+  const { data, error } = await supabase.auth.signInWithOtp({ phone: phoneNumber });
+  if (error) throw error;
+  return { phone: phoneNumber };
 }
 
-export async function verifyPhoneOTP(
-  confirmation: ConfirmationResult,
-  otp: string
-): Promise<Member> {
-  const result = await confirmation.confirm(otp);
-  return ensureProfileExists(result.user);
+export async function verifyPhoneOTP(confirmation: any, otp: string): Promise<Member> {
+  const { data, error } = await supabase.auth.verifyOtp({ phone: confirmation.phone, token: otp, type: 'sms' });
+  if (error) throw error;
+  if (!data.user) throw new Error('Verification failed');
+  
+  const profile = await getCurrentMemberProfile(data.user.id);
+  return profile as Member;
 }
 
 // ─── 5. Password Reset ────────────────────────────────────────────────────
 export async function sendPasswordReset(email: string): Promise<void> {
-  await sendPasswordResetEmail(auth, email);
+  const { error } = await supabase.auth.resetPasswordForEmail(email);
+  if (error) throw error;
 }
 
 // ─── 6. Logout ────────────────────────────────────────────────────────────
 export async function logoutUser(): Promise<void> {
-  await signOut(auth);
+  const { error } = await supabase.auth.signOut();
+  if (error) throw error;
 }
 
 // ─── 7. Get Profile ──────────────────────────────────────────────────────
 export async function getCurrentMemberProfile(uid: string): Promise<Member | null> {
-  const snap = await getDoc(doc(db, 'users', uid));
-  if (!snap.exists()) return null;
-  return { uid, ...snap.data() } as Member;
+  const { data, error } = await supabase.from('profiles').select('*').eq('id', uid).single();
+  if (error || !data) return null;
+  
+  return {
+    uid: data.id,
+    name: data.name,
+    email: data.email,
+    whatsapp: data.whatsapp,
+    role: data.role,
+    tier: data.tier,
+    balance: data.balance || 0,
+    totalSpent: data.total_spent || 0,
+    paymentMethod: data.payment_method,
+    photoURL: data.photo_url || defaultAvatar(data.name),
+    qrCode: data.qr_code,
+    memberCode: generateMemberCode(data.id),
+    active: data.active,
+    company: data.company_name
+  } as unknown as Member;
 }
 
 // ─── 8. Auth State Observer ───────────────────────────────────────────────
-export function subscribeToAuthState(callback: (user: User | null) => void) {
-  return onAuthStateChanged(auth, callback);
-}
-
-// ─── 9. Translate Firebase Auth error codes → French ─────────────────────
-export function translateAuthError(code: string): string {
-  const map: Record<string, string> = {
-    'auth/email-already-in-use':      'Cet e-mail est déjà associé à un compte.',
-    'auth/invalid-email':             "L'adresse e-mail n'est pas valide.",
-    'auth/user-not-found':            'Aucun compte trouvé avec cet e-mail.',
-    'auth/wrong-password':            'Mot de passe incorrect.',
-    'auth/invalid-credential':        'E-mail ou mot de passe incorrect.',
-    'auth/too-many-requests':         'Trop de tentatives. Veuillez réessayer dans quelques minutes.',
-    'auth/network-request-failed':    'Erreur réseau. Vérifiez votre connexion internet.',
-    'auth/user-disabled':             'Ce compte a été désactivé. Contactez le support IBC.',
-    'auth/weak-password':             'Le mot de passe doit contenir au moins 6 caractères.',
-    'auth/operation-not-allowed':     'Cette méthode de connexion n\'est pas activée.',
-    'auth/popup-closed-by-user':      'La fenêtre de connexion a été fermée.',
-    'auth/requires-recent-login':     'Veuillez vous reconnecter pour effectuer cette action.',
-    'auth/account-exists-with-different-credential': 'Un compte existe déjà avec cet e-mail via une autre méthode de connexion.',
-    'auth/credential-already-in-use': 'Ces identifiants sont déjà associés à un compte.',
-    'auth/invalid-verification-code': 'Code de vérification invalide.',
-    'auth/invalid-phone-number':      'Numéro de téléphone invalide. Utilisez le format international (+225).',
-    'auth/quota-exceeded':            'Trop de tentatives SMS. Veuillez réessayer dans une heure.',
-    'auth/captcha-check-failed':      'Vérification anti-robot échouée. Veuillez réessayer.',
-    'auth/missing-phone-number':      'Veuillez saisir votre numéro de téléphone.',
+export function subscribeToAuthState(callback: (user: any | null) => void) {
+  const { data: { subscription } } = supabase.auth.onAuthStateChange(
+    (event, session) => {
+      callback(session?.user || null);
+    }
+  );
+  return () => {
+    subscription.unsubscribe();
   };
-  return map[code] ?? 'Une erreur est survenue. Veuillez réessayer.';
 }
 
-// ─── 10. Social auth error helper ─────────────────────────────────────────
+// ─── 9. Translate Supabase Auth error codes → French ─────────────────────
+export function translateAuthError(code: string): string {
+  const errorMsg = code?.toLowerCase() || '';
+  if (errorMsg.includes('already registered')) return 'Cet e-mail est déjà associé à un compte.';
+  if (errorMsg.includes('invalid login credentials')) return 'E-mail ou mot de passe incorrect.';
+  if (errorMsg.includes('user not found')) return 'Aucun compte trouvé avec cet e-mail.';
+  if (errorMsg.includes('password')) return 'Mot de passe incorrect ou trop faible.';
+  return 'Une erreur est survenue. Veuillez réessayer.';
+}
+
 export function translateSocialAuthError(error: any): string {
-  if (!error) return 'Erreur inconnue.';
-  const code = error.code || '';
-  if (code === 'auth/popup-blocked') {
-    return 'La fenêtre de connexion a été bloquée. Autorisez les popups pour ce site.';
-  }
-  if (code === 'auth/popup-closed-by-user') {
-    return 'Connexion annulée.';
-  }
-  if (code?.includes('microsoft')) {
-    return 'La connexion Microsoft a échoué. Vérifiez que le provider est activé dans Firebase.';
-  }
-  return translateAuthError(code);
+  return translateAuthError(error?.message || '');
 }

@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { collection, query, orderBy, getDocs, limit } from 'firebase/firestore';
-import { db } from '../lib/firebase';
+import { supabase } from '../lib/supabase';
 import { LayoutDashboard, LogOut, ChevronLeft, Lock } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
@@ -15,10 +14,14 @@ export const AdminDashboardView: React.FC<{ onLogout: () => void }> = ({ onLogou
   useEffect(() => {
     const fetchAllTransactions = async () => {
       try {
-        const q = query(collection(db, 'transactions'), orderBy('createdAt', 'desc'), limit(50));
-        const snap = await getDocs(q);
-        const txs = snap.docs.map(d => ({ id: d.id, ...d.data() }));
-        setTransactions(txs);
+        const { data, error } = await supabase
+          .from('transactions')
+          .select('*, establishments (name)')
+          .order('created_at', { ascending: false })
+          .limit(50);
+        
+        if (error) throw error;
+        setTransactions(data || []);
       } catch (e) {
         console.error('Erreur de chargement des transactions admin', e);
       }

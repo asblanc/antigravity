@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import { collection, query, orderBy, getDocs } from 'firebase/firestore';
-import { db } from '../lib/firebase';
+import { supabase } from '../lib/supabase';
 import { ChevronLeft, Users, Search, Filter, LogOut } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
@@ -50,10 +49,14 @@ export const MembersListView: React.FC<{ onLogout: () => void }> = ({ onLogout }
     const fetchMembers = async () => {
       setLoading(true);
       try {
-        const q = query(collection(db, 'members'), orderBy('name', 'asc'));
-        const snap = await getDocs(q);
-        const members = snap.docs.map(d => ({ id: d.id, ...d.data() } as MemberRecord));
-        setAllMembers(members);
+        const { data, error } = await supabase
+          .from('profiles')
+          .select('*')
+          .eq('role', 'member')
+          .order('name', { ascending: true });
+          
+        if (error) throw error;
+        setAllMembers(data as unknown as MemberRecord[]);
       } catch (e) {
         console.error('Erreur chargement membres:', e);
       } finally {
