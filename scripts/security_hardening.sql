@@ -69,7 +69,9 @@ SECURITY DEFINER
 SET search_path = public
 AS $$
 BEGIN
-  IF current_user <> 'service_role' AND NOT public.is_admin() THEN
+  -- On ne restreint QUE les rôles atteignables depuis le client (authenticated/anon).
+  -- Les fonctions SECURITY DEFINER (exécutées en 'postgres') et service_role passent.
+  IF current_user IN ('authenticated', 'anon') AND NOT public.is_admin() THEN
     IF NEW.role        IS DISTINCT FROM OLD.role
     OR NEW.balance     IS DISTINCT FROM OLD.balance
     OR NEW.tier        IS DISTINCT FROM OLD.tier
@@ -290,6 +292,42 @@ $$;
 
 REVOKE ALL ON FUNCTION public.admin_set_establishment_active(UUID, BOOLEAN) FROM PUBLIC, anon;
 GRANT EXECUTE ON FUNCTION public.admin_set_establishment_active(UUID, BOOLEAN) TO authenticated;
+
+-- 5d. Finalisation du profil juste après l'inscription (whatsapp, photo, moyen
+--     de paiement, qr_code, tier choisi). Autorisée UNE SEULE FOIS (tant que
+--     qr_code est vide) → empêche toute ré-escalade du tier par la suite.
+CREATE OR REPLACE FUNCTION public.finalize_member_registration(
+  p_whatsapp       TEXT,
+  p_photo_url      TEXT,
+  p_payment_method TEXT,
+  p_qr_code        TEXT,
+  p_tier           TEXT
+)
+RETURNS VOID
+LANGUAGE plpgsql
+SECURITY DEFINER
+SET search_path = public
+AS $$
+BEGIN
+  UPDATE public.profiles
+     SET whatsapp       = COALESCE(p_whatsapp, whatsapp),
+         photo_url      = COALESCE(p_photo_url, photo_url),
+         payment_method = COALESCE(p_payment_method, payment_method),
+         qr_code        = p_qr_code,
+         tier           = CASE WHEN p_tier IN ('bronze', 'silver', 'gold')
+                               THEN p_tier ELSE tier END
+   WHERE id = auth.uid()
+     AND role = 'member'
+     AND (qr_code IS NULL OR qr_code = '');
+
+  IF NOT FOUND THEN
+    RAISE EXCEPTION 'Profil déjà finalisé ou non autorisé';
+  END IF;
+END;
+$$;
+
+REVOKE ALL ON FUNCTION public.finalize_member_registration(TEXT, TEXT, TEXT, TEXT, TEXT) FROM PUBLIC, anon;
+GRANT EXECUTE ON FUNCTION public.finalize_member_registration(TEXT, TEXT, TEXT, TEXT, TEXT) TO authenticated;
 
 -- ============================================================================
 -- FIN — RLS reste activée sur les 3 tables (ALTER TABLE ... ENABLE RLS déjà fait)

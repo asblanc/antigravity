@@ -27,15 +27,6 @@ function detectRole(email: string): 'member' | 'partner' | 'admin' {
   return 'member';
 }
 
-async function writeMemberProfile(uid: string, data: Record<string, any>): Promise<void> {
-  // On utilise update() au lieu de upsert() car le trigger SQL a déjà créé la ligne.
-  // upsert() requiert une politique RLS "INSERT" qui n'existe pas.
-  const { error } = await supabase.from('profiles').update(data).eq('id', uid);
-  if (error) {
-    console.error('Error writing profile:', error);
-    throw new Error("Erreur lors de la création du profil: " + error.message);
-  }
-}
 
 // ─── Public API ────────────────────────────────────────────────────────────
 
@@ -106,8 +97,25 @@ export async function registerMember(data: {
     } catch { /* fallback to default */ }
   }
 
-  // 3. Write profile (Supabase trigger handle_new_user should have inserted it, we just update it)
-  const profile = {
+  // 3. Finaliser le profil via RPC sécurisée.
+  //    Le trigger handle_new_user a déjà créé la ligne (id, name, email, role,
+  //    tier=bronze). On complète ici les champs non créés (whatsapp, photo,
+  //    moyen de paiement, qr_code) + le tier choisi, de façon contrôlée côté
+  //    serveur (un membre ne peut pas écrire role/balance/tier directement).
+  const { error: finalizeError } = await supabase.rpc('finalize_member_registration', {
+    p_whatsapp: data.whatsapp,
+    p_photo_url: finalPhotoURL,
+    p_payment_method: paymentMethod,
+    p_qr_code: qrCode,
+    p_tier: data.plan,
+  });
+  if (finalizeError) {
+    console.error('Error finalizing profile:', finalizeError);
+    throw new Error("Erreur lors de la création du profil: " + finalizeError.message);
+  }
+
+  return {
+    uid: user.id,
     name: data.name,
     email: data.email,
     whatsapp: data.whatsapp,
@@ -116,19 +124,12 @@ export async function registerMember(data: {
     role,
     qr_code: qrCode,
     tier: data.plan,
-  };
-
-  await writeMemberProfile(user.id, profile);
-  
-  return { 
-    uid: user.id, 
-    ...profile, 
     photoURL: finalPhotoURL,
     memberCode,
     balance: 0,
     totalSpent: 0,
     visitsThisMonth: 0,
-    active: true 
+    active: true
   } as unknown as Member;
 }
 
