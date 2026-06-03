@@ -6,10 +6,6 @@ import { Seo } from '../components/Seo';
 import { supabase } from '../lib/supabase';
 import { FadeImage } from '../components/FadeImage';
 
-// Images locales fiables (servies par le site) — évite la dépendance à des
-// hôtes externes parfois bloqués sur certains réseaux (images.unsplash.com).
-const LOCAL_IMGS = ['/hero-restaurant.webp', '/hero-lounge.webp', '/hero-beach.webp'];
-
 const HERO_IMAGES: { src: string; webp?: string; alt: string }[] = [
   { src: '/hero-lounge.jpg', webp: '/hero-lounge.webp', alt: 'Rooftop lounge vue sur Abidjan' },
   { src: '/hero-restaurant.jpg', webp: '/hero-restaurant.webp', alt: 'Restaurant gastronomique premium' },
@@ -243,18 +239,18 @@ export const HomeView: React.FC = () => {
           {/* Cards partenaires */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
             {[
-              { name: 'Sofitel Abidjan', cat: 'Hébergements et Séjours', zone: 'Cocody', cashback: '3-7%', img: '/assets/pullman-hotel.png' },
-              { name: 'Sky Lounge', cat: 'Lounges et Nightlife', zone: 'Marcory', cashback: '5%', img: '/hero-lounge.webp' },
-              { name: 'Radisson Blu', cat: 'Hébergements et Séjours', zone: 'Port-Bouet', cashback: '3-7%', img: '/assets/pullman-hotel.png' },
-              { name: 'Maison Akoula', cat: 'Beach Clubs et Loisirs', zone: 'Assinie', cashback: '5%', img: '/hero-beach.webp' },
-              { name: 'Le Grand Large', cat: 'Restaurants et Dining', zone: 'Zone 4', cashback: '5%', img: '/hero-restaurant.webp' },
-              { name: 'Orchidée Spa', cat: 'Bien-être et Wellness', zone: 'Cocody', cashback: '5%', img: '/hero-lounge.webp' }
+              { name: 'Sofitel Abidjan', cat: 'Hébergements et Séjours', zone: 'Cocody', cashback: '3-7%', img: '/partners/hotel1.webp' },
+              { name: 'Sky Lounge', cat: 'Lounges et Nightlife', zone: 'Marcory', cashback: '5%', img: '/partners/lounge.webp' },
+              { name: 'Radisson Blu', cat: 'Hébergements et Séjours', zone: 'Port-Bouet', cashback: '3-7%', img: '/partners/resort.webp' },
+              { name: 'Maison Akoula', cat: 'Beach Clubs et Loisirs', zone: 'Assinie', cashback: '5%', img: '/partners/beach.webp' },
+              { name: 'Le Grand Large', cat: 'Restaurants et Dining', zone: 'Zone 4', cashback: '5%', img: '/partners/restaurant.webp' },
+              { name: 'Orchidée Spa', cat: 'Bien-être et Wellness', zone: 'Cocody', cashback: '5%', img: '/partners/spa.webp' }
             ]
               .filter(place => activeFilter === 'Tous' || place.cat === activeFilter)
               .map((place, i) => (
                 <div key={i} className="hover-lift bg-white border border-gold/10 rounded-xl overflow-hidden hover:border-gold/30 hover:shadow-premium transition-all duration-500 group cursor-pointer" onClick={() => navigate('/offers')}>
                   <div className="relative overflow-hidden h-40 sm:h-48">
-                    <FadeImage src={LOCAL_IMGS[i % LOCAL_IMGS.length]} alt={place.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
+                    <FadeImage src={place.img} alt={place.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
                     <span className="absolute top-3 left-3 bg-green-dark/90 backdrop-blur-sm text-gold text-[8px] sm:text-[9px] uppercase tracking-widest font-bold px-3 py-1 rounded-sm">{place.cat}</span>
                   </div>
                   <div className="p-4 sm:p-6 text-left">
@@ -327,9 +323,9 @@ export const HomeView: React.FC = () => {
           </div>
           <div className="grid gap-6 md:grid-cols-3">
             {[
-              { name: 'Aminata Koné', role: 'Membre Gold · Abidjan', quote: "Grâce au cashback IBC, mes sorties au restaurant et au lounge me rapportent enfin. J'ai financé un week-end à Assinie rien qu'avec ma cagnotte !" },
-              { name: 'Marc-André Diomandé', role: 'Entrepreneur · Cocody', quote: "Au-delà des avantages, le réseau IBC m'a connecté à des partenaires d'affaires lors d'événements privés. Un vrai cercle de confiance." },
-              { name: 'Fatou Bamba', role: 'Membre · Marcory', quote: "La conciergerie et les accès prioritaires changent tout. Je me sens vraiment membre d'un club privé, pas d'une simple appli." },
+              { name: 'Aminata Koné', role: 'Membre Gold · Abidjan', photo: '/people/p2.webp', quote: "Grâce au cashback IBC, mes sorties au restaurant et au lounge me rapportent enfin. J'ai financé un week-end à Assinie rien qu'avec ma cagnotte !" },
+              { name: 'Marc-André Diomandé', role: 'Entrepreneur · Cocody', photo: '/people/p1.webp', quote: "Au-delà des avantages, le réseau IBC m'a connecté à des partenaires d'affaires lors d'événements privés. Un vrai cercle de confiance." },
+              { name: 'Fatou Bamba', role: 'Membre · Marcory', photo: '/people/p3.webp', quote: "La conciergerie et les accès prioritaires changent tout. Je me sens vraiment membre d'un club privé, pas d'une simple appli." },
             ].map((t) => (
               <div key={t.name} className="bg-white border border-gold/10 rounded-2xl p-7 shadow-soft flex flex-col">
                 <Quote size={28} className="text-gold/40 mb-4" />
@@ -339,9 +335,9 @@ export const HomeView: React.FC = () => {
                 <p className="text-text text-sm leading-relaxed flex-1 italic">« {t.quote} »</p>
                 <div className="flex items-center gap-3 mt-6 pt-5 border-t border-gold/10">
                   <img
-                    src={`https://ui-avatars.com/api/?name=${encodeURIComponent(t.name)}&background=1B5E35&color=C9A84C&bold=true`}
+                    src={t.photo}
                     alt={t.name} loading="lazy"
-                    className="w-10 h-10 rounded-full border border-gold/20"
+                    className="w-10 h-10 rounded-full border border-gold/20 object-cover"
                   />
                   <div>
                     <p className="font-serif font-bold text-green-dark text-sm">{t.name}</p>
@@ -472,12 +468,12 @@ export const HomeView: React.FC = () => {
           <div className="flex-1 w-full relative">
             <div className="grid grid-cols-2 gap-3 sm:gap-6 relative">
               <div className="space-y-3 sm:space-y-6 mt-8 sm:mt-12">
-                <img src="/hero-restaurant.webp" alt="Restaurant gastronomique" loading="lazy" className="rounded-2xl w-full h-32 sm:h-64 object-cover shadow-lg" />
-                <img src="/hero-beach.webp" alt="Beach Club Assinie" loading="lazy" className="rounded-2xl w-full h-24 sm:h-48 object-cover shadow-lg" />
+                <img src="/partners/restaurant.webp" alt="Restaurant gastronomique" loading="lazy" className="rounded-2xl w-full h-32 sm:h-64 object-cover shadow-lg" />
+                <img src="/partners/beach.webp" alt="Beach Club Assinie" loading="lazy" className="rounded-2xl w-full h-24 sm:h-48 object-cover shadow-lg" />
               </div>
               <div className="space-y-3 sm:space-y-6">
-                <img src="/assets/pullman-hotel.png" alt="Hôtel Premium" loading="lazy" className="rounded-2xl w-full h-24 sm:h-48 object-cover shadow-lg" />
-                <img src="/hero-lounge.webp" alt="Rooftop Lounge" loading="lazy" className="rounded-2xl w-full h-32 sm:h-64 object-cover shadow-lg" />
+                <img src="/partners/hotel2.webp" alt="Hôtel Premium" loading="lazy" className="rounded-2xl w-full h-24 sm:h-48 object-cover shadow-lg" />
+                <img src="/partners/lounge.webp" alt="Rooftop Lounge" loading="lazy" className="rounded-2xl w-full h-32 sm:h-64 object-cover shadow-lg" />
               </div>
             </div>
           </div>

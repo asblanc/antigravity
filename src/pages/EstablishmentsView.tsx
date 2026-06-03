@@ -12,14 +12,14 @@ export const EstablishmentsView: React.FC = () => {
   const [filter, setFilter] = useState(initialFilter);
 
   const SHOWCASE = [
-    { name: 'Domaine Bini', cat: 'Diaspora & Héritage', zone: 'Autoroute du Nord', cashback: '5%', img: '/hero-restaurant.webp' },
-    { name: 'Sofitel Abidjan', cat: 'Hébergements & Séjours', zone: 'Cocody', cashback: '3-7%', img: '/assets/pullman-hotel.png' },
-    { name: 'Pullman Helios', cat: 'Hébergements & Séjours', zone: 'Plateau', cashback: '3-7%', img: '/assets/pullman-hotel.png' },
-    { name: 'Sky Lounge', cat: 'Lounges & Nightlife', zone: 'Marcory', cashback: '5%', img: '/hero-lounge.webp' },
-    { name: 'Radisson Blu', cat: 'Hébergements & Séjours', zone: 'Port-Bouet', cashback: '3-7%', img: '/assets/pullman-hotel.png' },
-    { name: 'Maison Akoula', cat: 'Beach Clubs & Loisirs', zone: 'Assinie', cashback: '5%', img: '/hero-beach.webp' },
-    { name: 'Le Grand Large', cat: 'Restaurants & Dining', zone: 'Zone 4', cashback: '5%', img: '/hero-restaurant.webp' },
-    { name: 'Orchidée Spa', cat: 'Bien-être & Wellness', zone: 'Cocody', cashback: '5%', img: '/hero-beach.webp' },
+    { name: 'Domaine Bini', cat: 'Diaspora & Héritage', zone: 'Autoroute du Nord', cashback: '5%', img: '/partners/heritage.webp' },
+    { name: 'Sofitel Abidjan', cat: 'Hébergements & Séjours', zone: 'Cocody', cashback: '3-7%', img: '/partners/hotel1.webp' },
+    { name: 'Pullman Helios', cat: 'Hébergements & Séjours', zone: 'Plateau', cashback: '3-7%', img: '/partners/hotel2.webp' },
+    { name: 'Sky Lounge', cat: 'Lounges & Nightlife', zone: 'Marcory', cashback: '5%', img: '/partners/lounge.webp' },
+    { name: 'Radisson Blu', cat: 'Hébergements & Séjours', zone: 'Port-Bouet', cashback: '3-7%', img: '/partners/resort.webp' },
+    { name: 'Maison Akoula', cat: 'Beach Clubs & Loisirs', zone: 'Assinie', cashback: '5%', img: '/partners/beach.webp' },
+    { name: 'Le Grand Large', cat: 'Restaurants & Dining', zone: 'Zone 4', cashback: '5%', img: '/partners/restaurant.webp' },
+    { name: 'Orchidée Spa', cat: 'Bien-être & Wellness', zone: 'Cocody', cashback: '5%', img: '/partners/spa.webp' },
   ];
 
   // Établissements réels (actifs) depuis Supabase ; repli sur le catalogue d'exemple si base vide.
@@ -38,7 +38,7 @@ export const EstablishmentsView: React.FC = () => {
           cat: e.category,
           zone: e.zone,
           cashback: `${e.cashback_rate}%`,
-          img: e.image_url || '/hero-lounge.webp',
+          img: e.image_url || '/partners/resort.webp',
         })));
       }
     })();

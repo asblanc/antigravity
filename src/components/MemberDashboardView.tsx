@@ -349,10 +349,10 @@ export const MemberDashboardView: React.FC<MemberDashboardViewProps> = ({ user, 
 
   // Carousel of recommended offers at the bottom
   const recommendations = [
-    { id: 1, name: 'La Plage', location: 'Grand-Bassam', discount: '-20%', img: '/hero-beach.webp' },
-    { id: 2, name: 'Azar Club', location: 'Cocody', discount: '-15%', img: '/hero-lounge.webp' },
-    { id: 3, name: 'Hôtel Tiama', location: 'Marcory', discount: '-25%', img: '/assets/pullman-hotel.png' },
-    { id: 4, name: 'Assinie Lodge', location: 'Assinie', discount: '-20%', img: '/assets/pullman-hotel.png' }
+    { id: 1, name: 'La Plage', location: 'Grand-Bassam', discount: '-20%', img: '/partners/beach.webp' },
+    { id: 2, name: 'Azar Club', location: 'Cocody', discount: '-15%', img: '/partners/lounge.webp' },
+    { id: 3, name: 'Hôtel Tiama', location: 'Marcory', discount: '-25%', img: '/partners/hotel1.webp' },
+    { id: 4, name: 'Assinie Lodge', location: 'Assinie', discount: '-20%', img: '/partners/resort.webp' }
   ];
 
   // Sidebar Render Component
@@ -834,7 +834,7 @@ export const MemberDashboardView: React.FC<MemberDashboardViewProps> = ({ user, 
                   {/* Destination with circular image — matches mockup */}
                   <div className="flex items-center gap-3 mb-1">
                     <img
-                      src="/hero-beach.webp"
+                      src="/partners/beach.webp"
                       alt="Weekend Assinie"
                       className="w-11 h-11 rounded-full object-cover border-2 border-gold/30 shadow-md shrink-0"
                     />
@@ -1213,7 +1213,7 @@ export const MemberDashboardView: React.FC<MemberDashboardViewProps> = ({ user, 
                         onClick={() => setActiveTab('experiences')}
                       >
                         <img
-                          src={exp.image_url || '/hero-lounge.webp'}
+                          src={exp.image_url || "/partners/lounge.webp"}
                           alt={exp.title}
                           loading="lazy"
                           className="w-10 h-10 object-cover rounded-lg shrink-0 border border-gold/10 shadow-sm"
@@ -1815,7 +1815,7 @@ export const MemberDashboardView: React.FC<MemberDashboardViewProps> = ({ user, 
                   return (
                     <div key={exp.id} className="bg-white border border-gold/15 rounded-3xl shadow-soft overflow-hidden flex flex-col">
                       <img
-                        src={exp.image_url || '/hero-beach.webp'}
+                        src={exp.image_url || "/partners/resort.webp"}
                         alt={exp.title} loading="lazy"
                         className="w-full h-40 object-cover"
                       />

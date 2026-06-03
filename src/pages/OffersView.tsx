@@ -35,10 +35,10 @@ const PRIVILEGES = [
 ];
 
 const DEALS = [
-  { name: 'Sunset Lounge', location: 'Sky Lounge, Marcory', discount: '-20%', img: '/hero-lounge.webp' },
-  { name: 'Dîner Signature', location: 'Le Grand Large, Zone 4', discount: '-15%', img: '/hero-restaurant.webp' },
-  { name: 'Week-end Évasion', location: 'Maison Akoula, Assinie', discount: 'Cashback x2', img: '/hero-beach.webp' },
-  { name: 'Nuit Prestige', location: 'Sofitel Abidjan, Cocody', discount: '-20%', img: '/assets/pullman-hotel.png' },
+  { name: 'Sunset Lounge', location: 'Sky Lounge, Marcory', discount: '-20%', img: '/partners/lounge.webp' },
+  { name: 'Dîner Signature', location: 'Le Grand Large, Zone 4', discount: '-15%', img: '/partners/restaurant.webp' },
+  { name: 'Week-end Évasion', location: 'Maison Akoula, Assinie', discount: 'Cashback x2', img: '/partners/beach.webp' },
+  { name: 'Nuit Prestige', location: 'Sofitel Abidjan, Cocody', discount: '-20%', img: '/partners/hotel1.webp' },
 ];
 
 export const OffersView: React.FC = () => {
