@@ -1,0 +1,38 @@
+# ============================================================================
+# Garder Supabase actif (plan gratuit) — Workflow GitHub Actions
+# ----------------------------------------------------------------------------
+# ⚠️ À copier dans .github/workflows/keep-supabase-awake.yml
+#    (je n'ai pas pu le pousser directement : le token GitHub utilisé n'a pas
+#     le scope "workflow". Voir instructions dans le message.)
+#
+# Prérequis : ajouter 2 secrets dans le dépôt GitHub
+#   Settings > Secrets and variables > Actions > New repository secret
+#     - SUPABASE_URL        = https://<projet>.supabase.co
+#     - SUPABASE_ANON_KEY   = <clé anon publique>
+# ============================================================================
+name: Keep Supabase awake
+
+on:
+  schedule:
+    - cron: '17 6 */2 * *'   # tous les 2 jours à 06:17 UTC
+  workflow_dispatch:
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Ping Supabase (REST + Auth health)
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
+        run: |
+          set -e
+          if [ -z "$SUPABASE_URL" ] || [ -z "$SUPABASE_ANON_KEY" ]; then
+            echo "::error::Secrets SUPABASE_URL et SUPABASE_ANON_KEY manquants."
+            exit 1
+          fi
+          curl -fsS "$SUPABASE_URL/rest/v1/establishments?select=id&limit=1" \
+            -H "apikey: $SUPABASE_ANON_KEY" \
+            -H "Authorization: Bearer $SUPABASE_ANON_KEY" >/dev/null && echo "REST OK"
+          curl -fsS "$SUPABASE_URL/auth/v1/health" -H "apikey: $SUPABASE_ANON_KEY" >/dev/null && echo "Auth OK"
+          echo "Supabase pingé — projet maintenu actif."
