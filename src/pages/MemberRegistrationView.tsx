@@ -15,6 +15,25 @@ export const MemberRegistrationView: React.FC<{ onRegister: (data: any) => Promi
   const [emailError, setEmailError] = useState('');
   const [checkingEmail, setCheckingEmail] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [pwError, setPwError] = useState('');
+
+  // Force du mot de passe (0–4)
+  const pwScore = (() => {
+    const p = formData.password;
+    let s = 0;
+    if (p.length >= 6) s++;
+    if (p.length >= 10) s++;
+    if (/[A-Z]/.test(p) && /[a-z]/.test(p)) s++;
+    if (/\d/.test(p) && /[^A-Za-z0-9]/.test(p)) s++;
+    return p ? Math.min(s, 4) : 0;
+  })();
+  const pwMeta = [
+    { label: '', color: '' },
+    { label: 'Faible', color: 'bg-red-500' },
+    { label: 'Moyen', color: 'bg-amber-500' },
+    { label: 'Bon', color: 'bg-lime-500' },
+    { label: 'Excellent', color: 'bg-green-600' },
+  ][pwScore];
   const stepLabels = ['Informations personnelles', 'Choix d’adhésion', 'Paiement sécurisé'];
 
   const handleBack = () => setStep(Math.max(1, step - 1));
@@ -76,14 +95,15 @@ export const MemberRegistrationView: React.FC<{ onRegister: (data: any) => Promi
     e.preventDefault();
 
     if (formData.password.length < 6) {
-      alert('Le mot de passe doit contenir au moins 6 caractères.');
+      setPwError('Le mot de passe doit contenir au moins 6 caractères.');
       return;
     }
 
     if (formData.password !== formData.confirmPassword) {
-      alert('Les mots de passe ne correspondent pas.');
+      setPwError('Les mots de passe ne correspondent pas.');
       return;
     }
+    setPwError('');
 
     setIsSubmitting(true);
     try {
@@ -284,6 +304,20 @@ export const MemberRegistrationView: React.FC<{ onRegister: (data: any) => Promi
                 />
               </div>
             </div>
+
+            {/* Force du mot de passe */}
+            {formData.password && (
+              <div>
+                <div className="flex gap-1.5">
+                  {[1, 2, 3, 4].map((i) => (
+                    <span key={i} className={`h-1.5 flex-1 rounded-full transition-colors ${i <= pwScore ? pwMeta.color : 'bg-gold/15'}`} />
+                  ))}
+                </div>
+                {pwMeta.label && <p className="text-[10px] text-text-muted mt-1.5">Sécurité : <strong className="text-green-dark">{pwMeta.label}</strong></p>}
+              </div>
+            )}
+            {pwError && <p className="text-sm text-red-600 bg-red-50 px-3 py-2 rounded-lg">{pwError}</p>}
+
             <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
               {[{ id: 'orange', name: 'Orange Money', icon: <Smartphone size={24} /> }, { id: 'wave', name: 'Wave', icon: <Smartphone size={24} /> }, { id: 'moov', name: 'Moov Money', icon: <Smartphone size={24} /> }, { id: 'mtn', name: 'MTN Money', icon: <Smartphone size={24} /> }].map((m) => (
                 <div key={m.id} onClick={() => setFormData({...formData, paymentMethod: m.id})} className={`p-6 border cursor-pointer transition-all text-center flex flex-col items-center gap-4 ${formData.paymentMethod === m.id ? 'bg-green-dark text-white border-gold shadow-lg' : 'bg-white text-green-dark border-gold/10 hover:border-gold/30'}`}>

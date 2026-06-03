@@ -12,6 +12,7 @@ import {
   Palmtree, PiggyBank, Trophy, CheckCircle2, Ticket, Mail, ConciergeBell
 } from 'lucide-react';
 import type { Member, Transaction, Offer } from '../lib/mock-api';
+import { supabase } from '../lib/supabase';
 import { getMemberTransactions } from '../lib/transaction.service';
 import { getReferralStats, getMemberReferrals } from '../lib/referral.service';
 import type { Referral, ReferralStats } from '../lib/referral.service';
@@ -127,6 +128,23 @@ export const MemberDashboardView: React.FC<MemberDashboardViewProps> = ({ user, 
     };
     fetchData();
   }, [user.uid, user.name]);
+
+  // Temps réel : solde crédité (validation admin) + nouvelles transactions.
+  // Nécessite que les tables soient dans la publication supabase_realtime
+  // (voir scripts/realtime.sql). La RLS filtre déjà aux lignes du membre.
+  useEffect(() => {
+    if (!user.uid) return;
+    const channel = supabase
+      .channel(`member-rt-${user.uid}`)
+      .on('postgres_changes', { event: 'UPDATE', schema: 'public', table: 'profiles', filter: `id=eq.${user.uid}` }, (payload: any) => {
+        if (typeof payload.new?.balance === 'number') setBalance(payload.new.balance);
+      })
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'transactions', filter: `member_id=eq.${user.uid}` }, async () => {
+        try { setTransactions(await getMemberTransactions(user.uid, 15)); } catch { /* noop */ }
+      })
+      .subscribe();
+    return () => { supabase.removeChannel(channel); };
+  }, [user.uid]);
 
   const reloadGoals = async () => { setGoals(await getGoals(user.uid)); };
 
@@ -274,6 +292,11 @@ export const MemberDashboardView: React.FC<MemberDashboardViewProps> = ({ user, 
     setCopied(true);
     toast.success('Lien de parrainage copié !');
     setTimeout(() => setCopied(false), 2000);
+  };
+
+  const handleShareWhatsApp = () => {
+    const msg = `Rejoins-moi sur Ivoire Business Club 🌴 et profite de cashback et d'avantages exclusifs ! Inscris-toi ici : ${referralLink}`;
+    window.open(`https://wa.me/?text=${encodeURIComponent(msg)}`, '_blank', 'noopener,noreferrer');
   };
 
   // Nav Items definition matching screenshot sidebar
@@ -979,7 +1002,14 @@ export const MemberDashboardView: React.FC<MemberDashboardViewProps> = ({ user, 
                     </div>
                   </div>
 
-                  <button 
+                  <button
+                    onClick={handleShareWhatsApp}
+                    className="mt-3 w-full flex items-center justify-center gap-2 bg-[#25D366] hover:bg-[#1da851] text-white text-[10px] uppercase tracking-widest font-bold py-2.5 rounded-xl transition-colors"
+                  >
+                    <MessageSquare size={14} /> Partager sur WhatsApp
+                  </button>
+
+                  <button
                     onClick={() => {
                       setActiveTab('parrainage');
                       window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -1367,9 +1397,17 @@ export const MemberDashboardView: React.FC<MemberDashboardViewProps> = ({ user, 
               </div>
 
               {isLoadingTxs ? (
-                <div className="py-12 text-center text-text-muted flex flex-col items-center justify-center gap-3">
-                  <div className="w-10 h-10 border-4 border-gold border-t-transparent rounded-full animate-spin" />
-                  <p className="text-xs">Chargement de votre historique...</p>
+                <div className="space-y-3">
+                  {[1, 2, 3, 4].map((i) => (
+                    <div key={i} className="flex items-center gap-4 bg-cream/40 border border-gold/10 rounded-xl p-4">
+                      <div className="w-10 h-10 rounded-lg bg-gold/15 animate-pulse shrink-0" />
+                      <div className="flex-1 space-y-2">
+                        <div className="h-3 w-1/3 bg-gold/15 rounded animate-pulse" />
+                        <div className="h-2.5 w-1/4 bg-gold/10 rounded animate-pulse" />
+                      </div>
+                      <div className="h-4 w-16 bg-gold/15 rounded animate-pulse" />
+                    </div>
+                  ))}
                 </div>
               ) : transactions.length > 0 ? (
                 <div className="overflow-x-auto">
@@ -1674,6 +1712,12 @@ export const MemberDashboardView: React.FC<MemberDashboardViewProps> = ({ user, 
                       <span>{copied ? 'Copié !' : 'Copier'}</span>
                     </button>
                   </div>
+                  <button
+                    onClick={handleShareWhatsApp}
+                    className="mt-3 w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-[#25D366] hover:bg-[#1da851] text-white text-[10px] uppercase tracking-widest font-bold px-5 py-2.5 rounded-xl transition-colors"
+                  >
+                    <MessageSquare size={14} /> Partager sur WhatsApp
+                  </button>
                 </div>
               </div>
 
