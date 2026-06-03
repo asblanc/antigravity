@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
-import { toast } from 'react-hot-toast';
 import { Seo } from '../components/Seo';
-import { MapPin, Crown, Plane, PiggyBank, Palmtree, Banknote, Wallet, Gift, TrendingUp, Users, Star, Sparkles, Smartphone, CheckCircle2 } from 'lucide-react';
+import { MapPin, Crown, Banknote, Wallet, Gift, TrendingUp, Users, Star, Sparkles, Smartphone, CheckCircle2 } from 'lucide-react';
 import { supabase } from '../lib/supabase';
 
 export const MemberRegistrationView: React.FC<{ onRegister: (data: any) => Promise<void> }> = ({ onRegister }) => {
@@ -34,6 +33,9 @@ export const MemberRegistrationView: React.FC<{ onRegister: (data: any) => Promi
       if (photoPreview) URL.revokeObjectURL(photoPreview);
     };
   }, [photoPreview]);
+
+  // Remonte en haut à chaque changement d'étape (le formulaire peut être long).
+  useEffect(() => { window.scrollTo({ top: 0, behavior: 'smooth' }); }, [step]);
 
   const checkEmailExists = async (): Promise<boolean> => {
     if (!formData.email) {
@@ -91,74 +93,24 @@ export const MemberRegistrationView: React.FC<{ onRegister: (data: any) => Promi
     }
   };
   return (
-    <div className="min-h-screen bg-cream py-24">
+    <div className="min-h-screen bg-cream pt-28 pb-20">
       <Seo
         title="Devenir Membre — Ivoire Business Club"
         description="Rejoignez le club privé IBC : adhésion Bronze, Silver ou Gold, cashback sur vos sorties et avantages exclusifs en Côte d'Ivoire."
         path="/member-registration"
       />
       <div className="container mx-auto px-6 max-w-5xl">
-        {/* Marketing Header */}
-        <div className="mb-16">
-          <div className="text-center mb-12">
-            <span className="text-[10px] uppercase tracking-[0.4em] text-gold font-bold block mb-4">LE CLUB PRIVÉ</span>
-            <h2 className="font-serif text-3xl md:text-5xl font-bold text-green-dark mb-6">Bienvenue dans votre univers IBC</h2>
-            <p className="text-text-muted max-w-2xl mx-auto text-lg">Rejoignez une communauté exclusive et profitez d'un écosystème d'avantages pensés pour vous.</p>
-          </div>
-          
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-16">
-            {[
-              { title: 'Cashback & Cagnotte', desc: "Cumulez jusqu'à 7% sur vos dépenses chez nos partenaires. Utilisez votre cagnotte pour vos prochaines sorties.", icon: Banknote },
-              { title: 'Statuts Évolutifs', desc: 'Bronze, Or, Platinum. Plus vous explorez, plus vos privilèges et avantages exclusifs augmentent.', icon: Crown },
-              { title: 'Objectif Évasion', desc: 'Fixez-vous un objectif de voyage ou de loisir, et financez-le automatiquement grâce à votre cagnotte.', icon: Plane },
-              { title: 'Épargne Club', desc: "Une solution intelligente pour planifier vos dépenses loisirs tout au long de l'année.", icon: PiggyBank },
-              { title: 'Cercle Évasion', desc: 'Accédez à des séjours exclusifs et des escapades premium négociés spécialement pour les membres.', icon: Palmtree },
-            ].map((item, i) => (
-              <div key={i} className="bg-white p-6 border border-gold/10 hover:border-gold/30 hover:shadow-soft transition-all">
-                <item.icon size={24} className="text-gold mb-4" />
-                <h4 className="font-serif text-lg text-green-dark font-bold mb-2">{item.title}</h4>
-                <p className="text-text-muted text-sm">{item.desc}</p>
-              </div>
-            ))}
-          </div>
-
-          <div className="mb-16">
-            <h3 className="font-serif text-2xl font-bold text-green-dark mb-8 text-center">Recommandés pour vous</h3>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              {[
-                { title: 'Dîner Signature', location: 'Le Grand Large, Zone 4', badge: '-15%', img: 'https://images.unsplash.com/photo-1514362545857-3bc16c4c7d1b?auto=format&fit=crop&q=80&w=400' },
-                { title: 'Week-end Évasion', location: 'Maison Akoula, Assinie', badge: 'Cashback x2', img: 'https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?auto=format&fit=crop&q=80&w=400' },
-                { title: 'Sunset Lounge', location: 'Sky Lounge, Marcory', badge: 'Verre Offert', img: 'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&q=80&w=400' },
-              ].map((exp, i) => (
-                <div key={i} className="relative overflow-hidden rounded-xl group">
-                  <img src={exp.img} alt={exp.title} className="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-700" />
-                  <div className="absolute inset-0 bg-gradient-to-t from-green-dark/90 to-transparent" />
-                  <div className="absolute top-3 right-3 bg-gold text-[#010a04] text-[10px] font-bold uppercase tracking-widest px-3 py-1 rounded">
-                    {exp.badge}
-                  </div>
-                  <div className="absolute bottom-0 p-5 w-full">
-                    <h4 className="font-serif text-white font-bold text-lg">{exp.title}</h4>
-                    <p className="text-gold/80 text-xs flex items-center gap-1 mt-1"><MapPin size={12} /> {exp.location}</p>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
+        {/* En-tête compact */}
+        <div className="max-w-2xl mx-auto text-center mb-10">
+          <span className="text-[10px] uppercase tracking-[0.4em] text-gold font-bold block mb-3">Le club privé</span>
+          <h1 className="font-serif text-3xl md:text-4xl font-bold text-green-dark mb-3">Devenez membre du club IBC</h1>
+          <p className="text-text-muted text-sm md:text-base">
+            Adhésion à partir de <strong className="text-green-dark">500 FCFA / mois</strong> — cashback, avantages membres et événements privés.
+          </p>
+          <button type="button" onClick={() => navigate('/')} className="mt-3 text-[10px] uppercase tracking-[0.3em] font-bold text-text-muted hover:text-gold transition-colors">← Retour à l'accueil</button>
         </div>
 
         <div className="max-w-2xl mx-auto">
-        <div className="border border-gold/20 p-12 mb-6 flex flex-col gap-6 bg-white/50">
-          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-            <div>
-              <span className="text-[10px] uppercase tracking-[0.4em] text-gold font-bold block mb-4">REJOIGNEZ GRATUITEMENT IBC</span>
-              <h2 className="font-serif text-4xl font-bold text-green-dark">Devenez Membre du club</h2>
-            </div>
-            <button type="button" onClick={() => navigate('/')} className="text-[10px] uppercase tracking-[0.3em] font-bold text-green-dark border-b border-green-dark hover:text-gold transition-colors">Retour à l'accueil</button>
-          </div>
-          <p className="text-text-muted italic text-sm leading-relaxed">
-            Accès aux expériences, avantages membres et événements privés à partir de 500 FCFA / mois
-          </p>
-        </div>
         {/* Progress */}
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-12">
           {stepLabels.map((label, index) => (

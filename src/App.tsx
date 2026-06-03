@@ -38,6 +38,10 @@ const App: React.FC = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
+  // Remonte en haut de page à chaque changement de route (UX : on ne reste pas
+  // bloqué à la position de scroll de la page précédente).
+  useEffect(() => { window.scrollTo(0, 0); }, [location.pathname]);
+
   useEffect(() => {
     const unsubscribe = subscribeToAuthState(async (authUser: any) => {
       if (authUser) {
