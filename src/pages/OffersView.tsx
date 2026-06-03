@@ -149,7 +149,7 @@ export const OffersView: React.FC = () => {
 
         {/* CTA final */}
         <div className="max-w-3xl mx-auto text-center bg-green-dark rounded-[36px] p-10 md:p-14 shadow-premium">
-          <BadgePercent size={32} className="text-gold mx-auto mb-4" />
+          <BadgePercent size={32} className="text-gold mx-auto block mb-4" />
           <h2 className="font-serif text-2xl md:text-3xl font-bold text-white mb-3">Prêt à profiter de tous ces avantages ?</h2>
           <p className="text-white/70 text-sm md:text-base max-w-xl mx-auto mb-8">
             Rejoignez Ivoire Business Club dès 500 FCFA / mois et transformez chacune de vos sorties en avantages concrets.

@@ -404,7 +404,7 @@ export const MemberDashboardView: React.FC<MemberDashboardViewProps> = ({ user, 
       {/* Sidebar Footer / Contact Support */}
       <div className="p-6 border-t border-white/5">
         <div className="rounded-2xl border border-gold/20 bg-white/5 p-4 text-center">
-          <HelpCircle size={20} className="text-gold mx-auto mb-2 animate-pulse" />
+          <HelpCircle size={20} className="text-gold mx-auto block mb-2 animate-pulse" />
           <p className="text-[11px] font-semibold text-white">Besoin d'aide ?</p>
           <p className="text-[9px] text-white/50 mt-1 leading-relaxed">Notre équipe est à votre écoute</p>
           <button 
@@ -1662,7 +1662,7 @@ export const MemberDashboardView: React.FC<MemberDashboardViewProps> = ({ user, 
                       Partagez l'expérience d'Ivoire Business Club autour de vous et gagnez des bonus substantiels. Pour chaque personne s'inscrivant via votre lien exclusif et finalisant son adhésion, vous recevez un crédit de <strong className="text-green-dark">2 500 FCFA</strong> directement dans votre cagnotte.
                     </p>
                   </div>
-                  <Gift size={52} className="text-gold mx-auto" />
+                  <Gift size={52} className="text-gold mx-auto block" />
                 </div>
 
                 {/* Stats summary row */}

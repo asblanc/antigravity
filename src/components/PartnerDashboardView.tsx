@@ -224,7 +224,7 @@ export const PartnerDashboardView: React.FC<{ onLogout: () => void }> = ({ onLog
       {/* Dedicated Support Block */}
       <div className="p-6 border-t border-white/5">
         <div className="rounded-2xl border border-gold/20 bg-white/5 p-4 text-center">
-          <HelpCircle size={20} className="text-gold mx-auto mb-2 animate-pulse" />
+          <HelpCircle size={20} className="text-gold mx-auto block mb-2 animate-pulse" />
           <p className="text-[11px] font-semibold text-white">Support Dédié B2B</p>
           <p className="text-[9px] text-white/50 mt-1 leading-relaxed">Manager : Eric Kouamé</p>
           <button 

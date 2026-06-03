@@ -336,17 +336,17 @@ export const AdminImportView: React.FC<{ onLogout: () => void }> = ({ onLogout }
             {/* Summary cards */}
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
               <div className="bg-white/5 border border-gold/15 rounded-2xl p-5 text-center">
-                <CheckCircle2 size={24} className="text-green-400 mx-auto mb-2" />
+                <CheckCircle2 size={24} className="text-green-400 mx-auto block mb-2" />
                 <p className="text-[9px] uppercase tracking-widest text-white/40 font-bold">Importés</p>
                 <p className="font-serif text-3xl font-bold text-green-400 mt-1">{result.totalImported}</p>
               </div>
               <div className="bg-white/5 border border-gold/15 rounded-2xl p-5 text-center">
-                <AlertTriangle size={24} className="text-gold mx-auto mb-2" />
+                <AlertTriangle size={24} className="text-gold mx-auto block mb-2" />
                 <p className="text-[9px] uppercase tracking-widest text-white/40 font-bold">Ignorés</p>
                 <p className="font-serif text-3xl font-bold text-gold mt-1">{result.totalSkipped}</p>
               </div>
               <div className="bg-white/5 border border-gold/15 rounded-2xl p-5 text-center">
-                <FileSpreadsheet size={24} className="text-gold mx-auto mb-2" />
+                <FileSpreadsheet size={24} className="text-gold mx-auto block mb-2" />
                 <p className="text-[9px] uppercase tracking-widest text-white/40 font-bold">Feuilles</p>
                 <p className="font-serif text-3xl font-bold text-white mt-1">{result.reports.length}</p>
               </div>

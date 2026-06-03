@@ -72,7 +72,7 @@ export const PartnerRegistrationView: React.FC = () => {
           </form>
         ) : (
           <div className="text-center py-12">
-            <CheckCircle2 size={48} className="text-green-dark mx-auto mb-6" />
+            <CheckCircle2 size={48} className="text-green-dark mx-auto block mb-6" />
             <h4 className="text-2xl font-serif text-green-dark mb-4">Merci !</h4>
             <p className="text-text-muted mb-6">Votre demande a été reçue. Notre équipe vous contactera très bientôt.</p>
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
