@@ -186,7 +186,9 @@ CREATE POLICY transactions_select_admin ON public.transactions
 -- 5. RPC — opérations privilégiées (SECURITY DEFINER)
 -- ============================================================================
 
--- 5a. Enregistrer une transaction + créditer le solde de façon ATOMIQUE.
+-- 5a. Enregistrer une transaction EN ATTENTE (status 'pending').
+--     Le solde du membre n'est crédité qu'à la validation par un admin
+--     (voir public.admin_review_transaction dans scripts/admin.sql).
 --     Seul le partenaire propriétaire de l'établissement (ou un admin) peut appeler.
 CREATE OR REPLACE FUNCTION public.record_transaction(
   p_member_id        UUID,
@@ -227,14 +229,11 @@ BEGIN
 
   v_cashback := ROUND(p_amount * (COALESCE(v_rate, 5.0) / 100.0));
 
+  -- Créée EN ATTENTE : le solde/total dépensé ne sont crédités qu'à la
+  -- validation admin (admin_review_transaction : pending -> confirmed).
   INSERT INTO public.transactions (member_id, establishment_id, amount, cashback_earned, status)
-  VALUES (p_member_id, p_establishment_id, p_amount, v_cashback, 'confirmed')
+  VALUES (p_member_id, p_establishment_id, p_amount, v_cashback, 'pending')
   RETURNING id INTO v_tx_id;
-
-  UPDATE public.profiles
-     SET balance     = COALESCE(balance, 0)     + v_cashback,
-         total_spent = COALESCE(total_spent, 0) + p_amount
-   WHERE id = p_member_id;
 
   RETURN v_tx_id;
 END;

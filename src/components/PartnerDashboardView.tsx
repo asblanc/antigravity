@@ -786,8 +786,8 @@ export const PartnerDashboardView: React.FC<{ onLogout: () => void }> = ({ onLog
                     <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
                       <CheckCircle2 size={36} className="text-green-600" />
                     </div>
-                    <h4 className="font-serif text-2xl mb-1 text-green-950 font-black">Visite Validée</h4>
-                    <p className="text-xs text-text-muted mb-6">Le cashback a été crédité sur le compte du membre.</p>
+                    <h4 className="font-serif text-2xl mb-1 text-green-950 font-black">Visite Enregistrée</h4>
+                    <p className="text-xs text-text-muted mb-6">Transaction en attente de validation par IBC. Le cashback sera crédité au membre une fois confirmée.</p>
                     
                     <div className="bg-[#FAF5E9] border border-gold/25 p-5 my-6 rounded-2xl text-left max-w-sm mx-auto space-y-3 text-[#031d0f]">
                       <div className="flex justify-between items-center text-xs">
