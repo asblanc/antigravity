@@ -1,6 +1,7 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Seo } from '../components/Seo';
+import { FadeImage } from '../components/FadeImage';
 import {
   BadgePercent, Crown, Gift, Wallet, Users, Sparkles, Star,
   TrendingUp, Banknote, Headphones, ArrowRight, Check, MapPin,
@@ -131,9 +132,9 @@ export const OffersView: React.FC = () => {
           </div>
           <div className="grid gap-5 grid-cols-2 lg:grid-cols-4">
             {DEALS.map((d) => (
-              <div key={d.name} className="bg-white border border-gold/10 rounded-2xl overflow-hidden hover:border-gold/30 hover:shadow-premium transition-all duration-300 group">
+              <div key={d.name} className="hover-lift bg-white border border-gold/10 rounded-2xl overflow-hidden hover:border-gold/30 hover:shadow-premium transition-all duration-300 group">
                 <div className="relative overflow-hidden h-36">
-                  <img src={d.img} alt={d.name} loading="lazy" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
+                  <FadeImage src={d.img} alt={d.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
                   <div className="absolute inset-0 bg-gradient-to-t from-green-dark/70 to-transparent" />
                   <span className="absolute top-2 right-2 bg-gradient-to-r from-gold to-[#F0C040] text-green-darker text-[10px] uppercase tracking-wider font-extrabold px-2.5 py-1 rounded shadow-sm">{d.discount}</span>
                 </div>

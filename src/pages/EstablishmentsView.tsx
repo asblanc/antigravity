@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import { Search, MapPin, Star, Hotel, Utensils, Coffee, Gamepad2, Heart, Globe } from 'lucide-react';
 import { Seo } from '../components/Seo';
+import { FadeImage } from '../components/FadeImage';
 import { supabase } from '../lib/supabase';
 
 export const EstablishmentsView: React.FC = () => {
@@ -87,9 +88,9 @@ export const EstablishmentsView: React.FC = () => {
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {filteredPlaces.map((place, i) => (
-            <div key={i} className="bg-white border border-gold/10 overflow-hidden hover:border-gold/30 hover:shadow-premium transition-all group">
+            <div key={i} className="hover-lift bg-white border border-gold/10 rounded-xl overflow-hidden hover:border-gold/30 hover:shadow-premium transition-all group">
               <div className="relative overflow-hidden h-56">
-                <img src={place.img} alt={place.name} loading="lazy" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
+                <FadeImage src={place.img} alt={place.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
                 <span className="absolute top-3 left-3 bg-green-dark text-gold text-[9px] uppercase tracking-widest font-bold px-3 py-1">{place.cat}</span>
               </div>
               <div className="p-6">

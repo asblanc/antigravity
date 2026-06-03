@@ -4,6 +4,7 @@ import { MapPin, Compass, Sparkles, Briefcase, Crown, Users, Utensils, CreditCar
 import { HomeTierCards } from '../components/HomeTierCards';
 import { Seo } from '../components/Seo';
 import { supabase } from '../lib/supabase';
+import { FadeImage } from '../components/FadeImage';
 
 const HERO_IMAGES: { src: string; webp?: string; alt: string }[] = [
   { src: '/hero-lounge.jpg', webp: '/hero-lounge.webp', alt: 'Rooftop lounge vue sur Abidjan' },
@@ -249,9 +250,9 @@ export const HomeView: React.FC = () => {
             ]
               .filter(place => activeFilter === 'Tous' || place.cat === activeFilter)
               .map((place, i) => (
-                <div key={i} className="bg-white border border-gold/10 rounded-xl overflow-hidden hover:border-gold/30 hover:shadow-premium transition-all duration-500 group cursor-pointer" onClick={() => navigate('/offers')}>
+                <div key={i} className="hover-lift bg-white border border-gold/10 rounded-xl overflow-hidden hover:border-gold/30 hover:shadow-premium transition-all duration-500 group cursor-pointer" onClick={() => navigate('/offers')}>
                   <div className="relative overflow-hidden h-40 sm:h-48">
-                    <img src={place.img} alt={place.name} loading="lazy" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
+                    <FadeImage src={place.img} alt={place.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
                     <span className="absolute top-3 left-3 bg-green-dark/90 backdrop-blur-sm text-gold text-[8px] sm:text-[9px] uppercase tracking-widest font-bold px-3 py-1 rounded-sm">{place.cat}</span>
                   </div>
                   <div className="p-4 sm:p-6 text-left">
