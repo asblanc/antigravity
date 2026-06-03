@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { MapPin, Compass, Sparkles, Briefcase, Crown, Users, Utensils, CreditCard, BookOpen, Headphones, Palmtree, Hotel, Globe, Smartphone, Heart, Star, Quote, Banknote } from 'lucide-react';
+import { MapPin, Compass, Sparkles, Briefcase, Crown, Users, Utensils, CreditCard, BookOpen, Headphones, Palmtree, Hotel, Globe, Smartphone, Heart, Star, Quote, Banknote, LayoutDashboard, ArrowRight } from 'lucide-react';
 import { HomeTierCards } from '../components/HomeTierCards';
 import { Seo } from '../components/Seo';
 import { supabase } from '../lib/supabase';
@@ -353,34 +353,92 @@ export const HomeView: React.FC = () => {
           </div>
         </div>
       </section>
-          {/* Section 7: Inscription */}
-      <section className="py-24 bg-cream reveal-section">
-        <div className="container mx-auto px-6 max-w-4xl">
-          <div className="border border-gold/20 p-12 text-center mb-10">
-            <span className="text-[10px] uppercase tracking-[0.4em] text-gold font-bold block mb-6">Rejoignez gratuitement IBC</span>
+          {/* Section 7: Inscription + aperçu espace membre */}
+      <section className="py-20 sm:py-28 bg-cream reveal-section">
+        <div className="container mx-auto px-6 max-w-5xl">
+          <div className="text-center mb-12 max-w-2xl mx-auto">
+            <span className="text-[10px] uppercase tracking-[0.4em] text-gold font-bold block mb-4">Rejoignez gratuitement IBC</span>
             <h2 className="font-serif text-2xl md:text-3xl lg:text-4xl font-bold text-green-dark leading-tight">
               Accès aux expériences, avantages membres et événements privés à partir de 500 FCFA / mois
             </h2>
           </div>
-          <div className="mb-8">
-            <p className="text-text font-medium mb-6 text-sm">Modes de paiement acceptés :</p>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-              <div className="flex items-center gap-4 p-4 bg-white border border-gold/10 rounded-lg">
-                <Smartphone size={20} className="text-gold shrink-0" />
-                <span className="text-green-dark font-medium">Mobile Money</span>
+
+          <div className="grid lg:grid-cols-2 gap-6 items-stretch">
+            {/* Aperçu de l'espace membre (après adhésion) */}
+            <div className="bg-green-dark rounded-3xl p-7 sm:p-8 text-white shadow-premium flex flex-col">
+              <span className="text-[10px] uppercase tracking-[0.4em] text-gold font-bold block mb-2">Après votre adhésion</span>
+              <h3 className="font-serif text-2xl font-bold text-white">Votre espace membre IBC</h3>
+              <p className="text-white/70 text-sm mt-2 leading-relaxed">
+                Dès votre inscription, accédez à votre tableau de bord personnel pour suivre vos avantages.
+              </p>
+              <div className="grid gap-3 mt-6">
+                <div className="flex items-center gap-4 bg-white/[0.06] border border-gold/15 rounded-xl p-4">
+                  <span className="w-10 h-10 rounded-xl bg-gold/10 border border-gold/20 flex items-center justify-center shrink-0">
+                    <LayoutDashboard size={18} className="text-gold" />
+                  </span>
+                  <div>
+                    <h4 className="font-serif font-bold text-white text-sm">Tableau de bord</h4>
+                    <p className="text-white/60 text-xs">Suivez vos cashbacks et activités</p>
+                  </div>
+                </div>
+                <div className="flex items-center gap-4 bg-white/[0.06] border border-gold/15 rounded-xl p-4">
+                  <span className="w-10 h-10 rounded-xl bg-gold/10 border border-gold/20 flex items-center justify-center shrink-0">
+                    <BookOpen size={18} className="text-gold" />
+                  </span>
+                  <div>
+                    <h4 className="font-serif font-bold text-white text-sm">Catalogue partenaires</h4>
+                    <p className="text-white/60 text-xs">Accédez à tous les établissements</p>
+                  </div>
+                </div>
               </div>
-              <div className="flex items-center gap-4 p-4 bg-white border border-gold/10 rounded-lg">
-                <Banknote size={20} className="text-gold shrink-0" />
-                <span className="text-green-dark font-medium">Espèces</span>
+              <button
+                onClick={() => navigate('/member-registration')}
+                className="btn-gold mt-7 py-4 flex items-center justify-center gap-2"
+              >
+                Accéder à mon espace <ArrowRight size={15} />
+              </button>
+            </div>
+
+            {/* Paiements */}
+            <div className="bg-white border border-gold/15 rounded-3xl p-7 sm:p-8 shadow-soft flex flex-col">
+              <h3 className="font-serif text-xl font-bold text-green-dark">Paiements</h3>
+
+              <div className="mt-6">
+                <p className="text-[10px] uppercase tracking-[0.2em] text-text-muted font-bold mb-2">Adhésion — sur la plateforme</p>
+                <div className="inline-flex items-center gap-3 px-4 py-3 bg-[#FF7900]/10 border border-[#FF7900]/30 rounded-xl">
+                  <Smartphone size={20} className="text-[#FF7900] shrink-0" />
+                  <span className="text-green-dark font-bold">Orange Money</span>
+                </div>
+                <p className="text-[11px] text-text-muted mt-2 leading-relaxed">
+                  Réglez votre abonnement membre en ligne, uniquement via Orange Money.
+                </p>
               </div>
+
+              <div className="mt-6 pt-6 border-t border-gold/10">
+                <p className="text-[10px] uppercase tracking-[0.2em] text-text-muted font-bold mb-2">Dépenses chez les partenaires</p>
+                <div className="flex flex-wrap gap-3">
+                  <div className="inline-flex items-center gap-2.5 px-4 py-3 bg-cream/60 border border-gold/15 rounded-xl">
+                    <Smartphone size={18} className="text-gold shrink-0" />
+                    <span className="text-green-dark font-medium text-sm">Orange Money</span>
+                  </div>
+                  <div className="inline-flex items-center gap-2.5 px-4 py-3 bg-cream/60 border border-gold/15 rounded-xl">
+                    <Banknote size={18} className="text-gold shrink-0" />
+                    <span className="text-green-dark font-medium text-sm">Espèces</span>
+                  </div>
+                </div>
+                <p className="text-[11px] text-text-muted mt-2 leading-relaxed">
+                  Payez vos consommations chez nos établissements partenaires en Orange Money ou en espèces, et cumulez votre cashback.
+                </p>
+              </div>
+
+              <button
+                onClick={() => navigate('/member-registration')}
+                className="mt-auto pt-7 text-[10px] uppercase tracking-[0.25em] font-bold text-green-dark hover:text-gold transition-colors flex items-center gap-1.5"
+              >
+                Confirmez mon adhésion <ArrowRight size={13} />
+              </button>
             </div>
           </div>
-          <button
-            onClick={() => navigate('/member-registration')}
-            className="btn-gold w-full py-5 text-sm"
-          >
-            Confirmez mon adhésion
-          </button>
         </div>
       </section>
       
