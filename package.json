@@ -8,7 +8,8 @@
     "build": "mkdir -p public && cp src/assets/ibc-logo.png public/ibc-logo.png || true; vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-    "optimize:images": "node execution/optimize_images.mjs"
+    "optimize:images": "node execution/optimize_images.mjs",
+    "import:members": "node scripts/import_members.mjs"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.107.0",

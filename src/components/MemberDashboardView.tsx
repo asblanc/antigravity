@@ -15,6 +15,7 @@ import { getMemberTransactions } from '../lib/transaction.service';
 import { getReferralStats, getMemberReferrals } from '../lib/referral.service';
 import type { Referral, ReferralStats } from '../lib/referral.service';
 import { getMySubscription, subscribe, type Subscription } from '../lib/subscription.service';
+import { getNotifications, type AppNotification } from '../lib/notification.service';
 import { MemberCard } from './MemberCard';
 import ibcLogo from '../assets/ibc-logo.webp';
 
@@ -46,6 +47,7 @@ export const MemberDashboardView: React.FC<MemberDashboardViewProps> = ({ user, 
   const [isLoadingReferrals, setIsLoadingReferrals] = useState<boolean>(true);
   const [mySubscription, setMySubscription] = useState<Subscription | null>(null);
   const [subscribing, setSubscribing] = useState<boolean>(false);
+  const [appNotifs, setAppNotifs] = useState<AppNotification[]>([]);
 
   // Fetch transactions and referrals on mount
   useEffect(() => {
@@ -76,6 +78,12 @@ export const MemberDashboardView: React.FC<MemberDashboardViewProps> = ({ user, 
         setMySubscription(await getMySubscription(user.uid));
       } catch (e) {
         console.error('Failed to load subscription:', e);
+      }
+
+      try {
+        setAppNotifs(await getNotifications(12));
+      } catch (e) {
+        console.error('Failed to load notifications:', e);
       }
     };
     fetchData();
@@ -319,11 +327,15 @@ export const MemberDashboardView: React.FC<MemberDashboardViewProps> = ({ user, 
                 className="w-10 h-10 border border-gold/20 rounded-full flex items-center justify-center text-green-dark hover:bg-cream/40 transition-all relative"
               >
                 <Bell size={18} />
-                <span className="absolute top-1 right-1 w-2.5 h-2.5 bg-gold border-2 border-white rounded-full animate-ping" />
-                <span className="absolute top-1 right-1 w-2.5 h-2.5 bg-gold border-2 border-white rounded-full" />
+                {appNotifs.length > 0 && (
+                  <>
+                    <span className="absolute top-1 right-1 w-2.5 h-2.5 bg-gold border-2 border-white rounded-full animate-ping" />
+                    <span className="absolute top-1 right-1 w-2.5 h-2.5 bg-gold border-2 border-white rounded-full" />
+                  </>
+                )}
               </button>
               
-              {/* Fake Notifications Dropdown */}
+              {/* Notifications Dropdown (réelles) */}
               <AnimatePresence>
                 {showNotifications && (
                   <motion.div
@@ -332,16 +344,17 @@ export const MemberDashboardView: React.FC<MemberDashboardViewProps> = ({ user, 
                     exit={{ opacity: 0, y: 10 }}
                     className="absolute right-0 mt-3 w-80 bg-white border border-gold/15 rounded-2xl shadow-premium p-4 z-50 text-left"
                   >
-                    <h4 className="font-serif font-bold text-green-dark border-b border-gold/10 pb-2 mb-3">Notifications (2)</h4>
-                    <div className="space-y-3">
-                      <div className="p-2.5 bg-cream/30 hover:bg-cream/60 rounded-xl cursor-pointer transition-colors border-l-2 border-gold">
-                        <p className="text-xs font-bold text-green-dark">🎉 Bienvenue dans le club IBC</p>
-                        <p className="text-[10px] text-text-muted mt-1 leading-snug">Profitez dès maintenant de vos 3% de cashback Bronze chez tous nos partenaires.</p>
-                      </div>
-                      <div className="p-2.5 bg-cream/30 hover:bg-cream/60 rounded-xl cursor-pointer transition-colors border-l-2 border-green-dark">
-                        <p className="text-xs font-bold text-green-dark">🌟 Avantage parrainage actif</p>
-                        <p className="text-[10px] text-text-muted mt-1 leading-snug">Parrainez vos proches et gagnez 2 500 FCFA sur leur adhésion.</p>
-                      </div>
+                    <h4 className="font-serif font-bold text-green-dark border-b border-gold/10 pb-2 mb-3">Notifications ({appNotifs.length})</h4>
+                    <div className="space-y-3 max-h-80 overflow-y-auto">
+                      {appNotifs.map((n) => (
+                        <div key={n.id} className="p-2.5 bg-cream/30 hover:bg-cream/60 rounded-xl transition-colors border-l-2 border-gold">
+                          <p className="text-xs font-bold text-green-dark">{n.title}</p>
+                          <p className="text-[10px] text-text-muted mt-1 leading-snug">{n.body}</p>
+                        </div>
+                      ))}
+                      {appNotifs.length === 0 && (
+                        <p className="text-[11px] text-text-muted italic text-center py-4">Aucune notification pour le moment.</p>
+                      )}
                     </div>
                   </motion.div>
                 )}

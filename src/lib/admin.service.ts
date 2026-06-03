@@ -221,3 +221,64 @@ export async function reviewSubscription(
   const { error } = await supabase.rpc('admin_review_subscription', { p_id: id, p_status: status });
   if (error) throw new Error(error.message);
 }
+
+// ─── Communication / Notifications ───────────────────────────────────────────
+export interface AdminNotification {
+  id: string;
+  title: string;
+  body: string;
+  audience: string;
+  created_at: string;
+}
+
+export async function getAdminNotifications(): Promise<AdminNotification[]> {
+  try {
+    const { data, error } = await supabase
+      .from('notifications')
+      .select('id, title, body, audience, created_at')
+      .order('created_at', { ascending: false });
+    if (error || !data) return [];
+    return data as AdminNotification[];
+  } catch {
+    return [];
+  }
+}
+
+export async function sendNotification(title: string, body: string, audience: string): Promise<void> {
+  const { error } = await supabase.rpc('admin_send_notification', { p_title: title, p_body: body, p_audience: audience });
+  if (error) throw new Error(error.message);
+}
+
+export async function deleteNotification(id: string): Promise<void> {
+  const { error } = await supabase.rpc('admin_delete_notification', { p_id: id });
+  if (error) throw new Error(error.message);
+}
+
+// ─── Rôles / Admins ──────────────────────────────────────────────────────────
+export interface AdminUser {
+  id: string;
+  name: string;
+  email: string;
+  role: string;
+  created_at: string;
+}
+
+export async function getAdmins(): Promise<AdminUser[]> {
+  const { data, error } = await supabase
+    .from('profiles')
+    .select('id, name, email, role, created_at')
+    .eq('role', 'admin')
+    .order('created_at', { ascending: true });
+  if (error || !data) return [];
+  return data as AdminUser[];
+}
+
+export async function setUserRole(userId: string, role: string): Promise<void> {
+  const { error } = await supabase.rpc('admin_set_role', { p_user_id: userId, p_role: role });
+  if (error) throw new Error(error.message);
+}
+
+export async function setRoleByEmail(email: string, role: string): Promise<void> {
+  const { error } = await supabase.rpc('admin_set_role_by_email', { p_email: email, p_role: role });
+  if (error) throw new Error(error.message);
+}

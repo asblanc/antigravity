@@ -4,13 +4,16 @@ import { toast } from 'react-hot-toast';
 import {
   LayoutDashboard, Users, Store, CreditCard, Gift, LogOut, ChevronLeft,
   Loader2, CheckCircle, XCircle, Wallet, TrendingUp, Award, Clock, Banknote,
+  Bell, Settings, Send, Trash2, Shield,
 } from 'lucide-react';
 import {
   getAdminOverview, getAdminMembers, setMemberActive, setMemberTier, adjustMemberBalance,
   getAdminEstablishments, updateEstablishment, getAdminTransactions, reviewTransaction,
   getAdminReferrals, getAdminSubscriptions, reviewSubscription,
+  getAdminNotifications, sendNotification, deleteNotification,
+  getAdmins, setUserRole, setRoleByEmail,
   type AdminOverview, type AdminMember, type AdminEstablishment, type AdminTransaction,
-  type AdminReferral, type AdminSubscription,
+  type AdminReferral, type AdminSubscription, type AdminNotification, type AdminUser,
 } from '../lib/admin.service';
 
 const fmt = (n: number): string => (n ?? 0).toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
@@ -22,6 +25,8 @@ const TABS = [
   { id: 'transactions', label: 'Transactions', icon: CreditCard },
   { id: 'subscriptions', label: 'Abonnements', icon: Banknote },
   { id: 'referrals', label: 'Parrainages', icon: Gift },
+  { id: 'communication', label: 'Communication', icon: Bell },
+  { id: 'settings', label: 'Paramètres', icon: Settings },
 ] as const;
 
 const TIERS = ['bronze', 'silver', 'gold', 'platinum'];
@@ -44,6 +49,12 @@ export const AdminDashboardView: React.FC<{ onLogout: () => void }> = ({ onLogou
   const [transactions, setTransactions] = useState<AdminTransaction[]>([]);
   const [referrals, setReferrals] = useState<AdminReferral[]>([]);
   const [subscriptions, setSubscriptions] = useState<AdminSubscription[]>([]);
+  const [notifications, setNotifications] = useState<AdminNotification[]>([]);
+  const [admins, setAdmins] = useState<AdminUser[]>([]);
+
+  // Formulaires
+  const [notifForm, setNotifForm] = useState({ title: '', body: '', audience: 'all' });
+  const [promoteForm, setPromoteForm] = useState({ email: '', role: 'admin' });
 
   const load = useCallback(async (which: string) => {
     setLoading(true);
@@ -54,6 +65,8 @@ export const AdminDashboardView: React.FC<{ onLogout: () => void }> = ({ onLogou
       else if (which === 'transactions') setTransactions(await getAdminTransactions());
       else if (which === 'subscriptions') setSubscriptions(await getAdminSubscriptions());
       else if (which === 'referrals') setReferrals(await getAdminReferrals());
+      else if (which === 'communication') setNotifications(await getAdminNotifications());
+      else if (which === 'settings') setAdmins(await getAdmins());
     } catch (e: any) {
       toast.error(e?.message || 'Erreur de chargement');
     } finally {
@@ -126,6 +139,37 @@ export const AdminDashboardView: React.FC<{ onLogout: () => void }> = ({ onLogou
       toast.success(status === 'active' ? 'Abonnement activé' : 'Abonnement annulé');
       load('subscriptions');
     } catch (e: any) { toast.error(e.message); }
+  };
+
+  const handleSendNotif = async () => {
+    if (!notifForm.title.trim() || !notifForm.body.trim()) { toast.error('Titre et message requis'); return; }
+    try {
+      await sendNotification(notifForm.title, notifForm.body, notifForm.audience);
+      toast.success('Notification envoyée');
+      setNotifForm({ title: '', body: '', audience: 'all' });
+      load('communication');
+    } catch (e: any) { toast.error(e.message); }
+  };
+
+  const handleDeleteNotif = async (id: string) => {
+    try { await deleteNotification(id); toast.success('Notification supprimée'); load('communication'); }
+    catch (e: any) { toast.error(e.message); }
+  };
+
+  const handlePromote = async () => {
+    if (!promoteForm.email.trim()) { toast.error('E-mail requis'); return; }
+    try {
+      await setRoleByEmail(promoteForm.email, promoteForm.role);
+      toast.success('Rôle mis à jour');
+      setPromoteForm({ email: '', role: 'admin' });
+      load('settings');
+    } catch (e: any) { toast.error(e.message); }
+  };
+
+  const handleDemote = async (u: AdminUser) => {
+    if (!window.confirm(`Retirer les droits admin de ${u.name} ?`)) return;
+    try { await setUserRole(u.id, 'member'); toast.success('Admin rétrogradé en membre'); load('settings'); }
+    catch (e: any) { toast.error(e.message); }
   };
 
   // ─── UI helpers ──────────────────────────────────────────────────────────
@@ -410,6 +454,125 @@ export const AdminDashboardView: React.FC<{ onLogout: () => void }> = ({ onLogou
                     {!loading && referrals.length === 0 && <tr><td colSpan={5} className="p-8 text-center text-white/40 italic">Aucun parrainage (ou table referrals non créée).</td></tr>}
                   </tbody>
                 </table>
+              </div>
+            </div>
+          )}
+
+          {/* ── COMMUNICATION ── */}
+          {tab === 'communication' && (
+            <div className="space-y-6">
+              <h2 className="font-serif text-2xl text-gold">Communication</h2>
+
+              <div className="bg-white/5 border border-gold/20 rounded-2xl p-6 space-y-4 max-w-2xl">
+                <h3 className="text-[10px] uppercase tracking-widest text-gold font-bold">Nouvelle notification</h3>
+                <input
+                  value={notifForm.title}
+                  onChange={(e) => setNotifForm({ ...notifForm, title: e.target.value })}
+                  placeholder="Titre"
+                  className="w-full bg-green-dark border border-gold/20 rounded-lg px-3 py-2 text-sm text-white placeholder-white/30 outline-none focus:border-gold"
+                />
+                <textarea
+                  value={notifForm.body}
+                  onChange={(e) => setNotifForm({ ...notifForm, body: e.target.value })}
+                  placeholder="Message"
+                  rows={3}
+                  className="w-full bg-green-dark border border-gold/20 rounded-lg px-3 py-2 text-sm text-white placeholder-white/30 outline-none focus:border-gold resize-none"
+                />
+                <div className="flex items-center gap-3 flex-wrap">
+                  <select
+                    value={notifForm.audience}
+                    onChange={(e) => setNotifForm({ ...notifForm, audience: e.target.value })}
+                    className="bg-green-dark border border-gold/20 rounded-lg px-3 py-2 text-sm text-white"
+                  >
+                    <option value="all">Tout le monde</option>
+                    <option value="members">Membres</option>
+                    <option value="partners">Partenaires</option>
+                    <option value="admins">Admins</option>
+                  </select>
+                  <button onClick={handleSendNotif} className="flex items-center gap-2 bg-gold text-green-darker text-xs font-bold uppercase tracking-widest px-5 py-2.5 rounded-full hover:opacity-90">
+                    <Send size={14} /> Envoyer
+                  </button>
+                </div>
+              </div>
+
+              <div className="bg-white/5 border border-gold/20 rounded-2xl overflow-x-auto">
+                <table className="w-full text-left text-sm">
+                  <thead>
+                    <tr className="bg-green-dark text-[10px] uppercase tracking-widest text-gold">
+                      <th className="p-3">Titre</th><th className="p-3">Message</th><th className="p-3">Audience</th>
+                      <th className="p-3">Date</th><th className="p-3 text-center">Action</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {notifications.map((n) => (
+                      <tr key={n.id} className="border-b border-white/5 hover:bg-white/5">
+                        <td className="p-3 font-semibold">{n.title}</td>
+                        <td className="p-3 text-white/60 text-xs max-w-xs truncate">{n.body}</td>
+                        <td className="p-3"><span className="text-[10px] px-2 py-0.5 rounded-full border border-gold/30 text-gold uppercase">{n.audience}</span></td>
+                        <td className="p-3 text-white/50 text-xs">{new Intl.DateTimeFormat('fr-FR', { dateStyle: 'short', timeStyle: 'short' }).format(new Date(n.created_at))}</td>
+                        <td className="p-3 text-center">
+                          <button onClick={() => handleDeleteNotif(n.id)} className="text-red-400 hover:text-red-300" title="Supprimer"><Trash2 size={15} /></button>
+                        </td>
+                      </tr>
+                    ))}
+                    {!loading && notifications.length === 0 && <tr><td colSpan={5} className="p-8 text-center text-white/40 italic">Aucune notification envoyée (ou table non créée).</td></tr>}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          )}
+
+          {/* ── SETTINGS / ADMINS ── */}
+          {tab === 'settings' && (
+            <div className="space-y-6">
+              <h2 className="font-serif text-2xl text-gold">Paramètres & Admins</h2>
+
+              <div className="bg-white/5 border border-gold/20 rounded-2xl p-6 space-y-4 max-w-2xl">
+                <h3 className="text-[10px] uppercase tracking-widest text-gold font-bold flex items-center gap-2"><Shield size={14} /> Désigner un administrateur</h3>
+                <p className="text-xs text-white/50">L'utilisateur doit déjà avoir un compte. Saisis son e-mail pour changer son rôle.</p>
+                <div className="flex items-center gap-3 flex-wrap">
+                  <input
+                    value={promoteForm.email}
+                    onChange={(e) => setPromoteForm({ ...promoteForm, email: e.target.value })}
+                    placeholder="email@exemple.com"
+                    className="flex-1 min-w-[200px] bg-green-dark border border-gold/20 rounded-lg px-3 py-2 text-sm text-white placeholder-white/30 outline-none focus:border-gold"
+                  />
+                  <select
+                    value={promoteForm.role}
+                    onChange={(e) => setPromoteForm({ ...promoteForm, role: e.target.value })}
+                    className="bg-green-dark border border-gold/20 rounded-lg px-3 py-2 text-sm text-white"
+                  >
+                    <option value="admin">Admin</option>
+                    <option value="partner">Partenaire</option>
+                    <option value="member">Membre</option>
+                  </select>
+                  <button onClick={handlePromote} className="bg-gold text-green-darker text-xs font-bold uppercase tracking-widest px-5 py-2.5 rounded-full hover:opacity-90">Appliquer</button>
+                </div>
+              </div>
+
+              <div>
+                <h3 className="text-[10px] uppercase tracking-widest text-gold font-bold mb-3">Administrateurs actuels ({admins.length})</h3>
+                <div className="bg-white/5 border border-gold/20 rounded-2xl overflow-x-auto">
+                  <table className="w-full text-left text-sm">
+                    <thead>
+                      <tr className="bg-green-dark text-[10px] uppercase tracking-widest text-gold">
+                        <th className="p-3">Nom</th><th className="p-3">Email</th><th className="p-3 text-center">Action</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {admins.map((u) => (
+                        <tr key={u.id} className="border-b border-white/5 hover:bg-white/5">
+                          <td className="p-3">{u.name}</td>
+                          <td className="p-3 text-white/60 text-xs">{u.email}</td>
+                          <td className="p-3 text-center">
+                            <button onClick={() => handleDemote(u)} className="text-xs px-3 py-1 rounded-full border border-red-500/30 text-red-400 hover:bg-red-500/10">Rétrograder</button>
+                          </td>
+                        </tr>
+                      ))}
+                      {!loading && admins.length === 0 && <tr><td colSpan={3} className="p-8 text-center text-white/40 italic">Aucun admin.</td></tr>}
+                    </tbody>
+                  </table>
+                </div>
               </div>
             </div>
           )}
