@@ -4,7 +4,7 @@ import { Loader2 } from 'lucide-react';
 
 import { Routes, Route, useNavigate, useLocation, Navigate } from 'react-router-dom';
 import type { Member } from './lib/mock-api';
-import { loginUser, registerMember, logoutUser, subscribeToAuthState, getCurrentMemberProfile, loginWithGoogle, loginWithFacebook, loginWithMicrosoft, sendPhoneOTP, verifyPhoneOTP, sendPasswordReset, initRecaptcha } from './lib/auth.service';
+import { loginUser, registerMember, logoutUser, subscribeToAuthState, getCurrentMemberProfile, loginWithGoogle, sendPasswordReset } from './lib/auth.service';
 
 import { Navbar } from './components/layout/Navbar';
 import { Footer } from './components/layout/Footer';
@@ -140,10 +140,6 @@ const App: React.FC = () => {
           <Route path="/login" element={<LoginView
             onLogin={handleLogin}
             onLoginGoogle={async () => { const u = await loginWithGoogle(); setUser(u); navigate(u.role === 'partner' ? '/partner-dashboard' : u.role === 'admin' ? '/admin-dashboard' : '/member-dashboard'); toast.success(`Bienvenue, ${u.name} !`); }}
-            onLoginFacebook={async () => { const u = await loginWithFacebook(); setUser(u); navigate('/member-dashboard'); toast.success(`Bienvenue, ${u.name} !`); }}
-            onLoginMicrosoft={async () => { const u = await loginWithMicrosoft(); setUser(u); navigate('/member-dashboard'); toast.success(`Bienvenue, ${u.name} !`); }}
-            onSendPhoneOTP={async (phone) => { initRecaptcha(); const c = await sendPhoneOTP(phone); return c; }}
-            onVerifyPhoneOTP={async (c, otp) => { const u = await verifyPhoneOTP(c, otp); setUser(u); navigate('/member-dashboard'); toast.success(`Bienvenue, ${u.name} !`); }}
             onResetPassword={async (email) => { await sendPasswordReset(email); }}
           />} />
           <Route path="/member-dashboard" element={user ? <MemberDashboardView user={user} onLogout={handleLogout} /> : <Navigate to="/login" />} />
