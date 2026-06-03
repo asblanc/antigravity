@@ -596,7 +596,7 @@ export const MemberDashboardView: React.FC<MemberDashboardViewProps> = ({ user, 
         </header>
 
         {/* ─── DYNAMIC TABS ROUTER ─── */}
-        <main className="flex-1 p-6 md:p-8 space-y-8 select-none">
+        <main className="flex-1 p-6 md:p-8 pb-24 lg:pb-8 space-y-8 select-none">
           
           {activeTab === 'dashboard' && (
             <div className="space-y-8 animate-in fade-in duration-500">
@@ -1900,6 +1900,29 @@ export const MemberDashboardView: React.FC<MemberDashboardViewProps> = ({ user, 
         </footer>
 
       </div>
+
+      {/* ─── NAV BASSE MOBILE ─── */}
+      <nav className="lg:hidden fixed bottom-0 inset-x-0 z-40 bg-[#031d0f]/95 backdrop-blur-md border-t border-gold/15 flex items-stretch">
+        {[
+          { id: 'dashboard', label: 'Accueil', Icon: LayoutDashboard },
+          { id: 'transactions', label: 'Transactions', Icon: CreditCard },
+          { id: 'cagnotte', label: 'Cagnotte', Icon: Wallet },
+          { id: 'parrainage', label: 'Parrainage', Icon: Gift },
+          { id: 'profil', label: 'Profil', Icon: User },
+        ].map(({ id, label, Icon }) => {
+          const active = activeTab === id;
+          return (
+            <button
+              key={id}
+              onClick={() => { setActiveTab(id); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
+              className={`flex-1 flex flex-col items-center justify-center gap-1 py-2.5 transition-colors ${active ? 'text-gold' : 'text-white/55 hover:text-white'}`}
+            >
+              <Icon size={19} />
+              <span className="text-[8px] uppercase tracking-wider font-bold">{label}</span>
+            </button>
+          );
+        })}
+      </nav>
 
       {/* ─── SHOW PASS QR FULLSCREEN MODAL ─── */}
       <AnimatePresence>
