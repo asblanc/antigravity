@@ -641,7 +641,7 @@ export const PartnerDashboardView: React.FC<{ onLogout: () => void }> = ({ onLog
                           </div>
                         ))}
                         <button
-                          onClick={() => toast('Détail des catégories bientôt disponible !', { icon: '📊' })}
+                          onClick={() => toast('Détail des catégories bientôt disponible !')}
                           className="mt-2 w-full text-[9px] font-bold text-gold hover:text-white uppercase tracking-widest flex items-center justify-center gap-1 transition-colors border-t border-white/5 pt-3"
                         >
                           Voir le détail des catégories →
@@ -827,7 +827,7 @@ export const PartnerDashboardView: React.FC<{ onLogout: () => void }> = ({ onLog
                   <p className="text-xs text-white/55 mt-1">Configurez les avantages exclusifs offerts aux membres du club.</p>
                 </div>
                 <button 
-                  onClick={() => toast.success("Module d'édition d'offre (Démo)", { icon: '✨' })}
+                  onClick={() => toast.success("Module d'édition d'offre (Démo)")}
                   className="bg-gold text-[#010f07] hover:bg-gold/90 font-bold px-5 py-2.5 rounded-xl uppercase tracking-widest text-[9px] flex items-center gap-1.5 self-start sm:self-auto shadow-md"
                 >
                   <Plus size={12} /> Nouvelle Offre
@@ -882,7 +882,7 @@ export const PartnerDashboardView: React.FC<{ onLogout: () => void }> = ({ onLog
                   <p className="text-xs text-white/55 mt-1">Diffusez des offres flash ou des invitations spéciales directement sur le smartphone des membres.</p>
                 </div>
                 <button 
-                  onClick={() => toast.success("Lancement d'assistant de campagne (Démo)", { icon: '📣' })}
+                  onClick={() => toast.success("Lancement d'assistant de campagne (Démo)")}
                   className="bg-gold text-[#010f07] hover:bg-gold/90 font-bold px-5 py-2.5 rounded-xl uppercase tracking-widest text-[9px] flex items-center gap-1.5 self-start sm:self-auto shadow-md"
                 >
                   <Plus size={12} /> Nouvelle Campagne
@@ -1166,7 +1166,7 @@ export const PartnerDashboardView: React.FC<{ onLogout: () => void }> = ({ onLog
                       </div>
                       <p className="text-xs text-white/70 leading-relaxed">{ev.description}</p>
                       <button 
-                        onClick={() => toast.success("Confirmation de présence envoyée !", { icon: '📅' })}
+                        onClick={() => toast.success("Confirmation de présence envoyée !")}
                         className="bg-gold/10 border border-gold/30 text-gold px-4 py-2 rounded-lg text-[9px] uppercase tracking-widest font-bold hover:bg-gold hover:text-[#010f07] transition-all flex items-center gap-1 mt-2"
                       >
                         Confirmer ma présence
@@ -1225,13 +1225,13 @@ export const PartnerDashboardView: React.FC<{ onLogout: () => void }> = ({ onLog
 
                 <div className="flex gap-4 max-w-sm mx-auto">
                   <button 
-                    onClick={() => toast('Support joignable sur WhatsApp au +225 0745454545', { icon: '💬' })}
+                    onClick={() => toast('Support joignable sur WhatsApp au +225 0745454545')}
                     className="flex-1 py-3 bg-[#25D366] text-white rounded-xl text-[9px] uppercase tracking-widest font-extrabold hover:opacity-90 transition-all flex items-center justify-center gap-1.5"
                   >
                     WhatsApp B2B
                   </button>
                   <button 
-                    onClick={() => toast('Lancement de votre application e-mail...', { icon: '✉️' })}
+                    onClick={() => toast('Lancement de votre application e-mail...')}
                     className="flex-1 py-3 bg-gold text-[#010f07] rounded-xl text-[9px] uppercase tracking-widest font-extrabold hover:bg-gold/90 transition-all flex items-center justify-center gap-1.5"
                   >
                     Envoyer un E-mail

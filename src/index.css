@@ -142,6 +142,11 @@
   animation: ken-burns 8s ease-out forwards;
 }
 
+/* Sur mobile : pas de Ken Burns (réduit le jank/'résistance' au scroll) */
+@media (max-width: 639px) {
+  .hero-slide.active { animation: none; }
+}
+
 /* Smooth page view transitions */
 .page-enter {
   animation: page-fade-in 0.4s ease-out forwards;
@@ -158,31 +163,32 @@
   }
 }
 
-/* Hero indicator — fines barres segmentées (rendu sobre & pro) */
+/* Hero indicator — petites pastilles qui s'allongent en pilule (sobre & pro) */
 .hero-dot {
-  width: 16px;
-  height: 2px;
-  border-radius: 2px;
-  background: rgba(255, 255, 255, 0.35);
+  width: 7px;
+  height: 7px;
+  border-radius: 9999px;
+  background: rgba(255, 255, 255, 0.4);
   border: none;
   padding: 0;
-  transition: width 0.4s ease, background-color 0.4s ease, box-shadow 0.4s ease;
+  -webkit-appearance: none;
+  appearance: none;
+  transition: width 0.4s ease, background-color 0.4s ease;
   cursor: pointer;
 }
 
 .hero-dot:hover {
-  background: rgba(255, 255, 255, 0.6);
+  background: rgba(255, 255, 255, 0.7);
 }
 
 .hero-dot.active {
   background: #C9A84C;
-  width: 34px;
-  box-shadow: 0 0 8px rgba(201, 168, 76, 0.45);
+  width: 20px;
 }
 
 @media (min-width: 640px) {
-  .hero-dot { width: 22px; }
-  .hero-dot.active { width: 46px; }
+  .hero-dot { width: 8px; height: 8px; }
+  .hero-dot.active { width: 26px; }
 }
 
 /* Navigation hover underline effect */

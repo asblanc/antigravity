@@ -81,7 +81,7 @@ export const EstablishmentsView: React.FC = () => {
         <div className="flex flex-wrap gap-3 mb-12">
           {categories.map((f) => (
             <button key={f} onClick={() => setFilter(f)} className={`px-8 py-2 text-[10px] font-bold uppercase tracking-widest whitespace-nowrap transition-all flex items-center gap-2 ${filter === f ? 'bg-green-dark text-gold border border-gold shadow-gold' : 'bg-white text-text-muted border border-gold/10'}`}>
-              {filterIcons[f]}{f}
+              {f === 'Tous' ? <Globe size={14} /> : (filterIcons[f] || <MapPin size={14} />)}{f}
             </button>
           ))}
         </div>

@@ -359,7 +359,7 @@ export const MemberDashboardView: React.FC<MemberDashboardViewProps> = ({ user, 
           <p className="text-[11px] font-semibold text-white">Besoin d'aide ?</p>
           <p className="text-[9px] text-white/50 mt-1 leading-relaxed">Notre équipe est à votre écoute</p>
           <button 
-            onClick={() => toast('Support accessible par WhatsApp ou téléphone au +225 0707070707', { icon: '📞' })}
+            onClick={() => toast('Support accessible par WhatsApp ou téléphone au +225 0707070707')}
             className="mt-3 w-full bg-gold/15 border border-gold text-gold text-[9px] uppercase tracking-widest font-bold py-2 rounded-lg hover:bg-gold hover:text-green-darker transition-all duration-300"
           >
             Nous contacter
@@ -719,7 +719,7 @@ export const MemberDashboardView: React.FC<MemberDashboardViewProps> = ({ user, 
                   </div>
 
                   <button 
-                    onClick={() => toast('Statistiques détaillées bientôt disponibles !', { icon: '📊' })}
+                    onClick={() => toast('Statistiques détaillées bientôt disponibles !')}
                     className="mt-4 text-center text-green-dark hover:text-gold text-[10px] uppercase tracking-widest font-bold flex items-center justify-center gap-1.5 transition-colors"
                   >
                     <span>Voir mes statistiques détaillées</span>
@@ -763,7 +763,7 @@ export const MemberDashboardView: React.FC<MemberDashboardViewProps> = ({ user, 
                   </div>
 
                   <button 
-                    onClick={() => toast('Votre cagnotte sera débitable lors de vos prochains paiements partenaires !', { icon: '💰' })}
+                    onClick={() => toast('Votre cagnotte sera débitable lors de vos prochains paiements partenaires !')}
                     className="mt-4 w-full bg-[#031d0f] hover:bg-green-dark text-gold text-[9px] uppercase tracking-[0.25em] font-bold py-2.5 rounded-xl transition-all duration-300"
                   >
                     Utiliser ma cagnotte
@@ -819,7 +819,7 @@ export const MemberDashboardView: React.FC<MemberDashboardViewProps> = ({ user, 
                   </div>
 
                   <button 
-                    onClick={() => toast('Configurez votre prochain objectif évasion dans le menu Mes Objectifs !', { icon: '✈️' })}
+                    onClick={() => toast('Configurez votre prochain objectif évasion dans le menu Mes Objectifs !')}
                     className="mt-1 text-center text-green-dark hover:text-gold text-[9px] uppercase tracking-widest font-bold flex items-center justify-center gap-1 transition-colors border-t border-gold/10 pt-2"
                   >
                     <span>Voir mes objectifs</span>
@@ -852,7 +852,7 @@ export const MemberDashboardView: React.FC<MemberDashboardViewProps> = ({ user, 
                   </div>
 
                   <button 
-                    onClick={() => toast('Gérez votre taux d’épargne automatique depuis cet espace.', { icon: '🐖' })}
+                    onClick={() => toast('Gérez votre taux d’épargne automatique depuis cet espace.')}
                     className="mt-3 text-center text-green-dark hover:text-gold text-[9px] uppercase tracking-widest font-bold flex items-center justify-center gap-1 transition-colors"
                   >
                     <span>Gérer mon épargne</span>
@@ -895,7 +895,7 @@ export const MemberDashboardView: React.FC<MemberDashboardViewProps> = ({ user, 
                   </div>
 
                   <button 
-                    onClick={() => toast('Créez un cercle d’épargne pour voyager en groupe !', { icon: '👥' })}
+                    onClick={() => toast('Créez un cercle d’épargne pour voyager en groupe !')}
                     className="text-center text-green-dark hover:text-gold text-[9px] uppercase tracking-widest font-bold flex items-center justify-center gap-1 transition-colors"
                   >
                     <span>Voir mes cercles</span>
@@ -922,7 +922,7 @@ export const MemberDashboardView: React.FC<MemberDashboardViewProps> = ({ user, 
                       </span>
                     </div>
                     <button 
-                      onClick={() => toast('Invitez vos proches à rejoindre IBC. À chaque adhésion payante, recevez 2 500 FCFA.', { icon: 'ℹ️' })}
+                      onClick={() => toast('Invitez vos proches à rejoindre IBC. À chaque adhésion payante, recevez 2 500 FCFA.')}
                       className="text-text-muted hover:text-[#031d0f] transition-colors p-1"
                     >
                       <Info size={16} />
@@ -1063,7 +1063,7 @@ export const MemberDashboardView: React.FC<MemberDashboardViewProps> = ({ user, 
                   </div>
 
                   <button 
-                    onClick={() => toast('Votre statut est déterminé par votre pouvoir d’achat mensuel moyen chez nos partenaires : Bronze (10 000–40 000 F), Or (50 000–90 000 F), Platinum (100 000 F et plus).', { icon: '⭐' })}
+                    onClick={() => toast('Votre statut est déterminé par votre pouvoir d’achat mensuel moyen chez nos partenaires : Bronze (10 000–40 000 F), Or (50 000–90 000 F), Platinum (100 000 F et plus).')}
                     className="text-center text-green-dark hover:text-gold text-[9px] uppercase tracking-widest font-bold flex items-center justify-center gap-1 transition-colors border-t border-gold/10 pt-3"
                   >
                     <span>Comprendre les niveaux</span>
