@@ -142,41 +142,41 @@ export const HomeView: React.FC = () => {
             </p>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 text-white/90">
-            <div className="bg-black/20 p-6 sm:p-8 rounded-2xl hover:bg-black/30 transition-colors duration-300 flex flex-col items-start gap-4 group">
-              <div className="w-12 h-12 rounded-full bg-gold/10 border border-gold/20 flex items-center justify-center group-hover:bg-gold/20 group-hover:border-gold/30 transition-all duration-300">
+            <div className="hover-lift bg-white border border-gold/10 shadow-soft p-6 sm:p-8 rounded-2xl hover:shadow-premium hover:border-gold/30 transition-all duration-300 flex flex-col items-start gap-4 group">
+              <div className="w-12 h-12 rounded-full bg-green-dark/5 border border-gold/20 flex items-center justify-center group-hover:bg-gold/10 group-hover:border-gold/30 transition-all duration-300">
                 <Compass className="text-gold animate-pulse" size={20} />
               </div>
-              <h4 className="font-serif text-lg font-bold text-white group-hover:text-gold transition-colors">Les amoureux de découvertes</h4>
-              <p className="text-white/65 text-[13px] leading-relaxed font-light">Explorez des destinations uniques, des hébergements insolites et des adresses secrètes à travers toute la Côte d'Ivoire.</p>
+              <h4 className="font-serif text-lg font-bold text-green-dark group-hover:text-gold transition-colors">Les amoureux de découvertes</h4>
+              <p className="text-text-muted text-[13px] leading-relaxed font-light">Explorez des destinations uniques, des hébergements insolites et des adresses secrètes à travers toute la Côte d'Ivoire.</p>
             </div>
-            <div className="bg-black/20 p-6 sm:p-8 rounded-2xl hover:bg-black/30 transition-colors duration-300 flex flex-col items-start gap-4 group">
-              <div className="w-12 h-12 rounded-full bg-gold/10 border border-gold/20 flex items-center justify-center group-hover:bg-gold/20 group-hover:border-gold/30 transition-all duration-300">
+            <div className="hover-lift bg-white border border-gold/10 shadow-soft p-6 sm:p-8 rounded-2xl hover:shadow-premium hover:border-gold/30 transition-all duration-300 flex flex-col items-start gap-4 group">
+              <div className="w-12 h-12 rounded-full bg-green-dark/5 border border-gold/20 flex items-center justify-center group-hover:bg-gold/10 group-hover:border-gold/30 transition-all duration-300">
                 <MapPin className="text-gold" size={20} />
               </div>
-              <h4 className="font-serif text-lg font-bold text-white group-hover:text-gold transition-colors">Les actifs urbains</h4>
-              <p className="text-white/65 text-[13px] leading-relaxed font-light">Décompressez après vos journées intenses grâce à notre sélection exclusive de lounges, rooftops et événements After Work animés.</p>
+              <h4 className="font-serif text-lg font-bold text-green-dark group-hover:text-gold transition-colors">Les actifs urbains</h4>
+              <p className="text-text-muted text-[13px] leading-relaxed font-light">Décompressez après vos journées intenses grâce à notre sélection exclusive de lounges, rooftops et événements After Work animés.</p>
             </div>
-            <div className="bg-black/20 p-6 sm:p-8 rounded-2xl hover:bg-black/30 transition-colors duration-300 flex flex-col items-start gap-4 group">
-              <div className="w-12 h-12 rounded-full bg-gold/10 border border-gold/20 flex items-center justify-center group-hover:bg-gold/20 group-hover:border-gold/30 transition-all duration-300">
+            <div className="hover-lift bg-white border border-gold/10 shadow-soft p-6 sm:p-8 rounded-2xl hover:shadow-premium hover:border-gold/30 transition-all duration-300 flex flex-col items-start gap-4 group">
+              <div className="w-12 h-12 rounded-full bg-green-dark/5 border border-gold/20 flex items-center justify-center group-hover:bg-gold/10 group-hover:border-gold/30 transition-all duration-300">
                 <Sparkles className="text-gold" size={20} />
               </div>
-              <h4 className="font-serif text-lg font-bold text-white group-hover:text-gold transition-colors">Les passionnés de lifestyle</h4>
-              <p className="text-white/65 text-[13px] leading-relaxed font-light">Savourez le meilleur de la gastronomie locale et internationale et accédez à des expériences de bien-être haut de gamme.</p>
+              <h4 className="font-serif text-lg font-bold text-green-dark group-hover:text-gold transition-colors">Les passionnés de lifestyle</h4>
+              <p className="text-text-muted text-[13px] leading-relaxed font-light">Savourez le meilleur de la gastronomie locale et internationale et accédez à des expériences de bien-être haut de gamme.</p>
             </div>
-            <div className="bg-black/20 p-6 sm:p-8 rounded-2xl hover:bg-black/30 transition-colors duration-300 flex flex-col items-start gap-4 group">
-              <div className="w-12 h-12 rounded-full bg-gold/10 border border-gold/20 flex items-center justify-center group-hover:bg-gold/20 group-hover:border-gold/30 transition-all duration-300">
+            <div className="hover-lift bg-white border border-gold/10 shadow-soft p-6 sm:p-8 rounded-2xl hover:shadow-premium hover:border-gold/30 transition-all duration-300 flex flex-col items-start gap-4 group">
+              <div className="w-12 h-12 rounded-full bg-green-dark/5 border border-gold/20 flex items-center justify-center group-hover:bg-gold/10 group-hover:border-gold/30 transition-all duration-300">
                 <Briefcase className="text-gold" size={20} />
               </div>
-              <h4 className="font-serif text-lg font-bold text-white group-hover:text-gold transition-colors">Les professionnels et entrepreneurs</h4>
-              <p className="text-white/65 text-[13px] leading-relaxed font-light">Connectez-vous avec un réseau sélect d'affaires, participez à des événements privés et créez des opportunités de synergie professionnelle.</p>
+              <h4 className="font-serif text-lg font-bold text-green-dark group-hover:text-gold transition-colors">Les professionnels et entrepreneurs</h4>
+              <p className="text-text-muted text-[13px] leading-relaxed font-light">Connectez-vous avec un réseau sélect d'affaires, participez à des événements privés et créez des opportunités de synergie professionnelle.</p>
             </div>
-            <div className="sm:col-span-2 bg-black/20 p-6 sm:p-8 rounded-2xl hover:bg-black/30 transition-colors duration-300 flex flex-col sm:flex-row items-start sm:items-center gap-6 group">
-              <div className="w-12 h-12 rounded-full bg-gold/10 border border-gold/20 flex items-center justify-center group-hover:bg-gold/20 group-hover:border-gold/30 transition-all duration-300 flex-shrink-0">
+            <div className="sm:col-span-2 hover-lift bg-white border border-gold/10 shadow-soft p-6 sm:p-8 rounded-2xl hover:shadow-premium hover:border-gold/30 transition-all duration-300 flex flex-col sm:flex-row items-start sm:items-center gap-6 group">
+              <div className="w-12 h-12 rounded-full bg-green-dark/5 border border-gold/20 flex items-center justify-center group-hover:bg-gold/10 group-hover:border-gold/30 transition-all duration-300 flex-shrink-0">
                 <Crown className="text-gold" size={20} />
               </div>
               <div>
-                <h4 className="font-serif text-lg font-bold text-white group-hover:text-gold transition-colors mb-2">Les amateurs d'expériences premium</h4>
-                <p className="text-white/65 text-[13px] leading-relaxed font-light">Bénéficiez d'un service d'exception, d'accords privilégiés et d'attentions exclusives réservés à l'élite des membres du réseau.</p>
+                <h4 className="font-serif text-lg font-bold text-green-dark group-hover:text-gold transition-colors mb-2">Les amateurs d'expériences premium</h4>
+                <p className="text-text-muted text-[13px] leading-relaxed font-light">Bénéficiez d'un service d'exception, d'accords privilégiés et d'attentions exclusives réservés à l'élite des membres du réseau.</p>
               </div>
             </div>
           </div>
