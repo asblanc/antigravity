@@ -116,8 +116,9 @@ export const HomeView: React.FC = () => {
         </div>
       </section>
 
-      {/* Community Target Section */}
-      <section className="relative overflow-hidden bg-green-dark py-28 sm:border-b sm:border-gold/20 reveal-section">
+      {/* Community Target Section — chevauche le hero de 1px pour souder les blocs
+          (évite le hairline/joint sous-pixel visible sur mobile entre les 2 sections) */}
+      <section className="relative overflow-hidden bg-green-dark py-28 -mt-px sm:border-b sm:border-gold/20 reveal-section">
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-gold/5 via-transparent to-transparent pointer-events-none" />
         <div className="container mx-auto px-6 max-w-5xl relative z-10">
           <div className="text-center mb-16 max-w-2xl mx-auto">
