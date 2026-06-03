@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import { Search, MapPin, Star, Hotel, Utensils, Coffee, Gamepad2, Heart, Globe } from 'lucide-react';
 import { Seo } from '../components/Seo';
+import { supabase } from '../lib/supabase';
 
 export const EstablishmentsView: React.FC = () => {
   const location = useLocation();
@@ -9,7 +10,7 @@ export const EstablishmentsView: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [filter, setFilter] = useState(initialFilter);
 
-  const places = [
+  const SHOWCASE = [
     { name: 'Domaine Bini', cat: 'Diaspora & Héritage', zone: 'Autoroute du Nord', cashback: '5%', img: 'https://images.unsplash.com/photo-1516026672322-bc52d61a55d5?auto=format&fit=crop&q=80&w=400' },
     { name: 'Sofitel Abidjan', cat: 'Hébergements & Séjours', zone: 'Cocody', cashback: '3-7%', img: 'https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?auto=format&fit=crop&q=80&w=400' },
     { name: 'Pullman Helios', cat: 'Hébergements & Séjours', zone: 'Plateau', cashback: '3-7%', img: '/assets/pullman-hotel.png' },
@@ -19,6 +20,30 @@ export const EstablishmentsView: React.FC = () => {
     { name: 'Le Grand Large', cat: 'Restaurants & Dining', zone: 'Zone 4', cashback: '5%', img: 'https://images.unsplash.com/photo-1514362545857-3bc16c4c7d1b?auto=format&fit=crop&q=80&w=400' },
     { name: 'Orchidée Spa', cat: 'Bien-être & Wellness', zone: 'Cocody', cashback: '5%', img: 'https://images.unsplash.com/photo-1540555700478-4be289fbecef?auto=format&fit=crop&q=80&w=400' },
   ];
+
+  // Établissements réels (actifs) depuis Supabase ; repli sur le catalogue d'exemple si base vide.
+  type Place = { name: string; cat: string; zone: string; cashback: string; img: string };
+  const [realPlaces, setRealPlaces] = useState<Place[]>([]);
+  useEffect(() => {
+    (async () => {
+      const { data } = await supabase
+        .from('establishments')
+        .select('name, category, zone, cashback_rate, image_url')
+        .eq('active', true)
+        .order('created_at', { ascending: false });
+      if (data && data.length) {
+        setRealPlaces(data.map((e: any) => ({
+          name: e.name,
+          cat: e.category,
+          zone: e.zone,
+          cashback: `${e.cashback_rate}%`,
+          img: e.image_url || 'https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&q=80&w=400',
+        })));
+      }
+    })();
+  }, []);
+
+  const places: Place[] = realPlaces.length ? realPlaces : SHOWCASE;
 
   const filteredPlaces = places.filter(p =>
     (filter === 'Tous' || p.cat === filter) &&
