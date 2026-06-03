@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { toast } from 'react-hot-toast';
 import { Seo } from '../components/Seo';
 import { MapPin, Crown, Plane, PiggyBank, Palmtree, Banknote, Wallet, Gift, TrendingUp, Users, Star, Sparkles, Smartphone, CheckCircle2 } from 'lucide-react';
@@ -7,6 +7,8 @@ import { supabase } from '../lib/supabase';
 
 export const MemberRegistrationView: React.FC<{ onRegister: (data: any) => Promise<void> }> = ({ onRegister }) => {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const referrerId = searchParams.get('ref') || undefined; // parrain via lien ?ref=
   const [step, setStep] = useState(1);
   const [formData, setFormData] = useState({ name: '', email: '', whatsapp: '', plan: 'bronze', paymentMethod: 'orange', password: '', confirmPassword: '' });
   const [photoFile, setPhotoFile] = useState<File | null>(null);
@@ -83,7 +85,7 @@ export const MemberRegistrationView: React.FC<{ onRegister: (data: any) => Promi
 
     setIsSubmitting(true);
     try {
-      await onRegister({ ...formData, photoFile });
+      await onRegister({ ...formData, photoFile, referrerId });
     } finally {
       setIsSubmitting(false);
     }

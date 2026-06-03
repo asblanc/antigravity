@@ -79,6 +79,7 @@ const App: React.FC = () => {
         plan: data.plan || 'bronze',
         paymentMethod: data.paymentMethod,
         photoFile: data.photoFile || null,
+        referrerId: data.referrerId,
       });
       setUser(userData);
       navigate('/member-dashboard');

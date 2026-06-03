@@ -39,6 +39,7 @@ export async function registerMember(data: {
   plan: 'bronze' | 'silver' | 'gold';
   paymentMethod?: string;
   photoFile?: File | null;
+  referrerId?: string;
 }): Promise<Member> {
   // DEMO MODE BYPASS — uniquement en développement (jamais en production)
   if (import.meta.env.DEV && data.email.toLowerCase().includes('demo')) {
@@ -112,6 +113,13 @@ export async function registerMember(data: {
   if (finalizeError) {
     console.error('Error finalizing profile:', finalizeError);
     throw new Error("Erreur lors de la création du profil: " + finalizeError.message);
+  }
+
+  // 4. Enregistrer le parrainage si l'inscription vient d'un lien de parrain.
+  //    Non bloquant : un échec ici ne doit pas casser l'inscription.
+  if (data.referrerId) {
+    const { error: refError } = await supabase.rpc('record_referral', { p_referrer_id: data.referrerId });
+    if (refError) console.warn('record_referral failed:', refError.message);
   }
 
   return {
