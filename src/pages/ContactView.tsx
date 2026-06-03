@@ -127,7 +127,7 @@ export const ContactView: React.FC = () => {
           <div className="rounded-[28px] overflow-hidden border border-gold/15 shadow-soft">
             <iframe
               title="Localisation Ivoire Business Club — Cocody Ambassades, Abidjan"
-              src="https://www.google.com/maps?q=Cocody%20Ambassades%2C%20Abidjan%2C%20C%C3%B4te%20d'Ivoire&output=embed"
+              src="https://www.google.com/maps?q=Cocody%20Ambassades%2C%20Abidjan%2C%20C%C3%B4te%20d'Ivoire&z=15&hl=fr&output=embed"
               width="100%"
               height="400"
               loading="lazy"
