@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
-import { MapPin, Compass, Sparkles, Briefcase, Crown, Users, Utensils, CreditCard, BookOpen, Headphones, Palmtree, Hotel, Globe, Smartphone, Heart, Star, Quote } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
+import { MapPin, Compass, Sparkles, Briefcase, Crown, Users, Utensils, CreditCard, BookOpen, Headphones, Palmtree, Hotel, Globe, Smartphone, Heart, Star, Quote, Banknote } from 'lucide-react';
 import { HomeTierCards } from '../components/HomeTierCards';
 import { Seo } from '../components/Seo';
 import { supabase } from '../lib/supabase';
@@ -363,11 +363,15 @@ export const HomeView: React.FC = () => {
             </h2>
           </div>
           <div className="mb-8">
-            <p className="text-text font-medium mb-6 text-sm">Mode de paiement :</p>
-            <div className="space-y-3">
-              <div className="flex items-center gap-4 p-4 bg-white border border-gold/10">
-                <Smartphone size={20} className="text-gold" />
+            <p className="text-text font-medium mb-6 text-sm">Modes de paiement acceptés :</p>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <div className="flex items-center gap-4 p-4 bg-white border border-gold/10 rounded-lg">
+                <Smartphone size={20} className="text-gold shrink-0" />
                 <span className="text-green-dark font-medium">Mobile Money</span>
+              </div>
+              <div className="flex items-center gap-4 p-4 bg-white border border-gold/10 rounded-lg">
+                <Banknote size={20} className="text-gold shrink-0" />
+                <span className="text-green-dark font-medium">Espèces</span>
               </div>
             </div>
           </div>
