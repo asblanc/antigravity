@@ -163,32 +163,32 @@
   }
 }
 
-/* Hero indicator — petites pastilles qui s'allongent en pilule (sobre & pro) */
+/* Hero indicator — petits points ronds subtils (jamais de rectangle) */
 .hero-dot {
   width: 7px;
   height: 7px;
   border-radius: 9999px;
-  background: rgba(255, 255, 255, 0.4);
+  background: rgba(255, 255, 255, 0.45);
   border: none;
   padding: 0;
+  flex: 0 0 auto;
   -webkit-appearance: none;
   appearance: none;
-  transition: width 0.4s ease, background-color 0.4s ease;
+  transition: background-color 0.3s ease, transform 0.3s ease;
   cursor: pointer;
 }
 
 .hero-dot:hover {
-  background: rgba(255, 255, 255, 0.7);
+  background: rgba(255, 255, 255, 0.75);
 }
 
 .hero-dot.active {
   background: #C9A84C;
-  width: 20px;
+  transform: scale(1.35);
 }
 
 @media (min-width: 640px) {
   .hero-dot { width: 8px; height: 8px; }
-  .hero-dot.active { width: 26px; }
 }
 
 /* Navigation hover underline effect */

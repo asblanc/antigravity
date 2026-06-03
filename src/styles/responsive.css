@@ -5,17 +5,16 @@
    ========================================================== */
 
 /* ─── BASE FIXES: NO HORIZONTAL SCROLL ─── */
-/* On évite max-width:100vw (inclut la largeur de la scrollbar -> léger
-   débordement horizontal = "ligne" aux bords). overflow-x:hidden suffit. */
+/* On utilise overflow-x: clip (et NON hidden) : 'hidden' transforme html/body
+   en conteneurs de défilement et peut bloquer/figer le scroll vertical (iOS).
+   'clip' coupe le débordement horizontal sans créer de conteneur de scroll. */
 html, body {
-  overflow-x: hidden !important;
-  width: 100%;
+  overflow-x: clip;
   max-width: 100%;
 }
 
-#root, .min-h-screen {
-  overflow-x: hidden;
-  max-width: 100%;
+#root {
+  overflow-x: clip;
 }
 
 /* Images fluides — SANS forcer height:auto (sinon les images object-cover à

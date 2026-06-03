@@ -129,35 +129,35 @@ export const HomeView: React.FC = () => {
             </p>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 text-white/90">
-            <div className="bg-white/[0.04] border border-white/10 p-6 sm:p-8 rounded-2xlhover:bg-white/[0.07] hover:border-gold/30 transition-all duration-500 flex flex-col items-start gap-4 group">
+            <div className="bg-white/[0.05] p-6 sm:p-8 rounded-2xlhover:bg-white/[0.07] hover:border-gold/30 transition-all duration-500 flex flex-col items-start gap-4 group">
               <div className="w-12 h-12 rounded-full bg-gold/10 border border-gold/20 flex items-center justify-center group-hover:bg-gold/20 group-hover:border-gold/30 transition-all duration-300">
                 <Compass className="text-gold animate-pulse" size={20} />
               </div>
               <h4 className="font-serif text-lg font-bold text-white group-hover:text-gold transition-colors">Les amoureux de découvertes</h4>
               <p className="text-white/70 text-xs leading-relaxed font-light">Explorez des destinations uniques, des hébergements insolites et des adresses secrètes à travers toute la Côte d'Ivoire.</p>
             </div>
-            <div className="bg-white/[0.04] border border-white/10 p-6 sm:p-8 rounded-2xlhover:bg-white/[0.07] hover:border-gold/30 transition-all duration-500 flex flex-col items-start gap-4 group">
+            <div className="bg-white/[0.05] p-6 sm:p-8 rounded-2xlhover:bg-white/[0.07] hover:border-gold/30 transition-all duration-500 flex flex-col items-start gap-4 group">
               <div className="w-12 h-12 rounded-full bg-gold/10 border border-gold/20 flex items-center justify-center group-hover:bg-gold/20 group-hover:border-gold/30 transition-all duration-300">
                 <MapPin className="text-gold" size={20} />
               </div>
               <h4 className="font-serif text-lg font-bold text-white group-hover:text-gold transition-colors">Les actifs urbains</h4>
               <p className="text-white/70 text-xs leading-relaxed font-light">Décompressez après vos journées intenses grâce à notre sélection exclusive de lounges, rooftops et événements After Work animés.</p>
             </div>
-            <div className="bg-white/[0.04] border border-white/10 p-6 sm:p-8 rounded-2xlhover:bg-white/[0.07] hover:border-gold/30 transition-all duration-500 flex flex-col items-start gap-4 group">
+            <div className="bg-white/[0.05] p-6 sm:p-8 rounded-2xlhover:bg-white/[0.07] hover:border-gold/30 transition-all duration-500 flex flex-col items-start gap-4 group">
               <div className="w-12 h-12 rounded-full bg-gold/10 border border-gold/20 flex items-center justify-center group-hover:bg-gold/20 group-hover:border-gold/30 transition-all duration-300">
                 <Sparkles className="text-gold" size={20} />
               </div>
               <h4 className="font-serif text-lg font-bold text-white group-hover:text-gold transition-colors">Les passionnés de lifestyle</h4>
               <p className="text-white/70 text-xs leading-relaxed font-light">Savourez le meilleur de la gastronomie locale et internationale et accédez à des expériences de bien-être haut de gamme.</p>
             </div>
-            <div className="bg-white/[0.04] border border-white/10 p-6 sm:p-8 rounded-2xlhover:bg-white/[0.07] hover:border-gold/30 transition-all duration-500 flex flex-col items-start gap-4 group">
+            <div className="bg-white/[0.05] p-6 sm:p-8 rounded-2xlhover:bg-white/[0.07] hover:border-gold/30 transition-all duration-500 flex flex-col items-start gap-4 group">
               <div className="w-12 h-12 rounded-full bg-gold/10 border border-gold/20 flex items-center justify-center group-hover:bg-gold/20 group-hover:border-gold/30 transition-all duration-300">
                 <Briefcase className="text-gold" size={20} />
               </div>
               <h4 className="font-serif text-lg font-bold text-white group-hover:text-gold transition-colors">Les professionnels et entrepreneurs</h4>
               <p className="text-white/70 text-xs leading-relaxed font-light">Connectez-vous avec un réseau sélect d'affaires, participez à des événements privés et créez des opportunités de synergie professionnelle.</p>
             </div>
-            <div className="sm:col-span-2 bg-white/[0.04] border border-white/10 p-6 sm:p-8 rounded-2xlhover:bg-white/[0.07] hover:border-gold/30 transition-all duration-500 flex flex-col sm:flex-row items-start sm:items-center gap-6 group">
+            <div className="sm:col-span-2 bg-white/[0.05] p-6 sm:p-8 rounded-2xlhover:bg-white/[0.07] hover:border-gold/30 transition-all duration-500 flex flex-col sm:flex-row items-start sm:items-center gap-6 group">
               <div className="w-12 h-12 rounded-full bg-gold/10 border border-gold/20 flex items-center justify-center group-hover:bg-gold/20 group-hover:border-gold/30 transition-all duration-300 flex-shrink-0">
                 <Crown className="text-gold" size={20} />
               </div>
