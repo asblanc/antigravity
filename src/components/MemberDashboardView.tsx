@@ -16,6 +16,11 @@ import { getReferralStats, getMemberReferrals } from '../lib/referral.service';
 import type { Referral, ReferralStats } from '../lib/referral.service';
 import { getMySubscription, subscribe, type Subscription } from '../lib/subscription.service';
 import { getNotifications, type AppNotification } from '../lib/notification.service';
+import {
+  getGoals, createGoal, setGoalProgress, deleteGoal,
+  getSavings, savingsDeposit, savingsWithdraw,
+  type Goal, type SavingsAccount,
+} from '../lib/member.service';
 import { MemberCard } from './MemberCard';
 import ibcLogo from '../assets/ibc-logo.webp';
 
@@ -48,6 +53,9 @@ export const MemberDashboardView: React.FC<MemberDashboardViewProps> = ({ user, 
   const [mySubscription, setMySubscription] = useState<Subscription | null>(null);
   const [subscribing, setSubscribing] = useState<boolean>(false);
   const [appNotifs, setAppNotifs] = useState<AppNotification[]>([]);
+  const [goals, setGoals] = useState<Goal[]>([]);
+  const [savings, setSavings] = useState<SavingsAccount | null>(null);
+  const [newGoal, setNewGoal] = useState({ title: '', target: '' });
 
   // Fetch transactions and referrals on mount
   useEffect(() => {
@@ -85,9 +93,69 @@ export const MemberDashboardView: React.FC<MemberDashboardViewProps> = ({ user, 
       } catch (e) {
         console.error('Failed to load notifications:', e);
       }
+
+      try {
+        setGoals(await getGoals(user.uid));
+        setSavings(await getSavings(user.uid));
+      } catch (e) {
+        console.error('Failed to load goals/savings:', e);
+      }
     };
     fetchData();
   }, [user.uid, user.name]);
+
+  const reloadGoals = async () => { setGoals(await getGoals(user.uid)); };
+
+  const handleCreateGoal = async () => {
+    const t = newGoal.title.trim();
+    const amt = Number(newGoal.target);
+    if (!t || !amt || amt <= 0) { toast.error('Titre et montant cible requis'); return; }
+    try {
+      await createGoal(user.uid, t, amt);
+      toast.success('Objectif créé');
+      setNewGoal({ title: '', target: '' });
+      reloadGoals();
+    } catch (e: any) { toast.error(e.message); }
+  };
+
+  const handleContribute = async (g: Goal) => {
+    const input = window.prompt(`Montant épargné pour « ${g.title} » (FCFA) :`, String(g.current_amount));
+    if (input === null) return;
+    const v = Number(input);
+    if (Number.isNaN(v) || v < 0) { toast.error('Montant invalide'); return; }
+    try { await setGoalProgress(g, v); toast.success('Objectif mis à jour'); reloadGoals(); }
+    catch (e: any) { toast.error(e.message); }
+  };
+
+  const handleDeleteGoal = async (g: Goal) => {
+    if (!window.confirm(`Supprimer l'objectif « ${g.title} » ?`)) return;
+    try { await deleteGoal(g.id); toast.success('Objectif supprimé'); reloadGoals(); }
+    catch (e: any) { toast.error(e.message); }
+  };
+
+  const handleDeposit = async () => {
+    const input = window.prompt('Montant à épargner depuis votre cashback (FCFA) :', '');
+    if (input === null) return;
+    const v = Number(input);
+    if (Number.isNaN(v) || v <= 0) { toast.error('Montant invalide'); return; }
+    try {
+      const nb = await savingsDeposit(v);
+      setSavings({ member_id: user.uid, balance: nb, updated_at: new Date().toISOString() });
+      toast.success(`Épargne créditée. Pensez à rafraîchir pour la cagnotte.`);
+    } catch (e: any) { toast.error(e.message); }
+  };
+
+  const handleWithdraw = async () => {
+    const input = window.prompt('Montant à retirer vers votre cashback (FCFA) :', '');
+    if (input === null) return;
+    const v = Number(input);
+    if (Number.isNaN(v) || v <= 0) { toast.error('Montant invalide'); return; }
+    try {
+      const nb = await savingsWithdraw(v);
+      setSavings({ member_id: user.uid, balance: nb, updated_at: new Date().toISOString() });
+      toast.success('Retrait effectué. Pensez à rafraîchir pour la cagnotte.');
+    } catch (e: any) { toast.error(e.message); }
+  };
 
   const handleSubscribe = async () => {
     setSubscribing(true);
@@ -114,11 +182,13 @@ export const MemberDashboardView: React.FC<MemberDashboardViewProps> = ({ user, 
   // Répartition cagnotte : tout le solde = cashback confirmé (pas de bonus séparé pour l'instant).
   const confirmedCashback = balance;
   const bonusCashback = 0;
-  // ⚠️ MOCK — "Objectifs" / "Épargne" non encore implémentés (aucune table dédiée).
-  const goalTarget = 50000;
-  const currentGoalProgress = 0;
-  const goalProgressPercentage = Math.round((currentGoalProgress / goalTarget) * 100);
-  const savingsBalance = 0;
+  // Objectif principal (le plus récent) + épargne, données réelles.
+  const primaryGoal = goals[0] || null;
+  const goalTitle = primaryGoal?.title ?? 'Aucun objectif';
+  const goalTarget = primaryGoal?.target_amount ?? 50000;
+  const currentGoalProgress = primaryGoal?.current_amount ?? 0;
+  const goalProgressPercentage = goalTarget > 0 ? Math.min(100, Math.round((currentGoalProgress / goalTarget) * 100)) : 0;
+  const savingsBalance = savings?.balance ?? 0;
   
   // Dynamic referral stats from the service
   const refereeCount = referralStats?.refereeCount ?? 0;
@@ -670,7 +740,7 @@ export const MemberDashboardView: React.FC<MemberDashboardViewProps> = ({ user, 
                     />
                     <div>
                       <h4 className="font-serif text-[15px] font-bold text-green-dark leading-tight flex items-center gap-1">
-                        <span>Weekend Assinie</span>
+                        <span>{goalTitle}</span>
                         <span>🌴</span>
                       </h4>
                       <p className="text-[9px] text-text-muted mt-0.5">Objectif : {formatPrice(goalTarget)} FCFA</p>
@@ -1327,38 +1397,71 @@ export const MemberDashboardView: React.FC<MemberDashboardViewProps> = ({ user, 
 
           {/* ─── TAB 5: OBJECTIFS TAB ─── */}
           {activeTab === 'objectifs' && (
-            <div className="space-y-6 text-left animate-in fade-in duration-500 bg-white border border-gold/15 p-8 rounded-[36px] shadow-soft">
-              <h3 className="font-serif text-3xl font-bold text-green-dark">Mes Objectifs Évasion</h3>
-              <p className="text-text-muted text-sm leading-relaxed max-w-2xl">
-                Fixez-vous des buts d'escapades et épargnez votre cashback pour financer des séjours d'exception de notre catalogue.
-              </p>
-              
-              <div className="bg-cream/30 border border-gold/20 p-6 rounded-2xl max-w-xl mt-8">
-                <div className="flex items-center justify-between border-b border-gold/10 pb-3 mb-4">
-                  <h4 className="font-serif text-xl font-bold text-green-dark flex items-center gap-2">
-                    <span>Weekend Assinie</span>
-                    <span>🌴</span>
-                  </h4>
-                  <span className="bg-gold text-green-darker text-[10px] font-extrabold px-3 py-1 rounded-full uppercase tracking-wider">
-                    Actif - {goalProgressPercentage}% Cible
-                  </span>
-                </div>
-                
-                <div className="space-y-4">
-                  <div className="flex justify-between text-xs font-semibold text-text">
-                    <span>Solde Épargné</span>
-                    <span className="font-mono text-green-dark">{formatPrice(currentGoalProgress)} / {formatPrice(goalTarget)} FCFA</span>
-                  </div>
-                  <div className="h-4 rounded-full bg-gold/15 border border-gold/20 overflow-hidden relative shadow-inner">
-                    <div 
-                      className="h-full rounded-full bg-gradient-to-r from-green-dark to-green-mid"
-                      style={{ width: `${goalProgressPercentage}%` }}
+            <div className="space-y-6 text-left animate-in fade-in duration-500">
+              <div className="bg-white border border-gold/15 p-8 rounded-[36px] shadow-soft">
+                <h3 className="font-serif text-3xl font-bold text-green-dark">Mes Objectifs Évasion</h3>
+                <p className="text-text-muted text-sm leading-relaxed max-w-2xl mt-2">
+                  Fixez-vous des buts d'escapades et suivez votre épargne pour financer vos séjours d'exception.
+                </p>
+
+                {/* Création d'objectif */}
+                <div className="bg-cream/30 border border-gold/20 p-5 rounded-2xl mt-6 flex flex-col sm:flex-row gap-3 sm:items-end">
+                  <div className="flex-1">
+                    <label className="text-[10px] uppercase tracking-wider text-text-muted font-bold">Titre de l'objectif</label>
+                    <input
+                      value={newGoal.title}
+                      onChange={(e) => setNewGoal({ ...newGoal, title: e.target.value })}
+                      placeholder="Ex : Weekend Assinie"
+                      className="w-full mt-1 bg-white border border-gold/20 rounded-lg px-3 py-2 text-sm text-green-dark outline-none focus:border-gold"
                     />
                   </div>
-                  <p className="text-xs text-text-muted leading-relaxed">
-                    Il vous manque encore <strong>{formatPrice(goalTarget - currentGoalProgress)} FCFA</strong> de cashback pour atteindre votre objectif et réserver votre weekend tout compris à Assinie.
-                  </p>
+                  <div className="sm:w-44">
+                    <label className="text-[10px] uppercase tracking-wider text-text-muted font-bold">Montant cible (FCFA)</label>
+                    <input
+                      type="number" min="1"
+                      value={newGoal.target}
+                      onChange={(e) => setNewGoal({ ...newGoal, target: e.target.value })}
+                      placeholder="50000"
+                      className="w-full mt-1 bg-white border border-gold/20 rounded-lg px-3 py-2 text-sm text-green-dark outline-none focus:border-gold"
+                    />
+                  </div>
+                  <button onClick={handleCreateGoal} className="bg-green-dark hover:bg-[#031d0f] text-gold font-bold px-6 py-2.5 rounded-lg uppercase tracking-widest text-[10px] whitespace-nowrap">
+                    + Créer
+                  </button>
                 </div>
+              </div>
+
+              {/* Liste des objectifs */}
+              <div className="grid gap-4 md:grid-cols-2">
+                {goals.map((g) => {
+                  const pct = g.target_amount > 0 ? Math.min(100, Math.round((g.current_amount / g.target_amount) * 100)) : 0;
+                  return (
+                    <div key={g.id} className="bg-white border border-gold/15 p-6 rounded-3xl shadow-soft">
+                      <div className="flex items-center justify-between border-b border-gold/10 pb-3 mb-4">
+                        <h4 className="font-serif text-lg font-bold text-green-dark flex items-center gap-2">
+                          {g.title} {g.status === 'reached' && <span title="Atteint">🏆</span>}
+                        </h4>
+                        <span className="bg-gold text-green-darker text-[10px] font-extrabold px-3 py-1 rounded-full uppercase tracking-wider">{pct}%</span>
+                      </div>
+                      <div className="flex justify-between text-xs font-semibold text-text mb-2">
+                        <span>Épargné</span>
+                        <span className="font-mono text-green-dark">{formatPrice(g.current_amount)} / {formatPrice(g.target_amount)} FCFA</span>
+                      </div>
+                      <div className="h-3 rounded-full bg-gold/15 border border-gold/20 overflow-hidden shadow-inner">
+                        <div className="h-full rounded-full bg-gradient-to-r from-green-dark to-green-mid" style={{ width: `${pct}%` }} />
+                      </div>
+                      <div className="flex gap-2 mt-4">
+                        <button onClick={() => handleContribute(g)} className="flex-1 bg-[#031d0f] hover:bg-green-dark text-gold text-[9px] uppercase tracking-widest font-bold py-2.5 rounded-lg">Mettre à jour</button>
+                        <button onClick={() => handleDeleteGoal(g)} className="px-3 border border-red-200 text-red-500 hover:bg-red-50 rounded-lg text-[9px] uppercase tracking-widest font-bold">Suppr.</button>
+                      </div>
+                    </div>
+                  );
+                })}
+                {goals.length === 0 && (
+                  <div className="md:col-span-2 text-center text-text-muted italic text-sm py-10 bg-white border border-gold/15 rounded-3xl">
+                    Aucun objectif pour le moment. Créez-en un ci-dessus 👆
+                  </div>
+                )}
               </div>
             </div>
           )}
@@ -1368,9 +1471,9 @@ export const MemberDashboardView: React.FC<MemberDashboardViewProps> = ({ user, 
             <div className="space-y-6 text-left animate-in fade-in duration-500 bg-white border border-gold/15 p-8 rounded-[36px] shadow-soft">
               <h3 className="font-serif text-3xl font-bold text-green-dark">Épargne Club</h3>
               <p className="text-text-muted text-sm leading-relaxed max-w-2xl">
-                La fonctionnalité <strong>Épargne Club</strong> vous permet d'allouer automatiquement un pourcentage choisi de votre cashback accumulé vers une tirelire dédiée à vos futurs projets voyages.
+                Mettez de côté une partie de votre cashback dans une tirelire dédiée à vos futurs projets voyages. Vous pouvez la réalimenter ou retirer à tout moment vers votre cagnotte.
               </p>
-              
+
               <div className="bg-cream/40 border border-gold/20 p-6 rounded-2xl flex items-center justify-between max-w-md mt-8 shadow-sm">
                 <div>
                   <p className="text-[10px] text-text-muted uppercase font-bold tracking-wider">Solde Épargne Active</p>
@@ -1380,6 +1483,16 @@ export const MemberDashboardView: React.FC<MemberDashboardViewProps> = ({ user, 
                   <span className="text-3xl">🐷</span>
                 </div>
               </div>
+
+              <div className="flex gap-3 max-w-md">
+                <button onClick={handleDeposit} className="flex-1 bg-green-dark hover:bg-[#031d0f] text-gold font-bold py-3 rounded-xl uppercase tracking-widest text-[10px]">
+                  Épargner depuis le cashback
+                </button>
+                <button onClick={handleWithdraw} className="flex-1 border border-green-dark text-green-dark hover:bg-cream font-bold py-3 rounded-xl uppercase tracking-widest text-[10px]">
+                  Retirer
+                </button>
+              </div>
+              <p className="text-[10px] text-text-muted">Cagnotte cashback disponible : <strong className="text-green-dark">{formatPrice(balance)} FCFA</strong></p>
             </div>
           )}
 
