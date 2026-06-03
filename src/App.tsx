@@ -12,6 +12,7 @@ import { HomeView } from './pages/HomeView';
 import { EstablishmentsView } from './pages/EstablishmentsView';
 import { OffersView } from './pages/OffersView';
 import { ContactView } from './pages/ContactView';
+import { CookieConsent } from './components/CookieConsent';
 import { MemberRegistrationView } from './pages/MemberRegistrationView';
 import { PartnerRegistrationView } from './pages/PartnerRegistrationView';
 import { NotFoundView } from './pages/NotFoundView';
@@ -120,6 +121,7 @@ const App: React.FC = () => {
   return (
     <div className="min-h-screen bg-cream font-sans">
       <Toaster position="top-center" toastOptions={{ className: 'font-sans text-sm' }} />
+      <CookieConsent />
       {!isDashboard && (
         <Navbar
           scrolled={scrolled}

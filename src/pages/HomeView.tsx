@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { MapPin, Compass, Sparkles, Briefcase, Crown, Users, Utensils, CreditCard, BookOpen, Headphones, Palmtree, Hotel, Globe, Smartphone, Heart } from 'lucide-react';
+import { MapPin, Compass, Sparkles, Briefcase, Crown, Users, Utensils, CreditCard, BookOpen, Headphones, Palmtree, Hotel, Globe, Smartphone, Heart, Star, Quote } from 'lucide-react';
 import { HomeTierCards } from '../components/HomeTierCards';
 import { Seo } from '../components/Seo';
+import { supabase } from '../lib/supabase';
 
 const HERO_IMAGES: { src: string; webp?: string; alt: string }[] = [
   { src: '/hero-lounge.jpg', webp: '/hero-lounge.webp', alt: 'Rooftop lounge vue sur Abidjan' },
@@ -16,6 +17,14 @@ export const HomeView: React.FC = () => {
   const navigate = useNavigate();
   const [activeFilter, setActiveFilter] = useState('Tous');
   const [currentSlide, setCurrentSlide] = useState(0);
+  const [stats, setStats] = useState<{ members: number; partners: number; establishments: number } | null>(null);
+
+  // Compteurs réels (RPC publique). Repli sur les valeurs marketing si vide.
+  useEffect(() => {
+    supabase.rpc('public_stats').then(({ data }) => { if (data) setStats(data as any); });
+  }, []);
+  const fmtCount = (n: number | undefined, fallback: string) =>
+    !n ? fallback : n >= 1000 ? `${Math.floor(n / 1000)}k+` : `${n}`;
 
   // Hero carousel auto-advance every 7 seconds
   useEffect(() => {
@@ -305,6 +314,42 @@ export const HomeView: React.FC = () => {
       
       {/* LOYALTY PROGRAM - Section 4: Le Programme Membre IBC */}
       <HomeTierCards />
+
+      {/* Témoignages — preuve sociale */}
+      <section className="py-24 sm:py-32 bg-cream reveal-section">
+        <div className="container mx-auto px-6 max-w-6xl">
+          <div className="text-center mb-16">
+            <span className="text-[10px] uppercase tracking-[0.4em] text-gold font-bold block mb-4">Ils nous font confiance</span>
+            <h2 className="font-serif text-3xl sm:text-4xl font-bold text-green-dark">Ce que disent nos membres</h2>
+          </div>
+          <div className="grid gap-6 md:grid-cols-3">
+            {[
+              { name: 'Aminata Koné', role: 'Membre Gold · Abidjan', quote: "Grâce au cashback IBC, mes sorties au restaurant et au lounge me rapportent enfin. J'ai financé un week-end à Assinie rien qu'avec ma cagnotte !" },
+              { name: 'Marc-André Diomandé', role: 'Entrepreneur · Cocody', quote: "Au-delà des avantages, le réseau IBC m'a connecté à des partenaires d'affaires lors d'événements privés. Un vrai cercle de confiance." },
+              { name: 'Fatou Bamba', role: 'Membre · Marcory', quote: "La conciergerie et les accès prioritaires changent tout. Je me sens vraiment membre d'un club privé, pas d'une simple appli." },
+            ].map((t) => (
+              <div key={t.name} className="bg-white border border-gold/10 rounded-2xl p-7 shadow-soft flex flex-col">
+                <Quote size={28} className="text-gold/40 mb-4" />
+                <div className="flex gap-0.5 mb-3">
+                  {[1, 2, 3, 4, 5].map((s) => <Star key={s} size={14} className="text-gold" fill="currentColor" />)}
+                </div>
+                <p className="text-text text-sm leading-relaxed flex-1 italic">« {t.quote} »</p>
+                <div className="flex items-center gap-3 mt-6 pt-5 border-t border-gold/10">
+                  <img
+                    src={`https://ui-avatars.com/api/?name=${encodeURIComponent(t.name)}&background=1B5E35&color=C9A84C&bold=true`}
+                    alt={t.name} loading="lazy"
+                    className="w-10 h-10 rounded-full border border-gold/20"
+                  />
+                  <div>
+                    <p className="font-serif font-bold text-green-dark text-sm">{t.name}</p>
+                    <p className="text-[10px] uppercase tracking-wider text-text-muted font-semibold">{t.role}</p>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
           {/* Section 7: Inscription */}
       <section className="py-24 bg-cream reveal-section">
         <div className="container mx-auto px-6 max-w-4xl">
@@ -343,11 +388,11 @@ export const HomeView: React.FC = () => {
             </p>
             <div className="grid grid-cols-2 gap-3 sm:gap-6 mb-10 sm:mb-12 max-w-lg mx-auto lg:mx-0">
                <div className="bg-white/5 border border-gold/10 rounded-xl p-4 sm:p-6 text-center">
-                  <p className="font-serif text-2xl sm:text-4xl font-bold text-gold">10k+</p>
+                  <p className="font-serif text-2xl sm:text-4xl font-bold text-gold">{fmtCount(stats?.members, '10k+')}</p>
                   <p className="text-[8px] sm:text-[10px] uppercase tracking-widest text-white/50 font-bold mt-2">Membres Actifs</p>
                </div>
                <div className="bg-white/5 border border-gold/10 rounded-xl p-4 sm:p-6 text-center">
-                  <p className="font-serif text-2xl sm:text-4xl font-bold text-gold">500+</p>
+                  <p className="font-serif text-2xl sm:text-4xl font-bold text-gold">{fmtCount(stats?.establishments, '500+')}</p>
                   <p className="text-[8px] sm:text-[10px] uppercase tracking-widest text-white/50 font-bold mt-2">Établissements</p>
                </div>
             </div>
