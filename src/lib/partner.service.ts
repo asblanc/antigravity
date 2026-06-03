@@ -20,6 +20,7 @@ export async function registerPartner(data: {
   category: string;
   address: string;
   cashbackRate?: number;
+  imageFile?: File | null;
 }): Promise<Partner> {
   const { data: authData, error: signUpError } = await supabase.auth.signUp({
     email: data.email,
@@ -37,6 +38,20 @@ export async function registerPartner(data: {
 
   const user = authData.user;
 
+  // Upload de la photo de l'établissement (bucket public 'establishments')
+  let imageUrl: string | null = null;
+  if (data.imageFile) {
+    try {
+      const ext = data.imageFile.name.split('.').pop()?.toLowerCase() || 'jpg';
+      const path = `${user.id}/cover.${ext}`;
+      const { error: upErr } = await supabase.storage.from('establishments').upload(path, data.imageFile, { upsert: true });
+      if (!upErr) {
+        const { data: { publicUrl } } = supabase.storage.from('establishments').getPublicUrl(path);
+        imageUrl = publicUrl;
+      }
+    } catch { /* photo optionnelle */ }
+  }
+
   // Insert into establishments for the partner
   const { error: estError } = await supabase.from('establishments').insert({
     partner_id: user.id,
@@ -44,6 +59,7 @@ export async function registerPartner(data: {
     category: data.category,
     zone: data.address,
     cashback_rate: data.cashbackRate ?? 5.0,
+    image_url: imageUrl,
     active: false // Needs admin approval
   });
 

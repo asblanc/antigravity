@@ -125,13 +125,25 @@ export async function updateEstablishment(
   id: string,
   active: boolean,
   cashbackRate: number,
+  imageUrl: string | null = null,
 ): Promise<void> {
   const { error } = await supabase.rpc('admin_update_establishment', {
     p_establishment_id: id,
     p_active: active,
     p_cashback_rate: cashbackRate,
+    p_image_url: imageUrl,
   });
   if (error) throw new Error(error.message);
+}
+
+// Upload de la photo de couverture d'un établissement (bucket 'establishments').
+export async function uploadEstablishmentImage(id: string, file: File): Promise<string> {
+  const ext = file.name.split('.').pop()?.toLowerCase() || 'jpg';
+  const path = `${id}/cover.${ext}`;
+  const { error } = await supabase.storage.from('establishments').upload(path, file, { upsert: true });
+  if (error) throw new Error(error.message);
+  const { data: { publicUrl } } = supabase.storage.from('establishments').getPublicUrl(path);
+  return `${publicUrl}?t=${Date.now()}`;
 }
 
 // ─── Transactions ───────────────────────────────────────────────────────────

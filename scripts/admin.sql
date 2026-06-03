@@ -80,22 +80,25 @@ GRANT EXECUTE ON FUNCTION public.admin_adjust_member_balance(UUID, NUMERIC) TO a
 
 -- ─── Gestion des établissements ─────────────────────────────────────────────
 -- Approbation/suspension + ajustement du taux de cashback.
+DROP FUNCTION IF EXISTS public.admin_update_establishment(UUID, BOOLEAN, NUMERIC);
 CREATE OR REPLACE FUNCTION public.admin_update_establishment(
   p_establishment_id UUID,
   p_active           BOOLEAN,
-  p_cashback_rate    NUMERIC
+  p_cashback_rate    NUMERIC,
+  p_image_url        TEXT DEFAULT NULL
 )
 RETURNS VOID LANGUAGE plpgsql SECURITY DEFINER SET search_path = public AS $$
 BEGIN
   IF NOT public.is_admin() THEN RAISE EXCEPTION 'Réservé aux administrateurs'; END IF;
   UPDATE public.establishments
      SET active = COALESCE(p_active, active),
-         cashback_rate = COALESCE(p_cashback_rate, cashback_rate)
+         cashback_rate = COALESCE(p_cashback_rate, cashback_rate),
+         image_url = COALESCE(p_image_url, image_url)
    WHERE id = p_establishment_id;
 END;
 $$;
-REVOKE ALL ON FUNCTION public.admin_update_establishment(UUID, BOOLEAN, NUMERIC) FROM PUBLIC, anon;
-GRANT EXECUTE ON FUNCTION public.admin_update_establishment(UUID, BOOLEAN, NUMERIC) TO authenticated;
+REVOKE ALL ON FUNCTION public.admin_update_establishment(UUID, BOOLEAN, NUMERIC, TEXT) FROM PUBLIC, anon;
+GRANT EXECUTE ON FUNCTION public.admin_update_establishment(UUID, BOOLEAN, NUMERIC, TEXT) TO authenticated;
 
 -- ─── Validation des transactions (workflow pending → confirmed/rejected) ─────
 -- Ajuste le solde du membre de façon cohérente selon la transition de statut.

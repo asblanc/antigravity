@@ -4,7 +4,7 @@ import { toast } from 'react-hot-toast';
 import {
   LayoutDashboard, Users, Store, CreditCard, Gift, LogOut, ChevronLeft,
   Loader2, CheckCircle, XCircle, Wallet, TrendingUp, Award, Clock, Banknote,
-  Bell, Settings, Send, Trash2, Shield, Calendar, Pencil, Inbox, Check,
+  Bell, Settings, Send, Trash2, Shield, Calendar, Pencil, Inbox, Check, ImagePlus,
 } from 'lucide-react';
 import {
   getAdminOverview, getAdminMembers, setMemberActive, setMemberTier, adjustMemberBalance,
@@ -14,6 +14,7 @@ import {
   getAdmins, setUserRole, setRoleByEmail,
   getAllExperiences, saveExperience, deleteExperience,
   getContactMessages, setMessageHandled, deleteMessage,
+  uploadEstablishmentImage,
   type AdminOverview, type AdminMember, type AdminEstablishment, type AdminTransaction,
   type AdminReferral, type AdminSubscription, type AdminNotification, type AdminUser,
   type AdminExperience, type ContactMessage,
@@ -122,6 +123,15 @@ export const AdminDashboardView: React.FC<{ onLogout: () => void }> = ({ onLogou
     try {
       await updateEstablishment(e.id, !e.active, e.cashback_rate);
       toast.success(e.active ? 'Établissement suspendu' : 'Établissement approuvé');
+      load('partners');
+    } catch (err: any) { toast.error(err.message); }
+  };
+
+  const handleEstImage = async (e: AdminEstablishment, file: File) => {
+    try {
+      const url = await uploadEstablishmentImage(e.id, file);
+      await updateEstablishment(e.id, e.active, e.cashback_rate, url);
+      toast.success('Photo mise à jour');
       load('partners');
     } catch (err: any) { toast.error(err.message); }
   };
@@ -406,10 +416,16 @@ export const AdminDashboardView: React.FC<{ onLogout: () => void }> = ({ onLogou
                             {e.active ? 'Actif' : 'En attente'}
                           </span>
                         </td>
-                        <td className="p-3 text-center">
-                          <button onClick={() => handleToggleEstablishment(e)} className={`text-xs px-3 py-1 rounded-full border ${e.active ? 'border-red-500/30 text-red-400 hover:bg-red-500/10' : 'border-green-500/30 text-green-400 hover:bg-green-500/10'}`}>
-                            {e.active ? 'Suspendre' : 'Approuver'}
-                          </button>
+                        <td className="p-3">
+                          <div className="flex items-center justify-center gap-3">
+                            <label className="cursor-pointer text-gold hover:text-white" title="Changer la photo">
+                              <ImagePlus size={16} />
+                              <input type="file" accept="image/*" className="hidden" onChange={(ev) => { const f = ev.target.files?.[0]; if (f) handleEstImage(e, f); ev.currentTarget.value = ''; }} />
+                            </label>
+                            <button onClick={() => handleToggleEstablishment(e)} className={`text-xs px-3 py-1 rounded-full border ${e.active ? 'border-red-500/30 text-red-400 hover:bg-red-500/10' : 'border-green-500/30 text-green-400 hover:bg-green-500/10'}`}>
+                              {e.active ? 'Suspendre' : 'Approuver'}
+                            </button>
+                          </div>
                         </td>
                       </tr>
                     ))}
