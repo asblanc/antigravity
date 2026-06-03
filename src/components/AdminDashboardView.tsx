@@ -4,7 +4,7 @@ import { toast } from 'react-hot-toast';
 import {
   LayoutDashboard, Users, Store, CreditCard, Gift, LogOut, ChevronLeft,
   Loader2, CheckCircle, XCircle, Wallet, TrendingUp, Award, Clock, Banknote,
-  Bell, Settings, Send, Trash2, Shield,
+  Bell, Settings, Send, Trash2, Shield, Calendar, Pencil,
 } from 'lucide-react';
 import {
   getAdminOverview, getAdminMembers, setMemberActive, setMemberTier, adjustMemberBalance,
@@ -12,8 +12,10 @@ import {
   getAdminReferrals, getAdminSubscriptions, reviewSubscription,
   getAdminNotifications, sendNotification, deleteNotification,
   getAdmins, setUserRole, setRoleByEmail,
+  getAllExperiences, saveExperience, deleteExperience,
   type AdminOverview, type AdminMember, type AdminEstablishment, type AdminTransaction,
   type AdminReferral, type AdminSubscription, type AdminNotification, type AdminUser,
+  type AdminExperience,
 } from '../lib/admin.service';
 
 const fmt = (n: number): string => (n ?? 0).toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
@@ -25,9 +27,12 @@ const TABS = [
   { id: 'transactions', label: 'Transactions', icon: CreditCard },
   { id: 'subscriptions', label: 'Abonnements', icon: Banknote },
   { id: 'referrals', label: 'Parrainages', icon: Gift },
+  { id: 'experiences', label: 'Expériences', icon: Calendar },
   { id: 'communication', label: 'Communication', icon: Bell },
   { id: 'settings', label: 'Paramètres', icon: Settings },
 ] as const;
+
+const EMPTY_EXP = { id: null as string | null, title: '', description: '', location: '', event_date: '', image_url: '', price: '', capacity: '', active: true };
 
 const TIERS = ['bronze', 'silver', 'gold', 'platinum'];
 
@@ -52,9 +57,12 @@ export const AdminDashboardView: React.FC<{ onLogout: () => void }> = ({ onLogou
   const [notifications, setNotifications] = useState<AdminNotification[]>([]);
   const [admins, setAdmins] = useState<AdminUser[]>([]);
 
+  const [experiences, setExperiences] = useState<AdminExperience[]>([]);
+
   // Formulaires
   const [notifForm, setNotifForm] = useState({ title: '', body: '', audience: 'all' });
   const [promoteForm, setPromoteForm] = useState({ email: '', role: 'admin' });
+  const [expForm, setExpForm] = useState<typeof EMPTY_EXP>(EMPTY_EXP);
 
   const load = useCallback(async (which: string) => {
     setLoading(true);
@@ -67,6 +75,7 @@ export const AdminDashboardView: React.FC<{ onLogout: () => void }> = ({ onLogou
       else if (which === 'referrals') setReferrals(await getAdminReferrals());
       else if (which === 'communication') setNotifications(await getAdminNotifications());
       else if (which === 'settings') setAdmins(await getAdmins());
+      else if (which === 'experiences') setExperiences(await getAllExperiences());
     } catch (e: any) {
       toast.error(e?.message || 'Erreur de chargement');
     } finally {
@@ -169,6 +178,41 @@ export const AdminDashboardView: React.FC<{ onLogout: () => void }> = ({ onLogou
   const handleDemote = async (u: AdminUser) => {
     if (!window.confirm(`Retirer les droits admin de ${u.name} ?`)) return;
     try { await setUserRole(u.id, 'member'); toast.success('Admin rétrogradé en membre'); load('settings'); }
+    catch (e: any) { toast.error(e.message); }
+  };
+
+  const handleSaveExp = async () => {
+    if (!expForm.title.trim()) { toast.error('Titre requis'); return; }
+    try {
+      await saveExperience({
+        id: expForm.id,
+        title: expForm.title,
+        description: expForm.description,
+        location: expForm.location,
+        event_date: expForm.event_date ? new Date(expForm.event_date).toISOString() : null,
+        image_url: expForm.image_url,
+        price: Number(expForm.price) || 0,
+        capacity: expForm.capacity ? Number(expForm.capacity) : null,
+        active: expForm.active,
+      });
+      toast.success(expForm.id ? 'Expérience mise à jour' : 'Expérience créée');
+      setExpForm(EMPTY_EXP);
+      load('experiences');
+    } catch (e: any) { toast.error(e.message); }
+  };
+
+  const handleEditExp = (x: AdminExperience) => {
+    setExpForm({
+      id: x.id, title: x.title, description: x.description || '', location: x.location || '',
+      event_date: x.event_date ? x.event_date.slice(0, 16) : '', image_url: x.image_url || '',
+      price: String(x.price ?? ''), capacity: x.capacity != null ? String(x.capacity) : '', active: x.active,
+    });
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  const handleDeleteExp = async (x: AdminExperience) => {
+    if (!window.confirm(`Supprimer « ${x.title} » ?`)) return;
+    try { await deleteExperience(x.id); toast.success('Expérience supprimée'); load('experiences'); }
     catch (e: any) { toast.error(e.message); }
   };
 
@@ -452,6 +496,60 @@ export const AdminDashboardView: React.FC<{ onLogout: () => void }> = ({ onLogou
                       </tr>
                     ))}
                     {!loading && referrals.length === 0 && <tr><td colSpan={5} className="p-8 text-center text-white/40 italic">Aucun parrainage (ou table referrals non créée).</td></tr>}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          )}
+
+          {/* ── EXPERIENCES ── */}
+          {tab === 'experiences' && (
+            <div className="space-y-6">
+              <h2 className="font-serif text-2xl text-gold">Expériences ({experiences.length})</h2>
+
+              <div className="bg-white/5 border border-gold/20 rounded-2xl p-6 space-y-3 max-w-3xl">
+                <h3 className="text-[10px] uppercase tracking-widest text-gold font-bold">{expForm.id ? 'Modifier' : 'Nouvelle'} expérience</h3>
+                <div className="grid sm:grid-cols-2 gap-3">
+                  <input value={expForm.title} onChange={(e) => setExpForm({ ...expForm, title: e.target.value })} placeholder="Titre *" className="bg-green-dark border border-gold/20 rounded-lg px-3 py-2 text-sm text-white placeholder-white/30 outline-none focus:border-gold" />
+                  <input value={expForm.location} onChange={(e) => setExpForm({ ...expForm, location: e.target.value })} placeholder="Lieu" className="bg-green-dark border border-gold/20 rounded-lg px-3 py-2 text-sm text-white placeholder-white/30 outline-none focus:border-gold" />
+                  <input type="datetime-local" value={expForm.event_date} onChange={(e) => setExpForm({ ...expForm, event_date: e.target.value })} className="bg-green-dark border border-gold/20 rounded-lg px-3 py-2 text-sm text-white outline-none focus:border-gold" />
+                  <input value={expForm.image_url} onChange={(e) => setExpForm({ ...expForm, image_url: e.target.value })} placeholder="URL image" className="bg-green-dark border border-gold/20 rounded-lg px-3 py-2 text-sm text-white placeholder-white/30 outline-none focus:border-gold" />
+                  <input type="number" value={expForm.price} onChange={(e) => setExpForm({ ...expForm, price: e.target.value })} placeholder="Prix (FCFA)" className="bg-green-dark border border-gold/20 rounded-lg px-3 py-2 text-sm text-white placeholder-white/30 outline-none focus:border-gold" />
+                  <input type="number" value={expForm.capacity} onChange={(e) => setExpForm({ ...expForm, capacity: e.target.value })} placeholder="Capacité" className="bg-green-dark border border-gold/20 rounded-lg px-3 py-2 text-sm text-white placeholder-white/30 outline-none focus:border-gold" />
+                </div>
+                <textarea value={expForm.description} onChange={(e) => setExpForm({ ...expForm, description: e.target.value })} placeholder="Description" rows={2} className="w-full bg-green-dark border border-gold/20 rounded-lg px-3 py-2 text-sm text-white placeholder-white/30 outline-none focus:border-gold resize-none" />
+                <label className="flex items-center gap-2 text-xs text-white/70"><input type="checkbox" checked={expForm.active} onChange={(e) => setExpForm({ ...expForm, active: e.target.checked })} /> Active (visible par les membres)</label>
+                <div className="flex gap-2">
+                  <button onClick={handleSaveExp} className="bg-gold text-green-darker text-xs font-bold uppercase tracking-widest px-5 py-2.5 rounded-full hover:opacity-90">{expForm.id ? 'Enregistrer' : 'Créer'}</button>
+                  {expForm.id && <button onClick={() => setExpForm(EMPTY_EXP)} className="text-xs text-white/50 hover:text-white px-4">Annuler</button>}
+                </div>
+              </div>
+
+              <div className="bg-white/5 border border-gold/20 rounded-2xl overflow-x-auto">
+                <table className="w-full text-left text-sm">
+                  <thead>
+                    <tr className="bg-green-dark text-[10px] uppercase tracking-widest text-gold">
+                      <th className="p-3">Titre</th><th className="p-3">Date</th><th className="p-3">Lieu</th>
+                      <th className="p-3 text-right">Prix</th><th className="p-3 text-center">Active</th><th className="p-3 text-center">Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {experiences.map((x) => (
+                      <tr key={x.id} className="border-b border-white/5 hover:bg-white/5">
+                        <td className="p-3 font-semibold">{x.title}</td>
+                        <td className="p-3 text-white/60 text-xs">{x.event_date ? new Intl.DateTimeFormat('fr-FR', { dateStyle: 'short', timeStyle: 'short' }).format(new Date(x.event_date)) : '—'}</td>
+                        <td className="p-3 text-white/60 text-xs">{x.location || '—'}</td>
+                        <td className="p-3 text-right font-mono text-gold">{x.price > 0 ? `${fmt(x.price)} F` : 'Gratuit'}</td>
+                        <td className="p-3 text-center"><span className={`text-[10px] px-2 py-0.5 rounded-full border ${x.active ? STATUS_STYLE.active : STATUS_STYLE.pending}`}>{x.active ? 'Oui' : 'Non'}</span></td>
+                        <td className="p-3">
+                          <div className="flex items-center justify-center gap-2">
+                            <button onClick={() => handleEditExp(x)} className="text-gold hover:text-white" title="Modifier"><Pencil size={15} /></button>
+                            <button onClick={() => handleDeleteExp(x)} className="text-red-400 hover:text-red-300" title="Supprimer"><Trash2 size={15} /></button>
+                          </div>
+                        </td>
+                      </tr>
+                    ))}
+                    {!loading && experiences.length === 0 && <tr><td colSpan={6} className="p-8 text-center text-white/40 italic">Aucune expérience (ou table non créée).</td></tr>}
                   </tbody>
                 </table>
               </div>

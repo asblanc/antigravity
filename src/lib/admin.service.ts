@@ -282,3 +282,62 @@ export async function setRoleByEmail(email: string, role: string): Promise<void>
   const { error } = await supabase.rpc('admin_set_role_by_email', { p_email: email, p_role: role });
   if (error) throw new Error(error.message);
 }
+
+// ─── Expériences (événements) ────────────────────────────────────────────────
+export interface AdminExperience {
+  id: string;
+  title: string;
+  description: string | null;
+  location: string | null;
+  event_date: string | null;
+  image_url: string | null;
+  price: number;
+  capacity: number | null;
+  active: boolean;
+  created_at: string;
+}
+
+export async function getAllExperiences(): Promise<AdminExperience[]> {
+  try {
+    const { data, error } = await supabase
+      .from('experiences')
+      .select('*')
+      .order('created_at', { ascending: false });
+    if (error || !data) return [];
+    return data as AdminExperience[];
+  } catch {
+    return [];
+  }
+}
+
+export interface ExperiencePayload {
+  id?: string | null;
+  title: string;
+  description?: string;
+  location?: string;
+  event_date?: string | null;
+  image_url?: string;
+  price?: number;
+  capacity?: number | null;
+  active?: boolean;
+}
+
+export async function saveExperience(p: ExperiencePayload): Promise<void> {
+  const { error } = await supabase.rpc('admin_save_experience', {
+    p_id: p.id ?? null,
+    p_title: p.title,
+    p_description: p.description ?? null,
+    p_location: p.location ?? null,
+    p_event_date: p.event_date || null,
+    p_image_url: p.image_url ?? null,
+    p_price: p.price ?? 0,
+    p_capacity: p.capacity ?? null,
+    p_active: p.active ?? true,
+  });
+  if (error) throw new Error(error.message);
+}
+
+export async function deleteExperience(id: string): Promise<void> {
+  const { error } = await supabase.rpc('admin_delete_experience', { p_id: id });
+  if (error) throw new Error(error.message);
+}

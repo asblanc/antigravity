@@ -21,6 +21,14 @@ import {
   getSavings, savingsDeposit, savingsWithdraw,
   type Goal, type SavingsAccount,
 } from '../lib/member.service';
+import {
+  getMyCircles, createCircle, inviteToCircle, contributeCircle, leaveCircle,
+  type Circle,
+} from '../lib/circle.service';
+import {
+  getExperiences, getMyBookings, bookExperience, cancelBooking,
+  type Experience, type Booking,
+} from '../lib/experience.service';
 import { MemberCard } from './MemberCard';
 import ibcLogo from '../assets/ibc-logo.webp';
 
@@ -56,6 +64,13 @@ export const MemberDashboardView: React.FC<MemberDashboardViewProps> = ({ user, 
   const [goals, setGoals] = useState<Goal[]>([]);
   const [savings, setSavings] = useState<SavingsAccount | null>(null);
   const [newGoal, setNewGoal] = useState({ title: '', target: '' });
+  const [circles, setCircles] = useState<Circle[]>([]);
+  const [newCircle, setNewCircle] = useState({ name: '', target: '' });
+  const [experiencesList, setExperiencesList] = useState<Experience[]>([]);
+  const [myBookings, setMyBookings] = useState<Booking[]>([]);
+  // Solde cashback en state pour rester live après dépôt/retrait d'épargne.
+  const [balance, setBalance] = useState<number>(user.balance ?? 0);
+  useEffect(() => { setBalance(user.balance ?? 0); }, [user.balance]);
 
   // Fetch transactions and referrals on mount
   useEffect(() => {
@@ -100,6 +115,14 @@ export const MemberDashboardView: React.FC<MemberDashboardViewProps> = ({ user, 
       } catch (e) {
         console.error('Failed to load goals/savings:', e);
       }
+
+      try {
+        setCircles(await getMyCircles());
+        setExperiencesList(await getExperiences());
+        setMyBookings(await getMyBookings(user.uid));
+      } catch (e) {
+        console.error('Failed to load circles/experiences:', e);
+      }
     };
     fetchData();
   }, [user.uid, user.name]);
@@ -141,7 +164,8 @@ export const MemberDashboardView: React.FC<MemberDashboardViewProps> = ({ user, 
     try {
       const nb = await savingsDeposit(v);
       setSavings({ member_id: user.uid, balance: nb, updated_at: new Date().toISOString() });
-      toast.success(`Épargne créditée. Pensez à rafraîchir pour la cagnotte.`);
+      setBalance((b) => Math.max(0, b - v));
+      toast.success('Épargne créditée');
     } catch (e: any) { toast.error(e.message); }
   };
 
@@ -153,8 +177,53 @@ export const MemberDashboardView: React.FC<MemberDashboardViewProps> = ({ user, 
     try {
       const nb = await savingsWithdraw(v);
       setSavings({ member_id: user.uid, balance: nb, updated_at: new Date().toISOString() });
-      toast.success('Retrait effectué. Pensez à rafraîchir pour la cagnotte.');
+      setBalance((b) => b + v);
+      toast.success('Retrait effectué');
     } catch (e: any) { toast.error(e.message); }
+  };
+
+  // ─── Cercle Évasion ─────────────────────────────────────────────────────
+  const reloadCircles = async () => { setCircles(await getMyCircles()); };
+
+  const handleCreateCircle = async () => {
+    const n = newCircle.name.trim();
+    const t = Number(newCircle.target) || 0;
+    if (!n) { toast.error('Nom du cercle requis'); return; }
+    try { await createCircle(n, t); toast.success('Cercle créé'); setNewCircle({ name: '', target: '' }); reloadCircles(); }
+    catch (e: any) { toast.error(e.message); }
+  };
+
+  const handleInviteCircle = async (c: Circle) => {
+    const email = window.prompt(`Inviter un membre dans « ${c.name} » (e-mail) :`, '');
+    if (!email) return;
+    try { await inviteToCircle(c.id, email); toast.success('Membre invité'); reloadCircles(); }
+    catch (e: any) { toast.error(e.message); }
+  };
+
+  const handleContributeCircle = async (c: Circle) => {
+    const input = window.prompt(`Contribuer à « ${c.name} » depuis votre cashback (FCFA) :`, '');
+    if (input === null) return;
+    const v = Number(input);
+    if (Number.isNaN(v) || v <= 0) { toast.error('Montant invalide'); return; }
+    try { await contributeCircle(c.id, v); setBalance((b) => Math.max(0, b - v)); toast.success('Contribution enregistrée'); reloadCircles(); }
+    catch (e: any) { toast.error(e.message); }
+  };
+
+  const handleLeaveCircle = async (c: Circle) => {
+    if (!window.confirm(`Quitter le cercle « ${c.name} » ?`)) return;
+    try { await leaveCircle(c.id); toast.success('Cercle quitté'); reloadCircles(); }
+    catch (e: any) { toast.error(e.message); }
+  };
+
+  // ─── Expériences ────────────────────────────────────────────────────────
+  const handleBook = async (exp: Experience) => {
+    try { await bookExperience(user.uid, exp.id); toast.success('Réservation confirmée'); setMyBookings(await getMyBookings(user.uid)); }
+    catch (e: any) { toast.error(e.message.includes('duplicate') ? 'Déjà réservé' : e.message); }
+  };
+
+  const handleCancelBooking = async (exp: Experience) => {
+    try { await cancelBooking(user.uid, exp.id); toast.success('Réservation annulée'); setMyBookings(await getMyBookings(user.uid)); }
+    catch (e: any) { toast.error(e.message); }
   };
 
   const handleSubscribe = async () => {
@@ -172,7 +241,6 @@ export const MemberDashboardView: React.FC<MemberDashboardViewProps> = ({ user, 
 
   // Derived calculations with fallback to match Yao K. screenshots
   const displayName = user.name || 'Membre';
-  const balance = user.balance ?? 0;
   const totalSpent = user.totalSpent ?? 0;
   const visitsThisMonth = transactions.length; // visites = transactions cashback chargées
   
@@ -223,30 +291,11 @@ export const MemberDashboardView: React.FC<MemberDashboardViewProps> = ({ user, 
     { id: 'settings', label: 'Paramètres', icon: Settings },
   ];
 
-  // Upcoming experiences with actual visual images matching dashboard design
-  const experiences = [
-    {
-      id: 1,
-      title: 'Sunset Lounge',
-      date: 'Vendredi 24 Mai • 18h00',
-      location: 'Abidjan, Cocody',
-      imageUrl: 'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&q=80&w=200'
-    },
-    {
-      id: 2,
-      title: 'Brunch & Chill',
-      date: 'Dimanche 26 Mai • 11h00',
-      location: 'Bingerville',
-      imageUrl: 'https://images.unsplash.com/photo-1514362545857-3bc16c4c7d1b?auto=format&fit=crop&q=80&w=200'
-    },
-    {
-      id: 3,
-      title: 'Weekend Assinie',
-      date: '1er - 2 Juin • 2 jours',
-      location: 'Assinie',
-      imageUrl: 'https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?auto=format&fit=crop&q=80&w=200'
-    }
-  ];
+  // Format de date court pour les expériences (event_date ISO -> texte FR).
+  const fmtEventDate = (iso: string | null) => iso
+    ? new Intl.DateTimeFormat('fr-FR', { dateStyle: 'medium', timeStyle: 'short' }).format(new Date(iso))
+    : 'Date à venir';
+  const bookedIds = new Set(myBookings.map((b) => b.experience_id));
 
   // Carousel of recommended offers at the bottom
   const recommendations = [
@@ -1097,27 +1146,31 @@ export const MemberDashboardView: React.FC<MemberDashboardViewProps> = ({ user, 
                     </button>
                   </div>
 
-                  {/* List of 3 bookings with visual thumbnails */}
+                  {/* Expériences à venir (réelles) */}
                   <div className="space-y-2.5 flex-1 overflow-y-auto pr-1 scrollbar-thin">
-                    {experiences.map((exp) => (
-                      <div 
-                        key={exp.id} 
+                    {experiencesList.slice(0, 4).map((exp) => (
+                      <div
+                        key={exp.id}
                         className="flex items-center gap-3 bg-cream/40 border border-gold/10 rounded-xl p-2 hover:border-gold/30 hover:bg-cream transition-all duration-300 cursor-pointer"
-                        onClick={() => toast(`Détails de la réservation "${exp.title}" envoyés par WhatsApp !`, { icon: '📱' })}
+                        onClick={() => setActiveTab('experiences')}
                       >
-                        <img 
-                          src={exp.imageUrl} 
-                          alt={exp.title} 
-                          className="w-10 h-10 object-cover rounded-lg shrink-0 border border-gold/10 shadow-sm" 
+                        <img
+                          src={exp.image_url || 'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&q=80&w=200'}
+                          alt={exp.title}
+                          loading="lazy"
+                          className="w-10 h-10 object-cover rounded-lg shrink-0 border border-gold/10 shadow-sm"
                         />
                         <div className="flex-1 min-w-0 text-left">
                           <h5 className="text-[10px] font-bold text-green-dark truncate">{exp.title}</h5>
-                          <p className="text-[8px] text-text-muted truncate mt-0.5">{exp.date}</p>
+                          <p className="text-[8px] text-text-muted truncate mt-0.5">{fmtEventDate(exp.event_date)}</p>
                           <p className="text-[7px] text-[#8C6239] font-medium truncate">{exp.location}</p>
                         </div>
                         <ChevronRight size={12} className="text-gold shrink-0" />
                       </div>
                     ))}
+                    {experiencesList.length === 0 && (
+                      <p className="text-[10px] text-text-muted italic text-center py-6">Aucune expérience programmée pour le moment.</p>
+                    )}
                   </div>
 
                 </div>
@@ -1498,24 +1551,64 @@ export const MemberDashboardView: React.FC<MemberDashboardViewProps> = ({ user, 
 
           {/* ─── TAB 7: CERCLE TAB ─── */}
           {activeTab === 'cercle' && (
-            <div className="space-y-6 text-left animate-in fade-in duration-500 bg-white border border-gold/15 p-8 rounded-[36px] shadow-soft">
-              <h3 className="font-serif text-3xl font-bold text-green-dark">Cercle Évasion IBC</h3>
-              <p className="text-text-muted text-sm leading-relaxed max-w-2xl">
-                Voyager à plusieurs est toujours plus agréable. Créez un cercle privé avec vos proches ou collègues de bureau membres d'IBC, et cumulez vos cagnottes pour vous offrir des séjours collectifs de rêve.
-              </p>
-              
-              <div className="mt-8 border border-gold/25 p-6 rounded-2xl bg-cream/30 max-w-xl text-center">
-                <span className="text-5xl">👥</span>
-                <h4 className="font-serif text-xl font-bold text-green-dark mt-4">Aucun cercle de voyage actif</h4>
-                <p className="text-xs text-text-muted mt-2 max-w-md mx-auto leading-relaxed">
-                  Vous n'êtes pour le moment membre d'aucun cercle évasion. Créez-en un dès maintenant et invitez des membres à vous rejoindre !
+            <div className="space-y-6 text-left animate-in fade-in duration-500">
+              <div className="bg-white border border-gold/15 p-8 rounded-[36px] shadow-soft">
+                <h3 className="font-serif text-3xl font-bold text-green-dark">Cercle Évasion IBC</h3>
+                <p className="text-text-muted text-sm leading-relaxed max-w-2xl mt-2">
+                  Créez un cercle privé avec vos proches membres d'IBC et cumulez vos cagnottes cashback pour financer des séjours collectifs.
                 </p>
-                <button 
-                  onClick={() => toast('Création de cercle bientôt disponible !', { icon: '✨' })}
-                  className="mt-6 bg-green-dark hover:bg-[#031d0f] text-gold font-bold px-8 py-3 rounded-xl uppercase tracking-widest text-[10px]"
-                >
-                  Créer un Cercle Évasion
-                </button>
+                <div className="bg-cream/30 border border-gold/20 p-5 rounded-2xl mt-6 flex flex-col sm:flex-row gap-3 sm:items-end">
+                  <div className="flex-1">
+                    <label className="text-[10px] uppercase tracking-wider text-text-muted font-bold">Nom du cercle</label>
+                    <input value={newCircle.name} onChange={(e) => setNewCircle({ ...newCircle, name: e.target.value })} placeholder="Ex : Team Assinie 2026"
+                      className="w-full mt-1 bg-white border border-gold/20 rounded-lg px-3 py-2 text-sm text-green-dark outline-none focus:border-gold" />
+                  </div>
+                  <div className="sm:w-44">
+                    <label className="text-[10px] uppercase tracking-wider text-text-muted font-bold">Objectif (FCFA)</label>
+                    <input type="number" min="0" value={newCircle.target} onChange={(e) => setNewCircle({ ...newCircle, target: e.target.value })} placeholder="200000"
+                      className="w-full mt-1 bg-white border border-gold/20 rounded-lg px-3 py-2 text-sm text-green-dark outline-none focus:border-gold" />
+                  </div>
+                  <button onClick={handleCreateCircle} className="bg-green-dark hover:bg-[#031d0f] text-gold font-bold px-6 py-2.5 rounded-lg uppercase tracking-widest text-[10px] whitespace-nowrap">+ Créer</button>
+                </div>
+              </div>
+
+              <div className="grid gap-4 md:grid-cols-2">
+                {circles.map((c) => {
+                  const pct = c.target_amount > 0 ? Math.min(100, Math.round((c.total_pooled / c.target_amount) * 100)) : 0;
+                  return (
+                    <div key={c.id} className="bg-white border border-gold/15 p-6 rounded-3xl shadow-soft">
+                      <div className="flex items-center justify-between border-b border-gold/10 pb-3 mb-3">
+                        <h4 className="font-serif text-lg font-bold text-green-dark flex items-center gap-2">
+                          {c.name} {c.is_owner && <span className="text-[8px] bg-gold/20 text-gold px-2 py-0.5 rounded-full uppercase">Propriétaire</span>}
+                        </h4>
+                        <span className="text-[10px] text-text-muted flex items-center gap-1"><Users size={12} /> {c.member_count}</span>
+                      </div>
+                      <div className="flex justify-between text-xs font-semibold text-text mb-2">
+                        <span>Cagnotte commune</span>
+                        <span className="font-mono text-green-dark">{formatPrice(c.total_pooled)}{c.target_amount > 0 ? ` / ${formatPrice(c.target_amount)}` : ''} FCFA</span>
+                      </div>
+                      {c.target_amount > 0 && (
+                        <div className="h-3 rounded-full bg-gold/15 border border-gold/20 overflow-hidden shadow-inner mb-2">
+                          <div className="h-full rounded-full bg-gradient-to-r from-green-dark to-green-mid" style={{ width: `${pct}%` }} />
+                        </div>
+                      )}
+                      <p className="text-[10px] text-text-muted mb-4">Ma contribution : <strong className="text-green-dark">{formatPrice(c.my_contribution)} FCFA</strong></p>
+                      <div className="flex flex-wrap gap-2">
+                        <button onClick={() => handleContributeCircle(c)} className="flex-1 bg-[#031d0f] hover:bg-green-dark text-gold text-[9px] uppercase tracking-widest font-bold py-2.5 rounded-lg">Contribuer</button>
+                        {c.is_owner ? (
+                          <button onClick={() => handleInviteCircle(c)} className="flex-1 border border-green-dark text-green-dark hover:bg-cream text-[9px] uppercase tracking-widest font-bold py-2.5 rounded-lg">Inviter</button>
+                        ) : (
+                          <button onClick={() => handleLeaveCircle(c)} className="px-3 border border-red-200 text-red-500 hover:bg-red-50 rounded-lg text-[9px] uppercase tracking-widest font-bold">Quitter</button>
+                        )}
+                      </div>
+                    </div>
+                  );
+                })}
+                {circles.length === 0 && (
+                  <div className="md:col-span-2 text-center text-text-muted italic text-sm py-10 bg-white border border-gold/15 rounded-3xl">
+                    Vous n'êtes membre d'aucun cercle. Créez-en un ci-dessus 👆
+                  </div>
+                )}
               </div>
             </div>
           )}
@@ -1669,23 +1762,45 @@ export const MemberDashboardView: React.FC<MemberDashboardViewProps> = ({ user, 
 
           {/* ─── TAB 10: EXPERIENCES TAB ─── */}
           {activeTab === 'experiences' && (
-            <div className="space-y-6 text-left animate-in fade-in duration-500 bg-white border border-gold/15 p-8 rounded-[36px] shadow-soft">
-              <h3 className="font-serif text-3xl font-bold text-green-dark">Mes Expériences & Agenda</h3>
-              <p className="text-text-muted text-sm leading-relaxed max-w-2xl">
-                Retrouvez l'historique et l'agenda de toutes vos participations aux escapades d'Ivoire Business Club.
-              </p>
-              
-              <div className="space-y-4 max-w-xl mt-8">
-                {experiences.map((exp) => (
-                  <div key={exp.id} className="flex gap-4 p-4 border border-gold/10 rounded-2xl bg-cream/35 items-center">
-                    <img src={exp.imageUrl} alt={exp.title} className="w-16 h-16 object-cover rounded-xl border border-gold/10 shadow-sm shrink-0" />
-                    <div>
-                      <h4 className="font-serif font-bold text-green-dark text-lg">{exp.title}</h4>
-                      <p className="text-xs text-text-muted mt-0.5">{exp.date}</p>
-                      <p className="text-xs text-[#8C6239] font-medium">{exp.location}</p>
+            <div className="space-y-6 text-left animate-in fade-in duration-500">
+              <div className="bg-white border border-gold/15 p-8 rounded-[36px] shadow-soft">
+                <h3 className="font-serif text-3xl font-bold text-green-dark">Expériences & Agenda</h3>
+                <p className="text-text-muted text-sm leading-relaxed max-w-2xl mt-2">
+                  Réservez votre place aux escapades et événements exclusifs d'Ivoire Business Club.
+                </p>
+              </div>
+
+              <div className="grid gap-4 md:grid-cols-2">
+                {experiencesList.map((exp) => {
+                  const booked = bookedIds.has(exp.id);
+                  return (
+                    <div key={exp.id} className="bg-white border border-gold/15 rounded-3xl shadow-soft overflow-hidden flex flex-col">
+                      <img
+                        src={exp.image_url || 'https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?auto=format&fit=crop&q=80&w=600'}
+                        alt={exp.title} loading="lazy"
+                        className="w-full h-40 object-cover"
+                      />
+                      <div className="p-5 flex flex-col flex-1">
+                        <h4 className="font-serif text-lg font-bold text-green-dark">{exp.title}</h4>
+                        <p className="text-[11px] text-text-muted mt-0.5">{fmtEventDate(exp.event_date)}{exp.location ? ` • ${exp.location}` : ''}</p>
+                        {exp.description && <p className="text-xs text-text-muted mt-2 leading-snug line-clamp-3">{exp.description}</p>}
+                        <div className="flex items-center justify-between mt-4 pt-3 border-t border-gold/10">
+                          <span className="font-mono text-sm font-bold text-green-dark">{exp.price > 0 ? `${formatPrice(exp.price)} FCFA` : 'Gratuit'}</span>
+                          {booked ? (
+                            <button onClick={() => handleCancelBooking(exp)} className="text-[9px] uppercase tracking-widest font-bold px-4 py-2 rounded-lg border border-red-200 text-red-500 hover:bg-red-50">Annuler</button>
+                          ) : (
+                            <button onClick={() => handleBook(exp)} className="text-[9px] uppercase tracking-widest font-bold px-4 py-2 rounded-lg bg-green-dark hover:bg-[#031d0f] text-gold">Réserver</button>
+                          )}
+                        </div>
+                      </div>
                     </div>
+                  );
+                })}
+                {experiencesList.length === 0 && (
+                  <div className="md:col-span-2 text-center text-text-muted italic text-sm py-10 bg-white border border-gold/15 rounded-3xl">
+                    Aucune expérience programmée pour le moment.
                   </div>
-                ))}
+                )}
               </div>
             </div>
           )}
