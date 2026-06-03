@@ -229,6 +229,7 @@ export async function getCurrentMemberProfile(uid: string): Promise<Member | nul
     tier: data.tier,
     balance: data.balance || 0,
     totalSpent: data.total_spent || 0,
+    points: data.points || 0,
     paymentMethod: data.payment_method,
     photoURL: data.photo_url || defaultAvatar(data.name),
     qrCode: data.qr_code,

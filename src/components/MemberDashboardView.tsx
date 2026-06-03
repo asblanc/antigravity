@@ -73,30 +73,32 @@ export const MemberDashboardView: React.FC<MemberDashboardViewProps> = ({ user, 
   }, [user.uid, user.name]);
 
   // Derived calculations with fallback to match Yao K. screenshots
-  const displayName = user.name || 'Yao K.';
-  const balance = user.balance || 12500;
-  const totalSpent = user.totalSpent || 245000;
-  const visitsThisMonth = user.visitsThisMonth || 12;
+  const displayName = user.name || 'Membre';
+  const balance = user.balance ?? 0;
+  const totalSpent = user.totalSpent ?? 0;
+  const visitsThisMonth = transactions.length; // visites = transactions cashback chargées
   
-  const avatarUrl = user.photoURL || (displayName.includes('Yao') 
-    ? 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=100' 
-    : `https://ui-avatars.com/api/?name=${encodeURIComponent(displayName)}&background=1B3A2D&color=C9A84C`);
-  
-  const confirmedCashback = Math.floor(balance * 0.816) || 10200;
-  const bonusCashback = balance - confirmedCashback || 2300;
+  const avatarUrl = user.photoURL
+    || `https://ui-avatars.com/api/?name=${encodeURIComponent(displayName)}&background=1B3A2D&color=C9A84C`;
+
+  // Répartition cagnotte : tout le solde = cashback confirmé (pas de bonus séparé pour l'instant).
+  const confirmedCashback = balance;
+  const bonusCashback = 0;
+  // ⚠️ MOCK — "Objectifs" / "Épargne" non encore implémentés (aucune table dédiée).
   const goalTarget = 50000;
-  const currentGoalProgress = 31000; // Matches screenshot Yao K.
-  const goalProgressPercentage = Math.round((currentGoalProgress / goalTarget) * 100); // 62%
-  const savingsBalance = 7800; // Matches Épargne active screenshot
+  const currentGoalProgress = 0;
+  const goalProgressPercentage = Math.round((currentGoalProgress / goalTarget) * 100);
+  const savingsBalance = 0;
   
   // Dynamic referral stats from the service
-  const refereeCount = referralStats?.refereeCount ?? 5;
-  const referralBonus = referralStats?.referralBonus ?? 2500;
+  const refereeCount = referralStats?.refereeCount ?? 0;
+  const referralBonus = referralStats?.referralBonus ?? 0;
   const referralLink = referralStats?.referralLink ?? `https://ibc.ci/parrain/${displayName.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/\s+/g, '')}`;
   
-  const memberPoints = 9450; // Points mock pour compatibilité
-  // Pouvoir d'achat moyen mensuel pour évolution de statut
-  const spendingLevel = 28000; // FCFA — tranche Bronze: 10k–40k
+  const memberPoints = user.points ?? 0;
+  // Évolution de statut basée sur le total dépensé réel (tranches 10k → 100k+).
+  const spendingLevel = totalSpent;
+  const evolutionPct = Math.min(100, Math.max(0, ((totalSpent - 10000) / (100000 - 10000)) * 100));
   
   const handleCopyLink = () => {
     navigator.clipboard.writeText(referralLink);
@@ -405,7 +407,7 @@ export const MemberDashboardView: React.FC<MemberDashboardViewProps> = ({ user, 
                     expireDate: '12/27',
                     points: user.points || memberPoints,
                   }}
-                  className="w-full aspect-[1.586/1] min-h-[180px] sm:min-h-[200px] max-h-[280px]"
+                  className="w-full h-[200px] sm:h-[230px] md:h-[260px]"
                 />
               </div>
               
@@ -827,13 +829,13 @@ export const MemberDashboardView: React.FC<MemberDashboardViewProps> = ({ user, 
                     {/* Line Active Fill — Bronze: 10k–40k = environ 28% du parcours */}
                     <div 
                       className="absolute top-1/2 left-4 h-1 bg-gradient-to-r from-orange-500 to-gold -translate-y-1/2" 
-                      style={{ width: 'calc(31.5% * (100% - 32px))' }}
+                      style={{ width: `calc(${evolutionPct}% * (100% - 32px))` }}
                     />
 
                     {/* Floating spending badge */}
                     <div 
                       className="absolute -top-7 transform -translate-x-1/2 flex flex-col items-center"
-                      style={{ left: 'calc(16px + 31.5% * (100% - 32px))' }}
+                      style={{ left: `calc(16px + ${evolutionPct}% * (100% - 32px))` }}
                     >
                       <div className="bg-[#1B5E35] text-white text-[9px] font-extrabold px-2.5 py-0.5 rounded-full shadow-md whitespace-nowrap">
                         {formatPrice(spendingLevel)} F
