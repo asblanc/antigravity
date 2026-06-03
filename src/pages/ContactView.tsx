@@ -117,6 +117,25 @@ export const ContactView: React.FC = () => {
             <p className="text-[10px] text-text-muted text-center">Vos données ne sont utilisées que pour traiter votre demande.</p>
           </form>
         </div>
+
+        {/* Carte / plan d'accès */}
+        <div className="mt-10">
+          <div className="flex items-center gap-2 mb-4">
+            <MapPin size={16} className="text-gold" />
+            <h2 className="font-serif text-xl font-bold text-green-dark">Nous trouver</h2>
+          </div>
+          <div className="rounded-[28px] overflow-hidden border border-gold/15 shadow-soft">
+            <iframe
+              title="Localisation Ivoire Business Club — Cocody Ambassades, Abidjan"
+              src="https://www.google.com/maps?q=Cocody%20Ambassades%2C%20Abidjan%2C%20C%C3%B4te%20d'Ivoire&output=embed"
+              width="100%"
+              height="400"
+              loading="lazy"
+              style={{ border: 0 }}
+              referrerPolicy="no-referrer-when-downgrade"
+            />
+          </div>
+        </div>
       </div>
     </div>
   );
