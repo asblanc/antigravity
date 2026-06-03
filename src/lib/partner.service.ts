@@ -19,6 +19,7 @@ export async function registerPartner(data: {
   whatsapp: string;
   category: string;
   address: string;
+  description?: string;
   cashbackRate?: number;
   imageFile?: File | null;
 }): Promise<Partner> {
@@ -58,6 +59,7 @@ export async function registerPartner(data: {
     name: data.businessName,
     category: data.category,
     zone: data.address,
+    description: data.description || null,
     cashback_rate: data.cashbackRate ?? 5.0,
     image_url: imageUrl,
     active: false // Needs admin approval
