@@ -5,19 +5,23 @@
    ========================================================== */
 
 /* ─── BASE FIXES: NO HORIZONTAL SCROLL ─── */
+/* On évite max-width:100vw (inclut la largeur de la scrollbar -> léger
+   débordement horizontal = "ligne" aux bords). overflow-x:hidden suffit. */
 html, body {
   overflow-x: hidden !important;
-  max-width: 100vw !important;
+  width: 100%;
+  max-width: 100%;
 }
 
 #root, .min-h-screen {
-  overflow-x: hidden !important;
-  max-width: 100vw !important;
+  overflow-x: hidden;
+  max-width: 100%;
 }
 
+/* Images fluides — SANS forcer height:auto (sinon les images object-cover à
+   hauteur fixe, cartes/hero, sont cassées et les sections paraissent mal empilées). */
 img, svg, video, canvas {
-  max-width: 100% !important;
-  height: auto !important;
+  max-width: 100%;
 }
 
 /* ─── SIDEBAR FIXES ─── */

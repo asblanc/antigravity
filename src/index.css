@@ -158,22 +158,31 @@
   }
 }
 
-/* Hero indicator dots */
+/* Hero indicator — fines barres segmentées (rendu sobre & pro) */
 .hero-dot {
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  background: rgba(255,255,255,0.35);
-  border: 1px solid rgba(255,255,255,0.5);
-  transition: all 0.4s ease;
+  width: 16px;
+  height: 2px;
+  border-radius: 2px;
+  background: rgba(255, 255, 255, 0.35);
+  border: none;
+  padding: 0;
+  transition: width 0.4s ease, background-color 0.4s ease, box-shadow 0.4s ease;
   cursor: pointer;
+}
+
+.hero-dot:hover {
+  background: rgba(255, 255, 255, 0.6);
 }
 
 .hero-dot.active {
   background: #C9A84C;
-  border-color: #C9A84C;
-  width: 24px;
-  border-radius: 4px;
+  width: 34px;
+  box-shadow: 0 0 8px rgba(201, 168, 76, 0.45);
+}
+
+@media (min-width: 640px) {
+  .hero-dot { width: 22px; }
+  .hero-dot.active { width: 46px; }
 }
 
 /* Navigation hover underline effect */
