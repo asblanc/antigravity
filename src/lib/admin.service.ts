@@ -177,3 +177,47 @@ export async function getAdminReferrals(): Promise<AdminReferral[]> {
     return [];
   }
 }
+
+// ─── Abonnements ─────────────────────────────────────────────────────────────
+export interface AdminSubscription {
+  id: string;
+  plan: string;
+  amount: number;
+  payment_method: string | null;
+  status: 'pending' | 'active' | 'expired' | 'cancelled';
+  started_at: string | null;
+  expires_at: string | null;
+  created_at: string;
+  memberName: string;
+}
+
+export async function getAdminSubscriptions(): Promise<AdminSubscription[]> {
+  try {
+    const { data, error } = await supabase
+      .from('subscriptions')
+      .select('id, plan, amount, payment_method, status, started_at, expires_at, created_at, member:profiles!member_id(name)')
+      .order('created_at', { ascending: false });
+    if (error || !data) return [];
+    return data.map((d: any) => ({
+      id: d.id,
+      plan: d.plan,
+      amount: d.amount,
+      payment_method: d.payment_method,
+      status: d.status,
+      started_at: d.started_at,
+      expires_at: d.expires_at,
+      created_at: d.created_at,
+      memberName: d.member?.name || 'Membre',
+    }));
+  } catch {
+    return [];
+  }
+}
+
+export async function reviewSubscription(
+  id: string,
+  status: 'active' | 'cancelled' | 'expired',
+): Promise<void> {
+  const { error } = await supabase.rpc('admin_review_subscription', { p_id: id, p_status: status });
+  if (error) throw new Error(error.message);
+}

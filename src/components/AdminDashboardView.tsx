@@ -3,13 +3,14 @@ import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-hot-toast';
 import {
   LayoutDashboard, Users, Store, CreditCard, Gift, LogOut, ChevronLeft,
-  Loader2, CheckCircle, XCircle, Wallet, TrendingUp, Award, Clock,
+  Loader2, CheckCircle, XCircle, Wallet, TrendingUp, Award, Clock, Banknote,
 } from 'lucide-react';
 import {
   getAdminOverview, getAdminMembers, setMemberActive, setMemberTier, adjustMemberBalance,
   getAdminEstablishments, updateEstablishment, getAdminTransactions, reviewTransaction,
-  getAdminReferrals,
-  type AdminOverview, type AdminMember, type AdminEstablishment, type AdminTransaction, type AdminReferral,
+  getAdminReferrals, getAdminSubscriptions, reviewSubscription,
+  type AdminOverview, type AdminMember, type AdminEstablishment, type AdminTransaction,
+  type AdminReferral, type AdminSubscription,
 } from '../lib/admin.service';
 
 const fmt = (n: number): string => (n ?? 0).toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
@@ -19,6 +20,7 @@ const TABS = [
   { id: 'members', label: 'Membres', icon: Users },
   { id: 'partners', label: 'Établissements', icon: Store },
   { id: 'transactions', label: 'Transactions', icon: CreditCard },
+  { id: 'subscriptions', label: 'Abonnements', icon: Banknote },
   { id: 'referrals', label: 'Parrainages', icon: Gift },
 ] as const;
 
@@ -41,6 +43,7 @@ export const AdminDashboardView: React.FC<{ onLogout: () => void }> = ({ onLogou
   const [establishments, setEstablishments] = useState<AdminEstablishment[]>([]);
   const [transactions, setTransactions] = useState<AdminTransaction[]>([]);
   const [referrals, setReferrals] = useState<AdminReferral[]>([]);
+  const [subscriptions, setSubscriptions] = useState<AdminSubscription[]>([]);
 
   const load = useCallback(async (which: string) => {
     setLoading(true);
@@ -49,6 +52,7 @@ export const AdminDashboardView: React.FC<{ onLogout: () => void }> = ({ onLogou
       else if (which === 'members') setMembers(await getAdminMembers());
       else if (which === 'partners') setEstablishments(await getAdminEstablishments());
       else if (which === 'transactions') setTransactions(await getAdminTransactions());
+      else if (which === 'subscriptions') setSubscriptions(await getAdminSubscriptions());
       else if (which === 'referrals') setReferrals(await getAdminReferrals());
     } catch (e: any) {
       toast.error(e?.message || 'Erreur de chargement');
@@ -113,6 +117,14 @@ export const AdminDashboardView: React.FC<{ onLogout: () => void }> = ({ onLogou
       await reviewTransaction(t.id, status);
       toast.success(status === 'confirmed' ? 'Transaction confirmée' : 'Transaction rejetée');
       load('transactions');
+    } catch (e: any) { toast.error(e.message); }
+  };
+
+  const handleReviewSub = async (s: AdminSubscription, status: 'active' | 'cancelled') => {
+    try {
+      await reviewSubscription(s.id, status);
+      toast.success(status === 'active' ? 'Abonnement activé' : 'Abonnement annulé');
+      load('subscriptions');
     } catch (e: any) { toast.error(e.message); }
   };
 
@@ -325,6 +337,48 @@ export const AdminDashboardView: React.FC<{ onLogout: () => void }> = ({ onLogou
                       </tr>
                     ))}
                     {!loading && transactions.length === 0 && <tr><td colSpan={7} className="p-8 text-center text-white/40 italic">Aucune transaction.</td></tr>}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          )}
+
+          {/* ── SUBSCRIPTIONS ── */}
+          {tab === 'subscriptions' && (
+            <div className="space-y-4">
+              <h2 className="font-serif text-2xl text-gold">Abonnements ({subscriptions.length})</h2>
+              <div className="grid gap-4 sm:grid-cols-3">
+                <Kpi icon={Banknote} label="Revenu actif (MRR)" value={`${fmt(subscriptions.filter(s => s.status === 'active').reduce((t, s) => t + (s.amount || 0), 0))} F`} />
+                <Kpi icon={CheckCircle} label="Abonnements actifs" value={fmt(subscriptions.filter(s => s.status === 'active').length)} />
+                <Kpi icon={Clock} label="En attente de paiement" value={fmt(subscriptions.filter(s => s.status === 'pending').length)} />
+              </div>
+              <div className="bg-white/5 border border-gold/20 rounded-2xl overflow-x-auto">
+                <table className="w-full text-left text-sm">
+                  <thead>
+                    <tr className="bg-green-dark text-[10px] uppercase tracking-widest text-gold">
+                      <th className="p-3">Membre</th><th className="p-3">Plan</th><th className="p-3">Paiement</th>
+                      <th className="p-3 text-right">Montant</th><th className="p-3">Échéance</th>
+                      <th className="p-3 text-center">Statut</th><th className="p-3 text-center">Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {subscriptions.map((s) => (
+                      <tr key={s.id} className="border-b border-white/5 hover:bg-white/5">
+                        <td className="p-3">{s.memberName}</td>
+                        <td className="p-3 uppercase text-xs">{s.plan}</td>
+                        <td className="p-3 text-white/60 text-xs">{s.payment_method || '—'}</td>
+                        <td className="p-3 text-right font-mono text-gold">{fmt(s.amount)} F</td>
+                        <td className="p-3 text-white/60 text-xs">{s.expires_at ? new Intl.DateTimeFormat('fr-FR', { dateStyle: 'short' }).format(new Date(s.expires_at)) : '—'}</td>
+                        <td className="p-3 text-center"><span className={`text-[10px] px-2 py-0.5 rounded-full border ${STATUS_STYLE[s.status] || STATUS_STYLE.pending}`}>{s.status}</span></td>
+                        <td className="p-3">
+                          <div className="flex items-center justify-center gap-2">
+                            {s.status !== 'active' && <button onClick={() => handleReviewSub(s, 'active')} title="Activer (paiement reçu)" className="text-green-400 hover:text-green-300"><CheckCircle size={16} /></button>}
+                            {s.status !== 'cancelled' && <button onClick={() => handleReviewSub(s, 'cancelled')} title="Annuler" className="text-red-400 hover:text-red-300"><XCircle size={16} /></button>}
+                          </div>
+                        </td>
+                      </tr>
+                    ))}
+                    {!loading && subscriptions.length === 0 && <tr><td colSpan={7} className="p-8 text-center text-white/40 italic">Aucun abonnement (ou table subscriptions non créée).</td></tr>}
                   </tbody>
                 </table>
               </div>

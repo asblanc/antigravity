@@ -14,6 +14,7 @@ import type { Member, Transaction, Offer } from '../lib/mock-api';
 import { getMemberTransactions } from '../lib/transaction.service';
 import { getReferralStats, getMemberReferrals } from '../lib/referral.service';
 import type { Referral, ReferralStats } from '../lib/referral.service';
+import { getMySubscription, subscribe, type Subscription } from '../lib/subscription.service';
 import { MemberCard } from './MemberCard';
 import ibcLogo from '../assets/ibc-logo.webp';
 
@@ -43,6 +44,8 @@ export const MemberDashboardView: React.FC<MemberDashboardViewProps> = ({ user, 
   const [referrals, setReferrals] = useState<Referral[]>([]);
   const [referralStats, setReferralStats] = useState<ReferralStats | null>(null);
   const [isLoadingReferrals, setIsLoadingReferrals] = useState<boolean>(true);
+  const [mySubscription, setMySubscription] = useState<Subscription | null>(null);
+  const [subscribing, setSubscribing] = useState<boolean>(false);
 
   // Fetch transactions and referrals on mount
   useEffect(() => {
@@ -68,9 +71,28 @@ export const MemberDashboardView: React.FC<MemberDashboardViewProps> = ({ user, 
       } finally {
         setIsLoadingReferrals(false);
       }
+
+      try {
+        setMySubscription(await getMySubscription(user.uid));
+      } catch (e) {
+        console.error('Failed to load subscription:', e);
+      }
     };
     fetchData();
   }, [user.uid, user.name]);
+
+  const handleSubscribe = async () => {
+    setSubscribing(true);
+    try {
+      await subscribe((user.tier as string) || 'bronze', (user as any).paymentMethod || 'orange');
+      toast.success("Demande d'adhésion envoyée — en attente de validation du paiement.");
+      setMySubscription(await getMySubscription(user.uid));
+    } catch (e: any) {
+      toast.error(e?.message || "Erreur lors de la souscription");
+    } finally {
+      setSubscribing(false);
+    }
+  };
 
   // Derived calculations with fallback to match Yao K. screenshots
   const displayName = user.name || 'Membre';
@@ -411,6 +433,37 @@ export const MemberDashboardView: React.FC<MemberDashboardViewProps> = ({ user, 
                 />
               </div>
               
+              {/* ─── MON ADHÉSION ─── */}
+              <div className="rounded-[28px] bg-white border border-gold/15 shadow-soft p-5 flex flex-col sm:flex-row items-center justify-between gap-4">
+                <div className="flex items-center gap-4">
+                  <div className="w-11 h-11 rounded-2xl bg-green-dark flex items-center justify-center text-gold shrink-0">
+                    <Banknote size={20} />
+                  </div>
+                  <div>
+                    <p className="text-[10px] uppercase tracking-[0.3em] text-text-muted font-bold">Mon adhésion</p>
+                    {mySubscription?.status === 'active' ? (
+                      <p className="text-sm font-semibold text-green-dark mt-0.5">
+                        Plan <span className="uppercase">{mySubscription.plan}</span> actif
+                        {mySubscription.expires_at && <> — jusqu'au {new Intl.DateTimeFormat('fr-FR', { dateStyle: 'medium' }).format(new Date(mySubscription.expires_at))}</>}
+                      </p>
+                    ) : mySubscription?.status === 'pending' ? (
+                      <p className="text-sm font-semibold text-amber-600 mt-0.5">Paiement en attente de validation</p>
+                    ) : (
+                      <p className="text-sm font-semibold text-text-muted mt-0.5">Aucune adhésion active</p>
+                    )}
+                  </div>
+                </div>
+                {mySubscription?.status !== 'pending' && (
+                  <button
+                    onClick={handleSubscribe}
+                    disabled={subscribing}
+                    className="bg-[#031d0f] hover:bg-green-dark text-gold text-[10px] uppercase tracking-[0.25em] font-bold px-6 py-3 rounded-full transition-all disabled:opacity-50 whitespace-nowrap"
+                  >
+                    {subscribing ? '…' : mySubscription?.status === 'active' ? 'Renouveler' : 'Souscrire / Payer'}
+                  </button>
+                )}
+              </div>
+
               {/* ─── ROW 1: CORE GRID (3 CARDS) ─── */}
               <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-[1.6fr_1fr_1.1fr]">
                 
