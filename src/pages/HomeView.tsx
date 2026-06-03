@@ -6,12 +6,14 @@ import { Seo } from '../components/Seo';
 import { supabase } from '../lib/supabase';
 import { FadeImage } from '../components/FadeImage';
 
+// Images locales fiables (servies par le site) — évite la dépendance à des
+// hôtes externes parfois bloqués sur certains réseaux (images.unsplash.com).
+const LOCAL_IMGS = ['/hero-restaurant.webp', '/hero-lounge.webp', '/hero-beach.webp'];
+
 const HERO_IMAGES: { src: string; webp?: string; alt: string }[] = [
   { src: '/hero-lounge.jpg', webp: '/hero-lounge.webp', alt: 'Rooftop lounge vue sur Abidjan' },
   { src: '/hero-restaurant.jpg', webp: '/hero-restaurant.webp', alt: 'Restaurant gastronomique premium' },
   { src: '/hero-beach.jpg', webp: '/hero-beach.webp', alt: 'Beach Club Assinie en bord de mer' },
-  { src: 'https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&q=80&w=1920', alt: 'Resort tropical en bord de mer' },
-  { src: 'https://images.unsplash.com/photo-1540555700478-4be289fbecef?auto=format&fit=crop&q=80&w=1920', alt: 'Spa et bien-être haut de gamme' },
 ];
 
 export const HomeView: React.FC = () => {
@@ -241,18 +243,18 @@ export const HomeView: React.FC = () => {
           {/* Cards partenaires */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
             {[
-              { name: 'Sofitel Abidjan', cat: 'Hébergements et Séjours', zone: 'Cocody', cashback: '3-7%', img: 'https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?auto=format&fit=crop&q=80&w=600' },
-              { name: 'Sky Lounge', cat: 'Lounges et Nightlife', zone: 'Marcory', cashback: '5%', img: 'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&q=80&w=600' },
-              { name: 'Radisson Blu', cat: 'Hébergements et Séjours', zone: 'Port-Bouet', cashback: '3-7%', img: 'https://images.unsplash.com/photo-1445019980597-93fa8acb246c?auto=format&fit=crop&q=80&w=600' },
-              { name: 'Maison Akoula', cat: 'Beach Clubs et Loisirs', zone: 'Assinie', cashback: '5%', img: 'https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?auto=format&fit=crop&q=80&w=600' },
-              { name: 'Le Grand Large', cat: 'Restaurants et Dining', zone: 'Zone 4', cashback: '5%', img: 'https://images.unsplash.com/photo-1514362545857-3bc16c4c7d1b?auto=format&fit=crop&q=80&w=600' },
-              { name: 'Orchidée Spa', cat: 'Bien-être et Wellness', zone: 'Cocody', cashback: '5%', img: 'https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&q=80&w=600' }
+              { name: 'Sofitel Abidjan', cat: 'Hébergements et Séjours', zone: 'Cocody', cashback: '3-7%', img: '/assets/pullman-hotel.png' },
+              { name: 'Sky Lounge', cat: 'Lounges et Nightlife', zone: 'Marcory', cashback: '5%', img: '/hero-lounge.webp' },
+              { name: 'Radisson Blu', cat: 'Hébergements et Séjours', zone: 'Port-Bouet', cashback: '3-7%', img: '/assets/pullman-hotel.png' },
+              { name: 'Maison Akoula', cat: 'Beach Clubs et Loisirs', zone: 'Assinie', cashback: '5%', img: '/hero-beach.webp' },
+              { name: 'Le Grand Large', cat: 'Restaurants et Dining', zone: 'Zone 4', cashback: '5%', img: '/hero-restaurant.webp' },
+              { name: 'Orchidée Spa', cat: 'Bien-être et Wellness', zone: 'Cocody', cashback: '5%', img: '/hero-lounge.webp' }
             ]
               .filter(place => activeFilter === 'Tous' || place.cat === activeFilter)
               .map((place, i) => (
                 <div key={i} className="hover-lift bg-white border border-gold/10 rounded-xl overflow-hidden hover:border-gold/30 hover:shadow-premium transition-all duration-500 group cursor-pointer" onClick={() => navigate('/offers')}>
                   <div className="relative overflow-hidden h-40 sm:h-48">
-                    <FadeImage src={place.img} alt={place.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
+                    <FadeImage src={LOCAL_IMGS[i % LOCAL_IMGS.length]} alt={place.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
                     <span className="absolute top-3 left-3 bg-green-dark/90 backdrop-blur-sm text-gold text-[8px] sm:text-[9px] uppercase tracking-widest font-bold px-3 py-1 rounded-sm">{place.cat}</span>
                   </div>
                   <div className="p-4 sm:p-6 text-left">
@@ -408,12 +410,12 @@ export const HomeView: React.FC = () => {
           <div className="flex-1 w-full relative">
             <div className="grid grid-cols-2 gap-3 sm:gap-6 relative">
               <div className="space-y-3 sm:space-y-6 mt-8 sm:mt-12">
-                <img src="https://images.unsplash.com/photo-1514362545857-3bc16c4c7d1b?auto=format&fit=crop&q=80&w=600" alt="Restaurant gastronomique" loading="lazy" className="rounded-2xl w-full h-32 sm:h-64 object-cover shadow-lg" />
-                <img src="https://images.unsplash.com/photo-1540555700478-4be289fbecef?auto=format&fit=crop&q=80&w=600" alt="Beach Club Assinie" loading="lazy" className="rounded-2xl w-full h-24 sm:h-48 object-cover shadow-lg" />
+                <img src="/hero-restaurant.webp" alt="Restaurant gastronomique" loading="lazy" className="rounded-2xl w-full h-32 sm:h-64 object-cover shadow-lg" />
+                <img src="/hero-beach.webp" alt="Beach Club Assinie" loading="lazy" className="rounded-2xl w-full h-24 sm:h-48 object-cover shadow-lg" />
               </div>
               <div className="space-y-3 sm:space-y-6">
-                <img src="https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?auto=format&fit=crop&q=80&w=600" alt="Hôtel Premium" loading="lazy" className="rounded-2xl w-full h-24 sm:h-48 object-cover shadow-lg" />
-                <img src="https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&q=80&w=600" alt="Rooftop Lounge" loading="lazy" className="rounded-2xl w-full h-32 sm:h-64 object-cover shadow-lg" />
+                <img src="/assets/pullman-hotel.png" alt="Hôtel Premium" loading="lazy" className="rounded-2xl w-full h-24 sm:h-48 object-cover shadow-lg" />
+                <img src="/hero-lounge.webp" alt="Rooftop Lounge" loading="lazy" className="rounded-2xl w-full h-32 sm:h-64 object-cover shadow-lg" />
               </div>
             </div>
           </div>

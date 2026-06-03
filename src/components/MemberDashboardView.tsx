@@ -349,10 +349,10 @@ export const MemberDashboardView: React.FC<MemberDashboardViewProps> = ({ user, 
 
   // Carousel of recommended offers at the bottom
   const recommendations = [
-    { id: 1, name: 'La Plage', location: 'Grand-Bassam', discount: '-20%', img: 'https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?auto=format&fit=crop&q=80&w=300' },
-    { id: 2, name: 'Azar Club', location: 'Cocody', discount: '-15%', img: 'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&q=80&w=300' },
-    { id: 3, name: 'Hôtel Tiama', location: 'Marcory', discount: '-25%', img: 'https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?auto=format&fit=crop&q=80&w=300' },
-    { id: 4, name: 'Assinie Lodge', location: 'Assinie', discount: '-20%', img: 'https://images.unsplash.com/photo-1445019980597-93fa8acb246c?auto=format&fit=crop&q=80&w=300' }
+    { id: 1, name: 'La Plage', location: 'Grand-Bassam', discount: '-20%', img: '/hero-beach.webp' },
+    { id: 2, name: 'Azar Club', location: 'Cocody', discount: '-15%', img: '/hero-lounge.webp' },
+    { id: 3, name: 'Hôtel Tiama', location: 'Marcory', discount: '-25%', img: '/assets/pullman-hotel.png' },
+    { id: 4, name: 'Assinie Lodge', location: 'Assinie', discount: '-20%', img: '/assets/pullman-hotel.png' }
   ];
 
   // Sidebar Render Component
@@ -834,7 +834,7 @@ export const MemberDashboardView: React.FC<MemberDashboardViewProps> = ({ user, 
                   {/* Destination with circular image — matches mockup */}
                   <div className="flex items-center gap-3 mb-1">
                     <img
-                      src="https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?auto=format&fit=crop&q=80&w=96&h=96"
+                      src="/hero-beach.webp"
                       alt="Weekend Assinie"
                       className="w-11 h-11 rounded-full object-cover border-2 border-gold/30 shadow-md shrink-0"
                     />
@@ -1213,7 +1213,7 @@ export const MemberDashboardView: React.FC<MemberDashboardViewProps> = ({ user, 
                         onClick={() => setActiveTab('experiences')}
                       >
                         <img
-                          src={exp.image_url || 'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&q=80&w=200'}
+                          src={exp.image_url || '/hero-lounge.webp'}
                           alt={exp.title}
                           loading="lazy"
                           className="w-10 h-10 object-cover rounded-lg shrink-0 border border-gold/10 shadow-sm"
@@ -1815,7 +1815,7 @@ export const MemberDashboardView: React.FC<MemberDashboardViewProps> = ({ user, 
                   return (
                     <div key={exp.id} className="bg-white border border-gold/15 rounded-3xl shadow-soft overflow-hidden flex flex-col">
                       <img
-                        src={exp.image_url || 'https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?auto=format&fit=crop&q=80&w=600'}
+                        src={exp.image_url || '/hero-beach.webp'}
                         alt={exp.title} loading="lazy"
                         className="w-full h-40 object-cover"
                       />

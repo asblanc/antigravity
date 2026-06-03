@@ -383,10 +383,10 @@ export const MemberRegistrationView: React.FC<{ onRegister: (data: any) => Promi
             </div>
             <div className="grid gap-4 grid-cols-2 lg:grid-cols-4">
               {[
-                { name: 'Sunset Lounge', location: 'Abidjan, Cocody', discount: '-20%', img: 'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&q=80&w=300' },
-                { name: 'Brunch & Chill', location: 'Bingerville', discount: '-15%', img: 'https://images.unsplash.com/photo-1514362545857-3bc16c4c7d1b?auto=format&fit=crop&q=80&w=300' },
-                { name: 'Weekend Assinie', location: 'Assinie', discount: '-25%', img: 'https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?auto=format&fit=crop&q=80&w=300' },
-                { name: 'Sofitel Abidjan', location: 'Abidjan, Cocody', discount: '-20%', img: 'https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?auto=format&fit=crop&q=80&w=300' },
+                { name: 'Sunset Lounge', location: 'Abidjan, Cocody', discount: '-20%', img: '/hero-lounge.webp' },
+                { name: 'Brunch & Chill', location: 'Bingerville', discount: '-15%', img: '/hero-restaurant.webp' },
+                { name: 'Weekend Assinie', location: 'Assinie', discount: '-25%', img: '/hero-beach.webp' },
+                { name: 'Sofitel Abidjan', location: 'Abidjan, Cocody', discount: '-20%', img: '/assets/pullman-hotel.png' },
               ].map((place, idx) => (
                 <div key={idx} className="bg-white border border-gold/10 rounded-2xl overflow-hidden hover:border-gold/30 hover:shadow-soft transition-all duration-300 group">
                   <div className="relative overflow-hidden h-28">
