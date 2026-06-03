@@ -1,4 +1,5 @@
 import React, { useState, useId } from 'react';
+import { Palmtree, Check } from 'lucide-react';
 
 // ─── Types ──────────────────────────────────────────────────────────────────
 
@@ -162,7 +163,7 @@ export const MemberCard: React.FC<{ data: MemberCardData; className?: string }> 
             <div className="flex items-center gap-2">
               <div className="flex items-center gap-1">
                 <span className="font-serif text-xl font-black tracking-tighter drop-shadow-md" style={{ color: data.tier === 'gold' ? '#1A1A1A' : '#FFD700' }}>IBC</span>
-                <span className="text-sm">🌴</span>
+                <Palmtree size={15} style={{ color: data.tier === 'gold' ? '#1A1A1A' : '#FFD700' }} />
               </div>
             </div>
             <div className="text-right">
@@ -235,7 +236,7 @@ export const MemberCard: React.FC<{ data: MemberCardData; className?: string }> 
             <div className="flex items-center justify-between mb-2 sm:mb-3">
               <div className="flex items-center gap-1.5">
                 <span className="font-serif text-base font-black tracking-tighter drop-shadow-md" style={{ color: data.tier === 'gold' ? '#1A1A1A' : '#FFD700' }}>IBC</span>
-                <span className="text-xs">🌴</span>
+                <Palmtree size={13} style={{ color: data.tier === 'gold' ? '#1A1A1A' : '#FFD700' }} />
               </div>
               <span className="text-[8px] uppercase tracking-[0.3em] font-bold px-2.5 py-0.5 rounded-full" style={{
                 background: 'rgba(255,255,255,0.12)', backdropFilter: 'blur(4px)',
@@ -265,7 +266,7 @@ export const MemberCard: React.FC<{ data: MemberCardData; className?: string }> 
               <div className="grid grid-cols-1 gap-0.5">
                 {tier.benefits.map((b, i) => (
                   <div key={i} className="flex items-center gap-1.5">
-                    <span className="text-[9px]" style={{ color: data.tier === 'bronze' ? '#CD7F32' : '#FFD700' }}>✓</span>
+                    <Check size={11} className="shrink-0" style={{ color: data.tier === 'bronze' ? '#CD7F32' : '#FFD700' }} />
                     <span className="text-[9px] sm:text-[10px] leading-snug opacity-85">{b}</span>
                   </div>
                 ))}

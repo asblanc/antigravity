@@ -8,7 +8,8 @@ import {
   Banknote, Users, Gift, MapPin, Compass, User, Settings,
   LogOut, Bell, ChevronRight, ChevronDown, Copy, Check,
   HelpCircle, X, Menu, ArrowRight, Shield, Award, Calendar,
-  Sparkles, Crown, BadgePercent, MessageSquare, Info
+  Sparkles, Crown, BadgePercent, MessageSquare, Info,
+  Palmtree, PiggyBank, Trophy, CheckCircle2, Ticket, Mail, ConciergeBell
 } from 'lucide-react';
 import type { Member, Transaction, Offer } from '../lib/mock-api';
 import { getMemberTransactions } from '../lib/transaction.service';
@@ -421,14 +422,14 @@ export const MemberDashboardView: React.FC<MemberDashboardViewProps> = ({ user, 
             </button>
             <div className="lg:hidden flex items-center gap-1.5">
               <span className="font-serif text-xl font-bold text-green-dark">IBC</span>
-              <span className="text-gold text-xs font-serif">🌴</span>
+              <Palmtree size={14} className="text-gold" />
             </div>
             <div className="hidden lg:block">
               <span className="text-[10px] uppercase tracking-[0.45em] text-text-muted font-bold block leading-none">
                 Bonjour
               </span>
               <h2 className="font-serif text-xl font-bold text-green-dark mt-1">
-                Bienvenue dans votre univers IBC <span className="text-gold">🌴</span>
+                Bienvenue dans votre univers IBC <Palmtree size={18} className="inline text-gold align-text-bottom" />
               </h2>
             </div>
           </div>
@@ -603,7 +604,7 @@ export const MemberDashboardView: React.FC<MemberDashboardViewProps> = ({ user, 
                 <div className="relative overflow-hidden rounded-[36px] bg-gradient-to-br from-[#1B5E35] to-[#0A2E18] p-8 text-white border border-gold/25 shadow-gold group min-h-[260px] flex flex-col justify-between">
                   {/* Palm Tree Glowing Vector Overlay */}
                   <div className="absolute right-0 bottom-0 top-0 w-1/2 opacity-15 pointer-events-none group-hover:opacity-25 transition-opacity duration-500 overflow-hidden">
-                    <span className="text-9xl absolute right-[-20px] bottom-[-20px] filter blur-[1px]">🌴</span>
+                    <Palmtree className="absolute right-[-10px] bottom-[-10px] text-gold/40" size={130} strokeWidth={1} />
                   </div>
                   
                   {/* Top Line */}
@@ -790,7 +791,7 @@ export const MemberDashboardView: React.FC<MemberDashboardViewProps> = ({ user, 
                     <div>
                       <h4 className="font-serif text-[15px] font-bold text-green-dark leading-tight flex items-center gap-1">
                         <span>{goalTitle}</span>
-                        <span>🌴</span>
+                        <Palmtree size={13} className="text-gold shrink-0" />
                       </h4>
                       <p className="text-[9px] text-text-muted mt-0.5">Objectif : {formatPrice(goalTarget)} FCFA</p>
                     </div>
@@ -844,9 +845,9 @@ export const MemberDashboardView: React.FC<MemberDashboardViewProps> = ({ user, 
                       <p className="text-[8px] text-text-muted uppercase font-bold tracking-wider">Épargne active</p>
                       <p className="font-serif text-lg font-bold text-green-dark mt-0.5">{formatPrice(savingsBalance)} FCFA</p>
                     </div>
-                    {/* Custom Green Piggybank circle */}
+                    {/* Tirelire épargne */}
                     <div className="w-9 h-9 rounded-full bg-green-dark/10 text-green-dark flex items-center justify-center shadow-inner">
-                      <span className="text-lg">🐷</span>
+                      <PiggyBank size={18} className="text-green-dark" />
                     </div>
                   </div>
 
@@ -1304,7 +1305,7 @@ export const MemberDashboardView: React.FC<MemberDashboardViewProps> = ({ user, 
                     className="bg-gold/10 border border-dashed border-gold/30 rounded-2xl p-6 flex flex-col justify-between text-left cursor-pointer group hover:bg-gold/20 hover:border-gold transition-all duration-500 col-span-2 md:col-span-1"
                   >
                     <div className="flex justify-between items-start">
-                      <span className="text-2xl">🌴</span>
+                      <Palmtree size={24} className="text-gold" />
                       <ArrowRight size={20} className="text-gold group-hover:translate-x-1.5 transition-transform" />
                     </div>
                     <div>
@@ -1330,13 +1331,13 @@ export const MemberDashboardView: React.FC<MemberDashboardViewProps> = ({ user, 
               
               <div className="grid gap-6 md:grid-cols-2 mt-8">
                 {[
-                  { title: 'Réductions Partenaires', desc: 'Profitez de tarifs réduits allant jusqu’à -30% sur vos consommations, séjours et loisirs auprès de notre catalogue exclusif d’établissements.', details: 'Actif chez tous les partenaires', active: true, icon: '🎫' },
-                  { title: 'Invitations Découvertes', desc: 'Soyez invité à nos soirées découvertes, vernissages et cocktails organisés par IBC ou ses partenaires.', details: 'Selon calendrier d’événements', active: true, icon: '✉️' },
-                  { title: 'Accès Prioritaire Événements', desc: 'Accédez en priorité aux réservations de nos événements les plus demandés, comme nos célèbres Weekend Assinie ou Brunch & Chill.', details: 'Nécessite le statut OR', active: false, icon: '👑' },
-                  { title: 'Services de Conciergerie Dédiée', desc: 'Bénéficiez d’une ligne de conciergerie dédiée sur WhatsApp pour toutes vos réservations d’hôtel, de table ou d’activités privées.', details: 'Nécessite le statut PLATINUM', active: false, icon: '🛎️' },
+                  { title: 'Réductions Partenaires', desc: 'Profitez de tarifs réduits allant jusqu’à -30% sur vos consommations, séjours et loisirs auprès de notre catalogue exclusif d’établissements.', details: 'Actif chez tous les partenaires', active: true, icon: Ticket },
+                  { title: 'Invitations Découvertes', desc: 'Soyez invité à nos soirées découvertes, vernissages et cocktails organisés par IBC ou ses partenaires.', details: 'Selon calendrier d’événements', active: true, icon: Mail },
+                  { title: 'Accès Prioritaire Événements', desc: 'Accédez en priorité aux réservations de nos événements les plus demandés, comme nos célèbres Weekend Assinie ou Brunch & Chill.', details: 'Nécessite le statut OR', active: false, icon: Crown },
+                  { title: 'Services de Conciergerie Dédiée', desc: 'Bénéficiez d’une ligne de conciergerie dédiée sur WhatsApp pour toutes vos réservations d’hôtel, de table ou d’activités privées.', details: 'Nécessite le statut PLATINUM', active: false, icon: ConciergeBell },
                 ].map((perk, i) => (
                   <div key={i} className={`p-6 border rounded-2xl flex gap-4 items-start ${perk.active ? 'bg-cream/30 border-gold/25' : 'bg-gray-50 border-gray-200 opacity-60'}`}>
-                    <span className="text-3xl">{perk.icon}</span>
+                    <span className="w-11 h-11 rounded-xl bg-green-dark/5 border border-gold/20 flex items-center justify-center shrink-0"><perk.icon size={20} className="text-gold" /></span>
                     <div className="space-y-1">
                       <h4 className="font-serif font-bold text-lg text-green-dark">{perk.title}</h4>
                       <p className="text-xs text-text-muted leading-relaxed">{perk.desc}</p>
@@ -1401,7 +1402,7 @@ export const MemberDashboardView: React.FC<MemberDashboardViewProps> = ({ user, 
                 </div>
               ) : (
                 <div className="py-20 text-center text-text-muted">
-                  <span className="text-5xl block mb-4">💳</span>
+                  <div className="flex justify-center mb-4"><CreditCard size={44} className="text-gold/60" /></div>
                   <h4 className="font-serif text-lg font-bold text-green-dark mb-1">Aucune transaction enregistrée</h4>
                   <p className="text-xs max-w-sm mx-auto leading-relaxed">
                     Présentez votre QR Code lors de votre passage dans un établissement partenaire pour accumuler votre premier cashback !
@@ -1421,17 +1422,17 @@ export const MemberDashboardView: React.FC<MemberDashboardViewProps> = ({ user, 
               
               <div className="grid gap-6 md:grid-cols-3 mt-8">
                 <div className="bg-cream/40 border border-gold/20 p-6 rounded-2xl text-center">
-                  <span className="text-3xl">💰</span>
+                  <div className="flex justify-center"><Wallet size={26} className="text-gold" /></div>
                   <h4 className="text-xs font-bold uppercase tracking-wider text-text-muted mt-3">Solde Total</h4>
                   <p className="font-serif text-2xl font-extrabold text-green-dark mt-2">{formatPrice(balance)} FCFA</p>
                 </div>
                 <div className="bg-[#FAF5E9]/50 border border-gold/15 p-6 rounded-2xl text-center">
-                  <span className="text-3xl">✅</span>
+                  <div className="flex justify-center"><CheckCircle2 size={26} className="text-green-600" /></div>
                   <h4 className="text-xs font-bold uppercase tracking-wider text-text-muted mt-3">Cashback Confirmé</h4>
                   <p className="font-serif text-2xl font-extrabold text-green-dark mt-2">{formatPrice(confirmedCashback)} FCFA</p>
                 </div>
                 <div className="bg-[#FAF5E9]/50 border border-gold/15 p-6 rounded-2xl text-center">
-                  <span className="text-3xl">🎁</span>
+                  <div className="flex justify-center"><Gift size={26} className="text-gold" /></div>
                   <h4 className="text-xs font-bold uppercase tracking-wider text-text-muted mt-3">Privilèges & Bonus</h4>
                   <p className="font-serif text-2xl font-extrabold text-green-dark mt-2">{formatPrice(bonusCashback)} FCFA</p>
                 </div>
@@ -1492,7 +1493,7 @@ export const MemberDashboardView: React.FC<MemberDashboardViewProps> = ({ user, 
                     <div key={g.id} className="bg-white border border-gold/15 p-6 rounded-3xl shadow-soft">
                       <div className="flex items-center justify-between border-b border-gold/10 pb-3 mb-4">
                         <h4 className="font-serif text-lg font-bold text-green-dark flex items-center gap-2">
-                          {g.title} {g.status === 'reached' && <span title="Atteint">🏆</span>}
+                          {g.title} {g.status === 'reached' && <Trophy size={15} className="text-gold" />}
                         </h4>
                         <span className="bg-gold text-green-darker text-[10px] font-extrabold px-3 py-1 rounded-full uppercase tracking-wider">{pct}%</span>
                       </div>
@@ -1512,7 +1513,7 @@ export const MemberDashboardView: React.FC<MemberDashboardViewProps> = ({ user, 
                 })}
                 {goals.length === 0 && (
                   <div className="md:col-span-2 text-center text-text-muted italic text-sm py-10 bg-white border border-gold/15 rounded-3xl">
-                    Aucun objectif pour le moment. Créez-en un ci-dessus 👆
+                    Aucun objectif pour le moment. Créez-en un ci-dessus.
                   </div>
                 )}
               </div>
@@ -1533,7 +1534,7 @@ export const MemberDashboardView: React.FC<MemberDashboardViewProps> = ({ user, 
                   <p className="font-serif text-3xl font-extrabold text-green-dark mt-1">{formatPrice(savingsBalance)} FCFA</p>
                 </div>
                 <div className="w-14 h-14 bg-green-dark rounded-2xl flex items-center justify-center text-gold shadow-md">
-                  <span className="text-3xl">🐷</span>
+                  <PiggyBank size={28} className="text-gold" />
                 </div>
               </div>
 
@@ -1606,7 +1607,7 @@ export const MemberDashboardView: React.FC<MemberDashboardViewProps> = ({ user, 
                 })}
                 {circles.length === 0 && (
                   <div className="md:col-span-2 text-center text-text-muted italic text-sm py-10 bg-white border border-gold/15 rounded-3xl">
-                    Vous n'êtes membre d'aucun cercle. Créez-en un ci-dessus 👆
+                    Vous n'êtes membre d'aucun cercle. Créez-en un ci-dessus.
                   </div>
                 )}
               </div>
@@ -1629,7 +1630,7 @@ export const MemberDashboardView: React.FC<MemberDashboardViewProps> = ({ user, 
                       Partagez l'expérience d'Ivoire Business Club autour de vous et gagnez des bonus substantiels. Pour chaque personne s'inscrivant via votre lien exclusif et finalisant son adhésion, vous recevez un crédit de <strong className="text-green-dark">2 500 FCFA</strong> directement dans votre cagnotte.
                     </p>
                   </div>
-                  <span className="text-6xl">🎁</span>
+                  <Gift size={52} className="text-gold mx-auto" />
                 </div>
 
                 {/* Stats summary row */}
@@ -1691,7 +1692,7 @@ export const MemberDashboardView: React.FC<MemberDashboardViewProps> = ({ user, 
                   </div>
                 ) : referrals.length === 0 ? (
                   <div className="text-center py-10">
-                    <span className="text-5xl block mb-4">👥</span>
+                    <div className="flex justify-center mb-4"><Users size={44} className="text-gold/60" /></div>
                     <p className="font-serif text-lg font-bold text-green-dark">Aucun filleul pour l'instant</p>
                     <p className="text-xs text-text-muted mt-2 max-w-sm mx-auto">Partagez votre lien de parrainage avec vos amis et proches pour commencer à gagner des bonus.</p>
                   </div>
@@ -1885,7 +1886,7 @@ export const MemberDashboardView: React.FC<MemberDashboardViewProps> = ({ user, 
               
               <div className="flex items-center justify-center gap-1.5 mb-2">
                 <span className="font-serif text-2xl font-black text-green-dark">IBC</span>
-                <span className="text-gold text-lg">🌴</span>
+                <Palmtree size={20} className="text-gold" />
               </div>
               <p className="text-text-muted text-[10px] uppercase tracking-widest font-semibold">Votre Pass Exclusif</p>
               

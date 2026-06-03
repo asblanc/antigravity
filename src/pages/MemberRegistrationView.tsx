@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { Seo } from '../components/Seo';
-import { MapPin, Crown, Banknote, Wallet, Gift, TrendingUp, Users, Star, Sparkles, Smartphone, CheckCircle2 } from 'lucide-react';
+import { MapPin, Crown, Banknote, Wallet, Gift, TrendingUp, Users, Star, Sparkles, Smartphone, CheckCircle2, Check } from 'lucide-react';
 import { supabase } from '../lib/supabase';
 
 export const MemberRegistrationView: React.FC<{ onRegister: (data: any) => Promise<void> }> = ({ onRegister }) => {
@@ -182,9 +182,9 @@ export const MemberRegistrationView: React.FC<{ onRegister: (data: any) => Promi
                   </div>
                   <p className="text-[8px] uppercase tracking-wider text-text-muted mb-3 font-semibold">Discovery Member</p>
                   <ul className="text-left text-[11px] text-text-muted space-y-1.5">
-                    <li>✓ Jusqu'à 3% de cashback</li>
-                    <li>✓ Accès aux expériences partenaires</li>
-                    <li>✓ Invitations événements découverte</li>
+                    {['Jusqu\'à 3% de cashback', 'Accès aux expériences partenaires', 'Invitations événements découverte'].map((t) => (
+                      <li key={t} className="flex items-start gap-1.5"><Check size={12} className="text-gold shrink-0 mt-0.5" /><span>{t}</span></li>
+                    ))}
                   </ul>
                 </div>
                 <div className="mt-4 border-t border-gold/10 pt-3 text-[10px] font-bold text-[#8C6239]">
@@ -203,9 +203,9 @@ export const MemberRegistrationView: React.FC<{ onRegister: (data: any) => Promi
                   </div>
                   <p className="text-[8px] uppercase tracking-wider text-text-muted mb-3 font-semibold">Privilege Member</p>
                   <ul className="text-left text-[11px] text-text-muted space-y-1.5">
-                    <li>✓ Jusqu'à 5% de cashback</li>
-                    <li>✓ Accès prioritaire réservations</li>
-                    <li>✓ Invitations cocktails VIP</li>
+                    {['Jusqu\'à 5% de cashback', 'Accès prioritaire réservations', 'Invitations cocktails VIP'].map((t) => (
+                      <li key={t} className="flex items-start gap-1.5"><Check size={12} className="text-gold shrink-0 mt-0.5" /><span>{t}</span></li>
+                    ))}
                   </ul>
                 </div>
                 <div className="mt-4 border-t border-gold/10 pt-3 text-[10px] font-bold text-gold">
@@ -224,9 +224,9 @@ export const MemberRegistrationView: React.FC<{ onRegister: (data: any) => Promi
                   </div>
                   <p className="text-[8px] uppercase tracking-wider text-text-muted mb-3 font-semibold">Elite Member</p>
                   <ul className="text-left text-[11px] text-text-muted space-y-1.5">
-                    <li>✓ Jusqu'à 7% de cashback</li>
-                    <li>✓ Conciergerie privée WhatsApp</li>
-                    <li>✓ Surclassements hôteliers VIP</li>
+                    {['Jusqu\'à 7% de cashback', 'Conciergerie privée WhatsApp', 'Surclassements hôteliers VIP'].map((t) => (
+                      <li key={t} className="flex items-start gap-1.5"><Check size={12} className="text-gold shrink-0 mt-0.5" /><span>{t}</span></li>
+                    ))}
                   </ul>
                 </div>
                 <div className="mt-4 border-t border-gold/10 pt-3 text-[10px] font-bold text-slate-500">

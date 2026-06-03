@@ -7,7 +7,7 @@ import {
   LayoutDashboard, Megaphone, Star, MessageSquare,
   TrendingUp, Users, Calendar, HelpCircle, ArrowRight,
   Menu, X, ChevronRight, BadgePercent, Plus, Building,
-  DollarSign, Activity, Award, Copy, Check
+  DollarSign, Activity, Award, Copy, Check, Palmtree, MapPin
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { validateMemberQR } from '../lib/partner.service';
@@ -182,7 +182,7 @@ export const PartnerDashboardView: React.FC<{ onLogout: () => void }> = ({ onLog
       <div className="p-8 flex flex-col items-center border-b border-white/5">
         <div className="flex items-center gap-2 mb-2">
           <span className="font-serif text-3xl font-black text-gold tracking-tighter">IBC</span>
-          <span className="text-xl">🌴</span>
+          <Palmtree size={20} className="text-gold" />
         </div>
         <span className="text-[9px] uppercase tracking-[0.45em] text-gold font-bold text-center block">
           ESPACE PARTENAIRE
@@ -294,14 +294,14 @@ export const PartnerDashboardView: React.FC<{ onLogout: () => void }> = ({ onLog
             </button>
             <div className="lg:hidden flex items-center gap-1.5">
               <span className="font-serif text-xl font-bold text-gold">IBC</span>
-              <span className="text-xs">🌴</span>
+              <Palmtree size={13} className="text-gold" />
             </div>
             <div className="hidden lg:block">
               <span className="text-[10px] uppercase tracking-[0.45em] text-white/40 font-bold block leading-none">
                 Pullman Hélios
               </span>
               <h2 className="font-serif text-xl font-bold text-gold mt-1.5 flex items-center gap-2">
-                Espace Partenaire Agréé <span>🌴</span>
+                Espace Partenaire Agréé <Palmtree size={14} className="inline text-gold align-text-bottom" />
               </h2>
             </div>
           </div>
@@ -338,7 +338,7 @@ export const PartnerDashboardView: React.FC<{ onLogout: () => void }> = ({ onLog
         {showPinModal && (
           <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/85 px-6 backdrop-blur-sm">
             <div className="bg-[#02170c] border border-gold p-6 max-w-sm w-full rounded-2xl shadow-premium">
-              <h3 className="font-serif text-xl mb-3 text-center text-gold">🔒 Accès Propriétaire</h3>
+              <h3 className="font-serif text-xl mb-3 text-center text-gold flex items-center justify-center gap-2"><Lock size={18} /> Accès Propriétaire</h3>
               <p className="text-xs text-white/60 mb-5 text-center">Saisissez votre code PIN à 4 chiffres (démo: 1234)</p>
               <input 
                 type="password" 
@@ -1162,7 +1162,7 @@ export const PartnerDashboardView: React.FC<{ onLogout: () => void }> = ({ onLog
                       <div className="space-y-1">
                         <span className="text-[9px] uppercase tracking-widest text-gold font-bold">{ev.date}</span>
                         <h4 className="font-serif text-lg font-bold text-white">{ev.title}</h4>
-                        <p className="text-xs text-white/50 flex items-center gap-1.5">📍 <span>{ev.location}</span></p>
+                        <p className="text-xs text-white/50 flex items-center gap-1.5"><MapPin size={12} className="text-gold" /> <span>{ev.location}</span></p>
                       </div>
                       <p className="text-xs text-white/70 leading-relaxed">{ev.description}</p>
                       <button 

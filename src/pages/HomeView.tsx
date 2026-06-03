@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { MapPin, Compass, Sparkles, Briefcase, Crown, Users, Utensils, CreditCard, BookOpen, Headphones, Palmtree, Hotel, Globe, Smartphone } from 'lucide-react';
+import { MapPin, Compass, Sparkles, Briefcase, Crown, Users, Utensils, CreditCard, BookOpen, Headphones, Palmtree, Hotel, Globe, Smartphone, Heart } from 'lucide-react';
 import { HomeTierCards } from '../components/HomeTierCards';
 import { Seo } from '../components/Seo';
 
@@ -203,12 +203,12 @@ export const HomeView: React.FC = () => {
           {/* Filtres avec icones */}
           <div className="flex flex-wrap gap-3 justify-center mb-12">
             {[
-              { id: 'Tous', label: 'Tous', emoji: '' },
-              { id: 'Hébergements et Séjours', label: 'Hébergements et Séjours', emoji: '🛏️' },
-              { id: 'Restaurants et Dining', label: 'Restaurants et Dining', emoji: '🍽️' },
-              { id: 'Lounges et Nightlife', label: 'Lounges et Nightlife', emoji: '🎧' },
-              { id: 'Beach Clubs et Loisirs', label: 'Beach Clubs et Loisirs', emoji: '🏖️' },
-              { id: 'Bien-être et Wellness', label: 'Bien-être et Wellness', emoji: '💆' }
+              { id: 'Tous', label: 'Tous', Icon: null },
+              { id: 'Hébergements et Séjours', label: 'Hébergements et Séjours', Icon: Hotel },
+              { id: 'Restaurants et Dining', label: 'Restaurants et Dining', Icon: Utensils },
+              { id: 'Lounges et Nightlife', label: 'Lounges et Nightlife', Icon: Headphones },
+              { id: 'Beach Clubs et Loisirs', label: 'Beach Clubs et Loisirs', Icon: Palmtree },
+              { id: 'Bien-être et Wellness', label: 'Bien-être et Wellness', Icon: Heart }
             ].map((cat) => {
               const isActive = activeFilter === cat.id;
               return (
@@ -221,7 +221,7 @@ export const HomeView: React.FC = () => {
                       : 'bg-transparent text-[#1B5E35] border border-[#1B5E35]'
                   }`}
                 >
-                  {cat.emoji && <span className="text-sm">{cat.emoji}</span>}
+                  {cat.Icon && <cat.Icon size={14} />}
                   {cat.label}
                 </button>
               );
