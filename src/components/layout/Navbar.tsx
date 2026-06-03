@@ -32,7 +32,7 @@ export const Navbar: React.FC<NavbarProps> = ({ scrolled, mobileMenuOpen, setMob
           {[{ name: 'Accueil', path: '/' }, { name: 'Partenaires', path: '/establishments' }, { name: 'Avantages', path: '/offers' }].map((item) => (
             <Link key={item.path} to={item.path} className={`relative font-medium text-[10px] uppercase tracking-widest transition-all duration-300 pb-0.5 border-b-2 ${currentView === item.path ? 'text-gold border-gold' : (isSolid ? 'text-text hover:text-gold border-transparent hover:border-gold' : 'text-white/90 hover:text-white border-transparent hover:border-white/60')}`}>{item.name}</Link>
           ))}
-          <button type="button" onClick={() => { navigate('/'); setTimeout(() => document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' }), 100); }} className={`font-medium text-[10px] uppercase tracking-widest transition-all duration-300 nav-link border-b-2 border-transparent hover:border-gold hover:text-gold pb-0.5 ${isSolid ? 'text-text hover:text-gold' : 'text-white/90 hover:text-white'}`}>Contact</button>
+          <Link to="/contact" className={`font-medium text-[10px] uppercase tracking-widest transition-all duration-300 pb-0.5 border-b-2 ${currentView === '/contact' ? 'text-gold border-gold' : (isSolid ? 'text-text hover:text-gold border-transparent hover:border-gold' : 'text-white/90 hover:text-white border-transparent hover:border-white/60')}`}>Contact</Link>
           {user ? (
             <button onClick={() => navigate('/member-dashboard')} className="btn-gold !px-5 !py-2 text-[10px] flex items-center gap-2">Mon Dashboard</button>
           ) : (
@@ -50,7 +50,7 @@ export const Navbar: React.FC<NavbarProps> = ({ scrolled, mobileMenuOpen, setMob
           {[{ name: 'Accueil', path: '/' }, { name: 'Partenaires', path: '/establishments' }, { name: 'Avantages', path: '/offers' }].map((item) => (
             <Link key={item.path} to={item.path} onClick={() => setMobileMenuOpen(false)} className={`text-[11px] uppercase tracking-[0.2em] font-bold ${currentView === item.path ? 'text-gold' : 'text-white/90 hover:text-gold transition-colors'}`}>{item.name}</Link>
           ))}
-          <button type="button" onClick={() => { setMobileMenuOpen(false); navigate('/'); setTimeout(() => document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' }), 100); }} className="text-[11px] uppercase tracking-[0.2em] font-bold text-white/90 hover:text-gold transition-colors text-left">Contact</button>
+          <Link to="/contact" onClick={() => setMobileMenuOpen(false)} className={`text-[11px] uppercase tracking-[0.2em] font-bold ${currentView === '/contact' ? 'text-gold' : 'text-white/90 hover:text-gold transition-colors'}`}>Contact</Link>
           
           <div className="h-px bg-gold/20 w-full my-2" />
           

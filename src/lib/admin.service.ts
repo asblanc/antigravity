@@ -341,3 +341,37 @@ export async function deleteExperience(id: string): Promise<void> {
   const { error } = await supabase.rpc('admin_delete_experience', { p_id: id });
   if (error) throw new Error(error.message);
 }
+
+// ─── Messages de contact ─────────────────────────────────────────────────────
+export interface ContactMessage {
+  id: string;
+  name: string;
+  email: string;
+  subject: string | null;
+  message: string;
+  handled: boolean;
+  created_at: string;
+}
+
+export async function getContactMessages(): Promise<ContactMessage[]> {
+  try {
+    const { data, error } = await supabase
+      .from('contact_messages')
+      .select('*')
+      .order('created_at', { ascending: false });
+    if (error || !data) return [];
+    return data as ContactMessage[];
+  } catch {
+    return [];
+  }
+}
+
+export async function setMessageHandled(id: string, handled: boolean): Promise<void> {
+  const { error } = await supabase.rpc('admin_set_message_handled', { p_id: id, p_handled: handled });
+  if (error) throw new Error(error.message);
+}
+
+export async function deleteMessage(id: string): Promise<void> {
+  const { error } = await supabase.rpc('admin_delete_message', { p_id: id });
+  if (error) throw new Error(error.message);
+}

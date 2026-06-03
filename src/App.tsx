@@ -11,6 +11,7 @@ import { Footer } from './components/layout/Footer';
 import { HomeView } from './pages/HomeView';
 import { EstablishmentsView } from './pages/EstablishmentsView';
 import { OffersView } from './pages/OffersView';
+import { ContactView } from './pages/ContactView';
 import { MemberRegistrationView } from './pages/MemberRegistrationView';
 import { PartnerRegistrationView } from './pages/PartnerRegistrationView';
 import { NotFoundView } from './pages/NotFoundView';
@@ -135,6 +136,7 @@ const App: React.FC = () => {
           <Route path="/partner-registration" element={<PartnerRegistrationView />} />
           <Route path="/establishments" element={<EstablishmentsView />} />
           <Route path="/offers" element={<OffersView />} />
+          <Route path="/contact" element={<ContactView />} />
           <Route path="/login" element={<LoginView
             onLogin={handleLogin}
             onLoginGoogle={async () => { const u = await loginWithGoogle(); setUser(u); navigate(u.role === 'partner' ? '/partner-dashboard' : u.role === 'admin' ? '/admin-dashboard' : '/member-dashboard'); toast.success(`Bienvenue, ${u.name} !`); }}

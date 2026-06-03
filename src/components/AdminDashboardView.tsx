@@ -4,7 +4,7 @@ import { toast } from 'react-hot-toast';
 import {
   LayoutDashboard, Users, Store, CreditCard, Gift, LogOut, ChevronLeft,
   Loader2, CheckCircle, XCircle, Wallet, TrendingUp, Award, Clock, Banknote,
-  Bell, Settings, Send, Trash2, Shield, Calendar, Pencil,
+  Bell, Settings, Send, Trash2, Shield, Calendar, Pencil, Inbox, Check,
 } from 'lucide-react';
 import {
   getAdminOverview, getAdminMembers, setMemberActive, setMemberTier, adjustMemberBalance,
@@ -13,9 +13,10 @@ import {
   getAdminNotifications, sendNotification, deleteNotification,
   getAdmins, setUserRole, setRoleByEmail,
   getAllExperiences, saveExperience, deleteExperience,
+  getContactMessages, setMessageHandled, deleteMessage,
   type AdminOverview, type AdminMember, type AdminEstablishment, type AdminTransaction,
   type AdminReferral, type AdminSubscription, type AdminNotification, type AdminUser,
-  type AdminExperience,
+  type AdminExperience, type ContactMessage,
 } from '../lib/admin.service';
 
 const fmt = (n: number): string => (n ?? 0).toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
@@ -28,6 +29,7 @@ const TABS = [
   { id: 'subscriptions', label: 'Abonnements', icon: Banknote },
   { id: 'referrals', label: 'Parrainages', icon: Gift },
   { id: 'experiences', label: 'Expériences', icon: Calendar },
+  { id: 'messages', label: 'Messages', icon: Inbox },
   { id: 'communication', label: 'Communication', icon: Bell },
   { id: 'settings', label: 'Paramètres', icon: Settings },
 ] as const;
@@ -58,6 +60,7 @@ export const AdminDashboardView: React.FC<{ onLogout: () => void }> = ({ onLogou
   const [admins, setAdmins] = useState<AdminUser[]>([]);
 
   const [experiences, setExperiences] = useState<AdminExperience[]>([]);
+  const [messages, setMessages] = useState<ContactMessage[]>([]);
 
   // Formulaires
   const [notifForm, setNotifForm] = useState({ title: '', body: '', audience: 'all' });
@@ -76,6 +79,7 @@ export const AdminDashboardView: React.FC<{ onLogout: () => void }> = ({ onLogou
       else if (which === 'communication') setNotifications(await getAdminNotifications());
       else if (which === 'settings') setAdmins(await getAdmins());
       else if (which === 'experiences') setExperiences(await getAllExperiences());
+      else if (which === 'messages') setMessages(await getContactMessages());
     } catch (e: any) {
       toast.error(e?.message || 'Erreur de chargement');
     } finally {
@@ -213,6 +217,17 @@ export const AdminDashboardView: React.FC<{ onLogout: () => void }> = ({ onLogou
   const handleDeleteExp = async (x: AdminExperience) => {
     if (!window.confirm(`Supprimer « ${x.title} » ?`)) return;
     try { await deleteExperience(x.id); toast.success('Expérience supprimée'); load('experiences'); }
+    catch (e: any) { toast.error(e.message); }
+  };
+
+  const handleToggleMsg = async (m: ContactMessage) => {
+    try { await setMessageHandled(m.id, !m.handled); load('messages'); }
+    catch (e: any) { toast.error(e.message); }
+  };
+
+  const handleDeleteMsg = async (m: ContactMessage) => {
+    if (!window.confirm(`Supprimer le message de ${m.name} ?`)) return;
+    try { await deleteMessage(m.id); toast.success('Message supprimé'); load('messages'); }
     catch (e: any) { toast.error(e.message); }
   };
 
@@ -498,6 +513,35 @@ export const AdminDashboardView: React.FC<{ onLogout: () => void }> = ({ onLogou
                     {!loading && referrals.length === 0 && <tr><td colSpan={5} className="p-8 text-center text-white/40 italic">Aucun parrainage (ou table referrals non créée).</td></tr>}
                   </tbody>
                 </table>
+              </div>
+            </div>
+          )}
+
+          {/* ── MESSAGES ── */}
+          {tab === 'messages' && (
+            <div className="space-y-4">
+              <h2 className="font-serif text-2xl text-gold">Messages de contact ({messages.length})</h2>
+              <div className="space-y-3">
+                {messages.map((m) => (
+                  <div key={m.id} className={`bg-white/5 border rounded-2xl p-5 ${m.handled ? 'border-white/10 opacity-70' : 'border-gold/20'}`}>
+                    <div className="flex items-start justify-between gap-4 flex-wrap">
+                      <div>
+                        <p className="font-semibold text-white">{m.name} <span className="text-white/40 text-xs font-normal">· {m.email}</span></p>
+                        {m.subject && <p className="text-gold text-xs mt-0.5">{m.subject}</p>}
+                      </div>
+                      <span className="text-[10px] text-white/40">{new Intl.DateTimeFormat('fr-FR', { dateStyle: 'short', timeStyle: 'short' }).format(new Date(m.created_at))}</span>
+                    </div>
+                    <p className="text-sm text-white/80 mt-3 whitespace-pre-wrap leading-relaxed">{m.message}</p>
+                    <div className="flex items-center gap-2 mt-4">
+                      <a href={`mailto:${m.email}`} className="text-[10px] uppercase tracking-widest font-bold px-3 py-1.5 rounded-full border border-gold/30 text-gold hover:bg-gold/10">Répondre</a>
+                      <button onClick={() => handleToggleMsg(m)} className={`text-[10px] uppercase tracking-widest font-bold px-3 py-1.5 rounded-full border flex items-center gap-1 ${m.handled ? 'border-white/20 text-white/50' : 'border-green-500/30 text-green-400 hover:bg-green-500/10'}`}>
+                        <Check size={12} /> {m.handled ? 'Traité' : 'Marquer traité'}
+                      </button>
+                      <button onClick={() => handleDeleteMsg(m)} className="text-red-400 hover:text-red-300 ml-auto" title="Supprimer"><Trash2 size={15} /></button>
+                    </div>
+                  </div>
+                ))}
+                {!loading && messages.length === 0 && <div className="p-8 text-center text-white/40 italic bg-white/5 border border-gold/20 rounded-2xl">Aucun message (ou table non créée).</div>}
               </div>
             </div>
           )}

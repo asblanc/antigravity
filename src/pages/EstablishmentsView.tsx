@@ -45,6 +45,9 @@ export const EstablishmentsView: React.FC = () => {
 
   const places: Place[] = realPlaces.length ? realPlaces : SHOWCASE;
 
+  // Filtres dynamiques : 'Tous' + catégories réellement présentes.
+  const categories = ['Tous', ...Array.from(new Set(places.map((p) => p.cat))).filter(Boolean)];
+
   const filteredPlaces = places.filter(p =>
     (filter === 'Tous' || p.cat === filter) &&
     (p.name.toLowerCase().includes(searchTerm.toLowerCase()) || p.zone.toLowerCase().includes(searchTerm.toLowerCase()))
@@ -76,7 +79,7 @@ export const EstablishmentsView: React.FC = () => {
           <input type="text" placeholder="Rechercher un lieu ou une zone..." className="w-full bg-white border border-gold/10 py-5 pl-16 pr-6 font-serif text-lg focus:border-gold outline-none shadow-premium transition-all" value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} />
         </div>
         <div className="flex flex-wrap gap-3 mb-12">
-          {['Tous', 'Hébergements & Séjours', 'Restaurants & Dining', 'Lounges & Nightlife', 'Beach Clubs & Loisirs', 'Bien-être & Wellness', 'Diaspora & Héritage'].map((f) => (
+          {categories.map((f) => (
             <button key={f} onClick={() => setFilter(f)} className={`px-8 py-2 text-[10px] font-bold uppercase tracking-widest whitespace-nowrap transition-all flex items-center gap-2 ${filter === f ? 'bg-green-dark text-gold border border-gold shadow-gold' : 'bg-white text-text-muted border border-gold/10'}`}>
               {filterIcons[f]}{f}
             </button>
