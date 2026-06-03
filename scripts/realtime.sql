@@ -9,9 +9,7 @@
 
 ALTER PUBLICATION supabase_realtime ADD TABLE public.profiles;
 ALTER PUBLICATION supabase_realtime ADD TABLE public.transactions;
-
--- Optionnel (notifications live de la cloche) :
--- ALTER PUBLICATION supabase_realtime ADD TABLE public.notifications;
+ALTER PUBLICATION supabase_realtime ADD TABLE public.notifications;
 
 -- ⚠️ Si une table est déjà dans la publication, Postgres renvoie une erreur
 --    "is already member of publication" — sans gravité, ignorez-la.

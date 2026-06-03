@@ -63,6 +63,15 @@ export const MemberDashboardView: React.FC<MemberDashboardViewProps> = ({ user, 
   const [mySubscription, setMySubscription] = useState<Subscription | null>(null);
   const [subscribing, setSubscribing] = useState<boolean>(false);
   const [appNotifs, setAppNotifs] = useState<AppNotification[]>([]);
+  const [notifSeen, setNotifSeen] = useState<number>(() => {
+    try { return Number(localStorage.getItem(`ibc-notif-seen-${user.uid}`)) || 0; } catch { return 0; }
+  });
+  const markNotifsSeen = () => {
+    const now = Date.now();
+    setNotifSeen(now);
+    try { localStorage.setItem(`ibc-notif-seen-${user.uid}`, String(now)); } catch { /* noop */ }
+  };
+  const unreadCount = appNotifs.filter((n) => new Date(n.created_at).getTime() > notifSeen).length;
   const [goals, setGoals] = useState<Goal[]>([]);
   const [savings, setSavings] = useState<SavingsAccount | null>(null);
   const [newGoal, setNewGoal] = useState({ title: '', target: '' });
@@ -141,6 +150,10 @@ export const MemberDashboardView: React.FC<MemberDashboardViewProps> = ({ user, 
       })
       .on('postgres_changes', { event: '*', schema: 'public', table: 'transactions', filter: `member_id=eq.${user.uid}` }, async () => {
         try { setTransactions(await getMemberTransactions(user.uid, 15)); } catch { /* noop */ }
+      })
+      .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'notifications' }, (payload: any) => {
+        // La RLS ne diffuse au membre que les notifications dont l'audience le concerne.
+        setAppNotifs((prev) => [payload.new as AppNotification, ...prev].slice(0, 12));
       })
       .subscribe();
     return () => { supabase.removeChannel(channel); };
@@ -286,6 +299,19 @@ export const MemberDashboardView: React.FC<MemberDashboardViewProps> = ({ user, 
   // Évolution de statut basée sur le total dépensé réel (tranches 10k → 100k+).
   const spendingLevel = totalSpent;
   const evolutionPct = Math.min(100, Math.max(0, ((totalSpent - 10000) / (100000 - 10000)) * 100));
+
+  // Répartition réelle des dépenses par établissement (top 6) depuis les transactions.
+  const CHART_PALETTE = ['#1B5E35', '#C9A84C', '#2D7A4F', '#8C6239', '#D4AF37', '#0c2c1b'];
+  const txAgg = (() => {
+    const map = new Map<string, number>();
+    for (const t of transactions) map.set(t.partnerName, (map.get(t.partnerName) || 0) + (t.amount || 0));
+    const arr = Array.from(map.entries())
+      .map(([label, value]) => ({ label, value }))
+      .sort((a, b) => b.value - a.value)
+      .slice(0, 6);
+    const max = arr.reduce((m, x) => Math.max(m, x.value), 0) || 1;
+    return arr.map((x) => ({ ...x, pct: Math.round((x.value / max) * 100) }));
+  })();
   
   const handleCopyLink = () => {
     navigator.clipboard.writeText(referralLink);
@@ -464,17 +490,18 @@ export const MemberDashboardView: React.FC<MemberDashboardViewProps> = ({ user, 
             <div className="relative">
               <button
                 onClick={() => {
-                  setShowNotifications(!showNotifications);
+                  const opening = !showNotifications;
+                  setShowNotifications(opening);
                   setProfileDropdownOpen(false);
+                  if (opening) markNotifsSeen();
                 }}
                 className="w-10 h-10 border border-gold/20 rounded-full flex items-center justify-center text-green-dark hover:bg-cream/40 transition-all relative"
               >
                 <Bell size={18} />
-                {appNotifs.length > 0 && (
-                  <>
-                    <span className="absolute top-1 right-1 w-2.5 h-2.5 bg-gold border-2 border-white rounded-full animate-ping" />
-                    <span className="absolute top-1 right-1 w-2.5 h-2.5 bg-gold border-2 border-white rounded-full" />
-                  </>
+                {unreadCount > 0 && (
+                  <span className="absolute -top-1 -right-1 min-w-[16px] h-4 px-1 bg-gold text-green-darker text-[9px] font-bold rounded-full flex items-center justify-center border border-white">
+                    {unreadCount > 9 ? '9+' : unreadCount}
+                  </span>
                 )}
               </button>
               
@@ -1211,61 +1238,28 @@ export const MemberDashboardView: React.FC<MemberDashboardViewProps> = ({ user, 
               {/* ─── RÉPARTITION DES TRANSACTIONS ─── */}
               <div className="border-t border-gold/15 pt-8">
                 <div className="bg-white border border-gold/15 rounded-[36px] shadow-soft p-6">
-                  <div className="flex items-center justify-between mb-6">
-                    <div>
-                      <h3 className="text-[10px] uppercase tracking-[0.4em] text-green-dark font-bold">RÉPARTITION DES TRANSACTIONS</h3>
-                      <p className="text-[9px] text-text-muted mt-0.5">Par catégorie — ce mois-ci</p>
-                    </div>
-                    <select className="text-[9px] font-bold text-green-dark border border-gold/20 rounded-lg px-3 py-1.5 bg-cream/30 outline-none focus:border-gold cursor-pointer uppercase tracking-wider">
-                      <option>Par catégorie</option>
-                      <option>Par établissement</option>
-                      <option>Par mois</option>
-                    </select>
+                  <div className="mb-6">
+                    <h3 className="text-[10px] uppercase tracking-[0.4em] text-green-dark font-bold">RÉPARTITION DES DÉPENSES</h3>
+                    <p className="text-[9px] text-text-muted mt-0.5">Par établissement partenaire</p>
                   </div>
 
-                  <div className="flex flex-col md:flex-row items-center gap-8">
-                    {/* Donut SVG Chart */}
-                    <div className="relative shrink-0">
-                      <svg width="160" height="160" viewBox="0 0 160 160">
-                        {/* Restauration 45% — vert foncé */}
-                        <circle cx="80" cy="80" r="60" fill="none" stroke="#1B5E35" strokeWidth="28"
-                          strokeDasharray="169.6 376.8" strokeDashoffset="94.2" />
-                        {/* Boissons 25% — or */}
-                        <circle cx="80" cy="80" r="60" fill="none" stroke="#C9A84C" strokeWidth="28"
-                          strokeDasharray="94.2 452.2" strokeDashoffset="-75.4" />
-                        {/* Location transats 15% — vert clair */}
-                        <circle cx="80" cy="80" r="60" fill="none" stroke="#2D7A4F" strokeWidth="28"
-                          strokeDasharray="56.5 489.9" strokeDashoffset="-169.6" />
-                        {/* Activités 10% — or clair */}
-                        <circle cx="80" cy="80" r="60" fill="none" stroke="#8C6239" strokeWidth="28"
-                          strokeDasharray="37.7 508.7" strokeDashoffset="-226.1" />
-                        {/* Autres 5% — gris doré */}
-                        <circle cx="80" cy="80" r="60" fill="none" stroke="#D4AF37" strokeWidth="28"
-                          strokeDasharray="18.8 527.6" strokeDashoffset="-263.9" />
-                        {/* Cercle central blanc */}
-                        <circle cx="80" cy="80" r="44" fill="white" />
-                        <text x="80" y="77" textAnchor="middle" className="font-serif" style={{fontFamily:'serif', fontWeight:700, fontSize:11, fill:'#1B5E35'}}>Mois</text>
-                        <text x="80" y="92" textAnchor="middle" style={{fontFamily:'sans-serif', fontWeight:800, fontSize:13, fill:'#1B5E35'}}>Mai</text>
-                      </svg>
-                    </div>
-
-                    {/* Légende */}
-                    <div className="flex-1 space-y-3 w-full">
-                      {[
-                        { label: 'Restauration', pct: 45, color: '#1B5E35' },
-                        { label: 'Boissons', pct: 25, color: '#C9A84C' },
-                        { label: 'Location & transats', pct: 15, color: '#2D7A4F' },
-                        { label: 'Activités', pct: 10, color: '#8C6239' },
-                        { label: 'Autres', pct: 5, color: '#D4AF37' },
-                      ].map((item) => (
-                        <div key={item.label} className="flex items-center gap-3">
-                          <span className="w-2.5 h-2.5 rounded-full shrink-0" style={{ background: item.color }} />
-                          <span className="text-[11px] text-text flex-1 font-medium">{item.label}</span>
-                          <div className="flex items-center gap-2">
-                            <div className="w-24 h-1.5 bg-gold/10 rounded-full overflow-hidden">
-                              <div className="h-full rounded-full" style={{ width: `${item.pct}%`, background: item.color }} />
-                            </div>
-                            <span className="text-[11px] font-bold text-green-dark w-8 text-right">{item.pct}%</span>
+                  {txAgg.length === 0 ? (
+                    <p className="text-xs text-text-muted italic text-center py-10">
+                      Aucune dépense enregistrée pour le moment. Vos dépenses par établissement s'afficheront ici après vos premières visites.
+                    </p>
+                  ) : (
+                    <div className="space-y-4">
+                      {txAgg.map((item, i) => (
+                        <div key={item.label}>
+                          <div className="flex items-center justify-between mb-1.5">
+                            <span className="flex items-center gap-2 text-[11px] text-text font-medium truncate">
+                              <span className="w-2.5 h-2.5 rounded-full shrink-0" style={{ background: CHART_PALETTE[i % CHART_PALETTE.length] }} />
+                              {item.label}
+                            </span>
+                            <span className="text-[11px] font-bold text-green-dark shrink-0">{formatPrice(item.value)} F</span>
+                          </div>
+                          <div className="h-2.5 bg-gold/10 rounded-full overflow-hidden">
+                            <div className="h-full rounded-full transition-all duration-700" style={{ width: `${item.pct}%`, background: CHART_PALETTE[i % CHART_PALETTE.length] }} />
                           </div>
                         </div>
                       ))}
@@ -1273,10 +1267,10 @@ export const MemberDashboardView: React.FC<MemberDashboardViewProps> = ({ user, 
                         onClick={() => setActiveTab('transactions')}
                         className="mt-2 text-[9px] font-bold text-green-dark hover:text-gold uppercase tracking-widest flex items-center gap-1 transition-colors border-t border-gold/10 pt-3"
                       >
-                        Voir le détail des catégories <ArrowRight size={10} />
+                        Voir toutes mes transactions <ArrowRight size={10} />
                       </button>
                     </div>
-                  </div>
+                  )}
                 </div>
               </div>
 

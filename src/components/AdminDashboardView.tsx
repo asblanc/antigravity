@@ -306,15 +306,28 @@ export const AdminDashboardView: React.FC<{ onLogout: () => void }> = ({ onLogou
               </div>
 
               <div className="bg-white/5 border border-gold/20 rounded-2xl p-6">
-                <h3 className="text-[10px] uppercase tracking-widest text-gold font-bold mb-4">Répartition par niveau</h3>
-                <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-                  {TIERS.map((t) => (
-                    <div key={t} className="text-center">
-                      <p className="font-serif text-2xl font-bold text-white">{fmt(overview.members_by_tier?.[t] || 0)}</p>
-                      <p className="text-[10px] uppercase tracking-wider text-white/50 mt-1">{t}</p>
+                <h3 className="text-[10px] uppercase tracking-widest text-gold font-bold mb-5">Répartition des membres par niveau</h3>
+                {(() => {
+                  const tierColors: Record<string, string> = { bronze: '#8C6239', silver: '#C0C0C0', gold: '#C9A84C', platinum: '#94A3B8' };
+                  const counts = TIERS.map((t) => overview.members_by_tier?.[t] || 0);
+                  const max = Math.max(1, ...counts);
+                  return (
+                    <div className="space-y-3">
+                      {TIERS.map((t) => {
+                        const c = overview.members_by_tier?.[t] || 0;
+                        return (
+                          <div key={t} className="flex items-center gap-3">
+                            <span className="w-16 text-[10px] uppercase tracking-wider text-white/60 shrink-0">{t}</span>
+                            <div className="flex-1 h-3 bg-white/5 rounded-full overflow-hidden">
+                              <div className="h-full rounded-full transition-all duration-700" style={{ width: `${Math.round((c / max) * 100)}%`, background: tierColors[t] }} />
+                            </div>
+                            <span className="w-8 text-right font-bold text-white text-sm shrink-0">{fmt(c)}</span>
+                          </div>
+                        );
+                      })}
                     </div>
-                  ))}
-                </div>
+                  );
+                })()}
               </div>
             </div>
           )}
