@@ -1,4 +1,6 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
+import { Star, Crown, Sparkles, Check } from 'lucide-react';
 import ibcLogo from '../assets/ibc-logo.webp';
 
 // ─── Tier configuration ────────────────────────────────────────────────────
@@ -7,61 +9,65 @@ interface TierInfo {
   id: string;
   badge: string;
   title: string;
-  gradient: string;
-  tone: 'light' | 'dark';
+  color: string;
+  icon: React.ComponentType<{ size?: number; className?: string }>;
+  popular?: boolean;
   profile: string;
   activity: string;
   price?: string;
+  cashback: string;
   benefits: string[];
 }
 
 const TIERS: TierInfo[] = [
   {
     id: 'bronze',
-    badge: 'BRONZE',
+    badge: 'Bronze',
     title: 'Discovery Member',
-    gradient: 'linear-gradient(135deg, #CD7F32 0%, #8B4513 100%)',
-    tone: 'light',
-    profile: 'Membres découverte et lifestyle occasionnel',
+    color: '#B87333',
+    icon: Star,
+    profile: 'Découverte & lifestyle occasionnel',
     activity: '10 000 – 40 000 FCFA / week-end',
     price: '500 FCFA / mois',
+    cashback: '3%',
     benefits: [
       'Accès aux expériences standards',
       'Accès prioritaire à certaines offres',
       'Invitations événements découverte',
       'Avantages partenaires',
-      'Cashback jusqu\'à 3%',
     ],
   },
   {
     id: 'gold',
-    badge: 'OR',
+    badge: 'Or',
     title: 'Prestige Member',
-    gradient: 'linear-gradient(135deg, #FFD700 0%, #B8860B 100%)',
-    tone: 'dark',
-    profile: 'Membres à forte activité et consommation régulière',
+    color: '#C9A84C',
+    icon: Crown,
+    popular: true,
+    profile: 'Forte activité & consommation régulière',
     activity: '50 000 – 90 000 FCFA / week-end',
+    cashback: '5%',
     benefits: [
       'Accès aux expériences prestige',
       'Invitations événements privés',
       'Avantages partenaires renforcés',
-      'Accès prioritaire à certains événements',
-      'Cashback jusqu\'à 5%',
+      'Accès prioritaire aux événements',
     ],
   },
   {
     id: 'platinum',
-    badge: 'PLATINUM',
+    badge: 'Platinum',
     title: 'Elite Member',
-    gradient: 'linear-gradient(135deg, #E8E8E8 0%, #A9A9A9 100%)',
-    tone: 'dark',
-    profile: 'Membres premium et grands consommateurs d’expériences',
+    color: '#7C8B9B',
+    icon: Sparkles,
+    profile: 'Premium & grands consommateurs',
     activity: '100 000 FCFA et plus / week-end',
+    cashback: '7%',
     benefits: [
-      'Accès expériences premium et VIP',
+      'Accès expériences premium & VIP',
       'Réservations prioritaires',
-      'Accès lounge',
-      'Cashback jusqu\'à 7%',
+      'Accès lounge & conciergerie',
+      'Surclassements partenaires',
     ],
   },
 ];
@@ -69,73 +75,70 @@ const TIERS: TierInfo[] = [
 // ─── Single Member Card ─────────────────────────────────────────────────────
 
 const MemberCard: React.FC<{ tier: TierInfo }> = ({ tier }) => {
-  const isDarkText = tier.tone === 'dark';
-  const textClass = isDarkText ? 'text-[#142017]' : 'text-white';
-  const mutedClass = isDarkText ? 'text-[#142017]/80' : 'text-white/90';
-  const borderClass = isDarkText ? 'border-black/15' : 'border-white/25';
-  const badgeClass = isDarkText
-    ? 'bg-black/10 text-[#142017] border-black/15'
-    : 'bg-white/20 text-white border-white/30';
-  const logoBoxClass = isDarkText ? 'bg-white/70 border-black/15' : 'bg-white/95 border-white/40';
+  const navigate = useNavigate();
+  const Icon = tier.icon;
 
   return (
     <article
-      className={`group relative mx-auto flex min-h-[500px] w-full max-w-[430px] flex-col overflow-hidden rounded-[18px] border ${borderClass} p-6 shadow-[0_18px_45px_rgba(3,29,15,0.14)] transition-all duration-300 sm:p-7 md:min-h-[540px] md:hover:-translate-y-1 md:hover:shadow-[0_26px_60px_rgba(3,29,15,0.24)] ${textClass}`}
-      style={{
-        background: isDarkText
-          ? tier.gradient
-          : `linear-gradient(135deg, rgba(0,0,0,0.28), rgba(0,0,0,0.36)), ${tier.gradient}`,
-      }}
+      className={`hover-lift relative flex w-full max-w-[380px] flex-col rounded-3xl bg-white p-6 sm:p-7 shadow-soft transition-all
+        ${tier.popular ? 'border-2 border-gold ring-2 ring-gold/15 md:-translate-y-3' : 'border border-gold/15'}`}
+      style={{ borderTopColor: tier.color, borderTopWidth: tier.popular ? undefined : 4 }}
     >
-      <div className="pointer-events-none absolute inset-0 z-0 opacity-10 bg-[linear-gradient(115deg,rgba(255,255,255,0.55)_0%,rgba(255,255,255,0.12)_28%,rgba(255,255,255,0)_54%)]" />
-      <div className={`pointer-events-none absolute -right-16 -top-16 z-0 h-44 w-44 rounded-full border ${borderClass} opacity-15`} />
-      <div className={`pointer-events-none absolute -bottom-24 right-4 z-0 h-48 w-48 rounded-full border ${borderClass} opacity-10`} />
-      <div className={`pointer-events-none absolute bottom-6 right-6 z-0 h-10 w-16 rounded-full border ${borderClass} opacity-10`} />
-
-      <div className="relative z-10 flex items-start justify-between gap-4">
-        <div className={`flex h-12 w-20 items-center justify-center rounded-md border ${logoBoxClass} px-2 shadow-sm`}>
-          <img src={ibcLogo} alt="IBC" className="max-h-8 w-auto object-contain" />
-        </div>
-        <span className={`rounded-full border px-3.5 py-1.5 text-[10px] font-bold uppercase tracking-[0.2em] ${badgeClass}`}>
-          {tier.badge}
+      {tier.popular && (
+        <span className="absolute -top-3 left-1/2 -translate-x-1/2 whitespace-nowrap rounded-full bg-gold px-3 py-1 text-[9px] font-bold uppercase tracking-widest text-green-darker shadow-md">
+          Le plus populaire
         </span>
-      </div>
+      )}
 
-      <div className="relative z-10 mt-7 flex-1">
-        <p className="font-serif text-xl font-bold leading-tight tracking-wide sm:text-2xl">{tier.title}</p>
-        <p className={`mt-3 text-sm font-medium leading-relaxed ${mutedClass}`}>Profil : {tier.profile}</p>
-
-        <div className={`mt-5 rounded-lg border ${borderClass} ${isDarkText ? 'bg-white/20' : 'bg-white/10'} p-4`}>
-          <p className={`text-[10px] font-bold uppercase tracking-[0.2em] ${mutedClass}`}>Activité moyenne</p>
-          <p className="mt-1.5 text-sm font-semibold leading-relaxed">{tier.activity}</p>
-        </div>
-
-        <ul className="mt-5 grid grid-cols-1 gap-3 text-sm font-medium leading-relaxed">
-          {tier.benefits.map((benefit) => (
-            <li key={benefit} className="flex items-start gap-3">
-              <span className={`mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full text-[11px] font-bold ${isDarkText ? 'bg-[#142017] text-white' : 'bg-white text-[#142017]'}`}>✓</span>
-              <span>{benefit}</span>
-            </li>
-          ))}
-        </ul>
-      </div>
-
-      <div className={`relative z-10 mt-7 flex items-end justify-between gap-4 border-t ${borderClass} pt-5`}>
-        {tier.price ? (
+      {/* Header */}
+      <div className="flex items-center justify-between">
+        <div className="flex items-center gap-2.5">
+          <span className="flex h-10 w-10 items-center justify-center rounded-full text-white shrink-0" style={{ background: tier.color }}>
+            <Icon size={17} />
+          </span>
           <div>
-            <p className={`text-[10px] font-bold uppercase tracking-[0.2em] ${mutedClass}`}>Tarif d'adhésion</p>
-            <p className="mt-1.5 font-serif text-xl font-bold leading-tight tracking-wide">{tier.price}</p>
-          </div>
-        ) : (
-          <span className={`text-[10px] font-bold uppercase tracking-[0.2em] ${mutedClass}`}>Statut évolutif IBC</span>
-        )}
-        <div className="flex shrink-0 items-center gap-1.5 opacity-50">
-          <span className={`h-2.5 w-2.5 rounded-full ${isDarkText ? 'bg-[#142017]/50' : 'bg-white/60'}`} />
-          <span className={`h-2.5 w-2.5 rounded-full ${isDarkText ? 'bg-[#142017]/35' : 'bg-white/40'}`} />
-          <div className={`ml-1 h-7 w-10 rounded ${isDarkText ? 'bg-[#142017]/15' : 'bg-white/15'} border ${borderClass} opacity-60`}>
-            <div className={`mx-auto mt-1.5 h-3.5 w-7 rounded-sm border ${borderClass}`} />
+            <h3 className="font-serif text-lg font-bold leading-none" style={{ color: tier.color }}>{tier.badge}</h3>
+            <p className="mt-1 text-[9px] font-semibold uppercase tracking-wider text-text-muted">{tier.title}</p>
           </div>
         </div>
+        <img src={ibcLogo} alt="IBC" width={32} height={32} className="h-8 w-8 object-contain opacity-80" />
+      </div>
+
+      {/* Cashback highlight */}
+      <div className="mt-6">
+        <span className="font-serif text-4xl font-extrabold text-green-dark">{tier.cashback}</span>
+        <span className="ml-1.5 text-sm text-text-muted">de cashback</span>
+      </div>
+      <p className="mt-1 text-xs text-text-muted">{tier.profile}</p>
+
+      {/* Activité */}
+      <div className="mt-5 rounded-xl border border-gold/10 bg-cream/50 p-3">
+        <p className="text-[9px] font-bold uppercase tracking-wider text-text-muted">Activité moyenne</p>
+        <p className="mt-0.5 text-xs font-semibold text-green-dark">{tier.activity}</p>
+      </div>
+
+      {/* Benefits */}
+      <ul className="mt-5 flex-1 space-y-2.5">
+        {tier.benefits.map((b) => (
+          <li key={b} className="flex items-start gap-2.5 text-[13px] text-text">
+            <Check size={15} className="mt-0.5 shrink-0" style={{ color: tier.color }} />
+            <span>{b}</span>
+          </li>
+        ))}
+      </ul>
+
+      {/* Footer */}
+      <div className="mt-6 flex items-center justify-between gap-3 border-t border-gold/10 pt-5">
+        <div>
+          <p className="text-[9px] font-bold uppercase tracking-wider text-text-muted">{tier.price ? 'Adhésion' : 'Statut'}</p>
+          <p className="mt-0.5 font-serif text-base font-bold text-green-dark">{tier.price ?? 'Évolutif'}</p>
+        </div>
+        <button
+          onClick={() => navigate('/member-registration')}
+          className="shrink-0 rounded-full bg-green-dark px-5 py-2.5 text-[10px] font-bold uppercase tracking-widest text-gold transition-colors hover:bg-[#031d0f]"
+        >
+          Choisir
+        </button>
       </div>
     </article>
   );
@@ -148,32 +151,19 @@ export const HomeTierCards: React.FC = () => {
     <section className="py-20 sm:py-32 bg-white reveal-section" id="membership-tiers">
       <div className="container mx-auto px-4 sm:px-6 max-w-6xl">
         {/* Section header */}
-        <div className="border border-gold/20 p-8 sm:p-12 text-center mb-10 sm:mb-14 max-w-4xl mx-auto">
-          <span className="text-[10px] uppercase tracking-[0.4em] text-gold font-bold block mb-4">IBC MEMBERSHIP</span>
-          <h2 className="font-serif text-3xl md:text-4xl font-bold text-green-dark leading-tight">
-            LE PROGRAMME MEMBRE IBC
+        <div className="text-center mb-12 max-w-3xl mx-auto">
+          <span className="text-[10px] uppercase tracking-[0.4em] text-gold font-bold block mb-4">IBC Membership</span>
+          <h2 className="font-serif text-3xl md:text-4xl font-bold text-green-dark leading-tight mb-4">
+            Le programme membre IBC
           </h2>
-        </div>
-
-        {/* Description */}
-        <div className="mb-12 bg-cream p-6 sm:p-8 border border-gold/10 text-green-dark leading-relaxed max-w-4xl mx-auto rounded-xl">
-          <p className="font-semibold mb-3 text-sm sm:text-base">
-            Un système d'avantages et de privilèges évolutif basé sur l'activité et l'expérience membre.
-          </p>
-          <p className="font-medium mb-2 text-xs sm:text-sm">La plateforme IVOIRE BUSINESS CLUB analyse :</p>
-          <ul className="space-y-1.5 pl-4 mb-3 text-[#1B5E35]/80 text-xs sm:text-sm">
-            <li className="flex items-start gap-2"><span>•</span> les habitudes de consommation</li>
-            <li className="flex items-start gap-2"><span>•</span> les préférences membres</li>
-            <li className="flex items-start gap-2"><span>•</span> les expériences vécues</li>
-            <li className="flex items-start gap-2"><span>•</span> les interactions avec les établissements partenaires</li>
-          </ul>
-          <p className="font-medium text-xs sm:text-sm">
-            afin d'offrir une expérience personnalisée et des avantages adaptés au profil de chaque membre.
+          <p className="text-text-muted text-sm sm:text-base leading-relaxed">
+            Un système d'avantages évolutif : plus vous vivez d'expériences, plus vos privilèges et votre
+            cashback augmentent. Votre statut s'adapte automatiquement à votre activité.
           </p>
         </div>
 
         {/* 3 cards grid */}
-        <div className="grid grid-cols-1 justify-items-center gap-7 md:grid-cols-3 md:items-stretch md:gap-5 lg:gap-7">
+        <div className="grid grid-cols-1 justify-items-center gap-8 md:grid-cols-3 md:items-stretch md:gap-6">
           {TIERS.map((tier) => (
             <MemberCard key={tier.id} tier={tier} />
           ))}
