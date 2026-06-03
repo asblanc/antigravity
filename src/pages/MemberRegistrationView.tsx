@@ -100,16 +100,18 @@ export const MemberRegistrationView: React.FC<{ onRegister: (data: any) => Promi
         path="/member-registration"
       />
       <div className="container mx-auto px-6 max-w-5xl">
-        {/* En-tête compact */}
+        {/* En-tête */}
         <div className="max-w-2xl mx-auto text-center mb-10">
           <span className="text-[10px] uppercase tracking-[0.4em] text-gold font-bold block mb-3">Le club privé</span>
-          <h1 className="font-serif text-3xl md:text-4xl font-bold text-green-dark mb-3">Devenez membre du club IBC</h1>
-          <p className="text-text-muted text-sm md:text-base">
-            Adhésion à partir de <strong className="text-green-dark">500 FCFA / mois</strong> — cashback, avantages membres et événements privés.
+          <h1 className="font-serif text-3xl md:text-5xl font-bold text-green-dark mb-4">Bienvenue dans votre univers IBC</h1>
+          <p className="text-text-muted max-w-xl mx-auto text-base md:text-lg">
+            Rejoignez une communauté exclusive et profitez d'un écosystème d'avantages pensés pour vous.
           </p>
-          <button type="button" onClick={() => navigate('/')} className="mt-3 text-[10px] uppercase tracking-[0.3em] font-bold text-text-muted hover:text-gold transition-colors">← Retour à l'accueil</button>
+          <p className="text-text-muted text-xs mt-3">Adhésion à partir de <strong className="text-green-dark">500 FCFA / mois</strong></p>
+          <button type="button" onClick={() => navigate('/')} className="mt-4 text-[10px] uppercase tracking-[0.3em] font-bold text-text-muted hover:text-gold transition-colors">← Retour à l'accueil</button>
         </div>
 
+        {/* FORMULAIRE — visible immédiatement après l'en-tête */}
         <div className="max-w-2xl mx-auto">
         {/* Progress */}
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-12">
@@ -233,119 +235,6 @@ export const MemberRegistrationView: React.FC<{ onRegister: (data: any) => Promi
               </div>
             </div>
 
-            {/* Comment ça marche - Les Avantages Clefs */}
-            <div className="space-y-6">
-              <div className="border-t border-gold/15 pt-8 text-left">
-                <span className="text-[10px] uppercase tracking-[0.4em] text-gold font-bold block mb-2">COMMENT ÇA MARCHE</span>
-                <h4 className="font-serif text-2xl font-bold text-green-dark">Une gestion intelligente de vos privilèges</h4>
-              </div>
-
-              <div className="grid gap-4 sm:grid-cols-2">
-                {/* Cashback */}
-                <div className="bg-white border border-gold/10 hover:border-gold/30 rounded-2xl p-5 flex items-start gap-4 transition-all duration-300 shadow-soft">
-                  <div className="w-10 h-10 rounded-xl bg-green-dark/5 text-green-dark flex items-center justify-center shrink-0 border border-gold/20">
-                    <Wallet size={20} className="text-gold" />
-                  </div>
-                  <div className="text-left">
-                    <h5 className="font-serif font-bold text-green-dark text-sm">Le Cashback Automatique</h5>
-                    <p className="text-[11px] text-text-muted mt-1 leading-relaxed">
-                      Chaque paiement chez nos partenaires crédite votre compte. Suivez vos gains accumulés en temps réel sur votre dashboard.
-                    </p>
-                  </div>
-                </div>
-
-                {/* Cagnotte */}
-                <div className="bg-white border border-gold/10 hover:border-gold/30 rounded-2xl p-5 flex items-start gap-4 transition-all duration-300 shadow-soft">
-                  <div className="w-10 h-10 rounded-xl bg-green-dark/5 text-green-dark flex items-center justify-center shrink-0 border border-gold/20">
-                    <Gift size={20} className="text-gold" />
-                  </div>
-                  <div className="text-left">
-                    <h5 className="font-serif font-bold text-green-dark text-sm">Ma Cagnotte IBC</h5>
-                    <p className="text-[11px] text-text-muted mt-1 leading-relaxed">
-                      Votre capital plaisir disponible. Utilisez-le en un clic pour régler tout ou partie de vos consommations chez nos partenaires.
-                    </p>
-                  </div>
-                </div>
-
-                {/* Objectifs */}
-                <div className="bg-white border border-gold/10 hover:border-gold/30 rounded-2xl p-5 flex items-start gap-4 transition-all duration-300 shadow-soft">
-                  <div className="w-10 h-10 rounded-xl bg-green-dark/5 text-green-dark flex items-center justify-center shrink-0 border border-gold/20">
-                    <TrendingUp size={20} className="text-gold" />
-                  </div>
-                  <div className="text-left">
-                    <h5 className="font-serif font-bold text-green-dark text-sm">Objectifs Évasion</h5>
-                    <p className="text-[11px] text-text-muted mt-1 leading-relaxed">
-                      Fixez-vous un but (séjour, weekend) et laissez votre épargne de cashback financer automatiquement l'escapade de vos rêves.
-                    </p>
-                  </div>
-                </div>
-
-                {/* Épargne Club */}
-                <div className="bg-white border border-gold/10 hover:border-gold/30 rounded-2xl p-5 flex items-start gap-4 transition-all duration-300 shadow-soft">
-                  <div className="w-10 h-10 rounded-xl bg-green-dark/5 text-green-dark flex items-center justify-center shrink-0 border border-gold/20">
-                    <Banknote size={20} className="text-gold" />
-                  </div>
-                  <div className="text-left">
-                    <h5 className="font-serif font-bold text-green-dark text-sm">Épargne Club</h5>
-                    <p className="text-[11px] text-text-muted mt-1 leading-relaxed">
-                      Allouez automatiquement un pourcentage de votre cashback vers votre tirelire de voyage privée pour épargner sans effort.
-                    </p>
-                  </div>
-                </div>
-
-                {/* Cercle Évasion */}
-                <div className="bg-white border border-gold/10 hover:border-gold/30 rounded-2xl p-5 flex items-start gap-4 transition-all duration-300 shadow-soft sm:col-span-2">
-                  <div className="w-10 h-10 rounded-xl bg-green-dark/5 text-green-dark flex items-center justify-center shrink-0 border border-gold/20">
-                    <Users size={20} className="text-gold" />
-                  </div>
-                  <div className="text-left">
-                    <h5 className="font-serif font-bold text-green-dark text-sm">Cercle Évasion</h5>
-                    <p className="text-[11px] text-text-muted mt-1 leading-relaxed">
-                      Épargnez à plusieurs ! Fusionnez vos cagnottes avec vos proches et amis pour réaliser ensemble des escapades collectives inoubliables.
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* Recommandés pour vous */}
-            <div className="space-y-6 border-t border-gold/15 pt-8">
-              <div className="text-left">
-                <span className="text-[10px] uppercase tracking-[0.4em] text-gold font-bold block mb-2">RECOMMANDÉS POUR VOUS</span>
-                <h4 className="font-serif text-2xl font-bold text-green-dark">Vivez des expériences d'exception</h4>
-                <p className="text-[11px] text-text-muted mt-1">Des réductions exclusives sur vos escapades et sorties lifestyle</p>
-              </div>
-
-              <div className="grid gap-4 grid-cols-2 md:grid-cols-4">
-                {[
-                  { name: 'Sunset Lounge', location: 'Abidjan, Cocody', discount: '-20%', img: 'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&q=80&w=300' },
-                  { name: 'Brunch & Chill', location: 'Bingerville', discount: '-15%', img: 'https://images.unsplash.com/photo-1514362545857-3bc16c4c7d1b?auto=format&fit=crop&q=80&w=300' },
-                  { name: 'Weekend Assinie', location: 'Assinie', discount: '-25%', img: 'https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?auto=format&fit=crop&q=80&w=300' },
-                  { name: 'Sofitel Abidjan', location: 'Abidjan, Cocody', discount: '-20%', img: 'https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?auto=format&fit=crop&q=80&w=300' },
-                ].map((place, idx) => (
-                  <div key={idx} className="bg-white border border-gold/10 rounded-2xl overflow-hidden hover:border-gold/30 hover:shadow-soft transition-all duration-300 group">
-                    <div className="relative overflow-hidden h-24">
-                      <img 
-                        src={place.img} 
-                        alt={place.name} 
-                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" 
-                      />
-                      <span className="absolute top-1.5 right-1.5 bg-gradient-to-r from-gold to-[#F0C040] text-green-darker text-[8px] uppercase tracking-wider font-extrabold px-1.5 py-0.5 rounded shadow-sm">
-                        {place.discount}
-                      </span>
-                    </div>
-                    <div className="p-3 text-left">
-                      <h5 className="font-serif text-[11px] font-bold text-green-dark truncate">{place.name}</h5>
-                      <p className="flex items-center gap-1 text-text-muted text-[8px] mt-0.5">
-                        <MapPin size={8} className="text-gold" />
-                        <span className="truncate">{place.location}</span>
-                      </p>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-
             {/* Boutons de navigation */}
             <div className="flex gap-4 border-t border-gold/15 pt-8">
               <button onClick={handleBack} className="flex-1 py-4 border border-green-dark text-green-dark font-bold uppercase tracking-widest text-[10px] hover:bg-green-dark hover:text-white transition-all">Retour</button>
@@ -420,6 +309,69 @@ export const MemberRegistrationView: React.FC<{ onRegister: (data: any) => Promi
             <p className="text-text-muted text-xs text-center mt-4">En cliquant sur confirmer, vous acceptez notre Charte de Confidentialité et les Conditions Générales du Club.</p>
           </form>
         )}
+        </div>
+
+        {/* ─── INFOS COMPLÉMENTAIRES (sous le formulaire) ─── */}
+        <div className="mt-20 space-y-16">
+          {/* Avantages */}
+          <div>
+            <div className="text-center mb-8">
+              <span className="text-[10px] uppercase tracking-[0.4em] text-gold font-bold block mb-2">Pourquoi rejoindre IBC</span>
+              <h3 className="font-serif text-2xl md:text-3xl font-bold text-green-dark">Un écosystème d'avantages pensé pour vous</h3>
+            </div>
+            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+              {[
+                { icon: Wallet, title: 'Cashback automatique', desc: "Chaque paiement chez nos partenaires crédite votre compte, suivi en temps réel sur votre dashboard." },
+                { icon: Gift, title: 'Ma Cagnotte IBC', desc: 'Votre capital plaisir disponible, utilisable en un clic pour régler vos consommations partenaires.' },
+                { icon: TrendingUp, title: 'Objectifs Évasion', desc: "Fixez un but (séjour, weekend) et laissez votre cashback financer l'escapade de vos rêves." },
+                { icon: Banknote, title: 'Épargne Club', desc: 'Mettez de côté une partie de votre cashback dans une tirelire voyage dédiée.' },
+                { icon: Users, title: 'Cercle Évasion', desc: 'Fusionnez vos cagnottes avec vos proches pour des escapades collectives inoubliables.' },
+                { icon: Crown, title: 'Statuts évolutifs', desc: 'Bronze, Or, Platinum : plus vous explorez, plus vos privilèges augmentent.' },
+              ].map((item, i) => (
+                <div key={i} className="bg-white border border-gold/10 hover:border-gold/30 hover:shadow-soft rounded-2xl p-5 flex items-start gap-4 transition-all duration-300">
+                  <div className="w-10 h-10 rounded-xl bg-green-dark/5 flex items-center justify-center shrink-0 border border-gold/20">
+                    <item.icon size={20} className="text-gold" />
+                  </div>
+                  <div className="text-left">
+                    <h5 className="font-serif font-bold text-green-dark text-sm">{item.title}</h5>
+                    <p className="text-[11px] text-text-muted mt-1 leading-relaxed">{item.desc}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Recommandés */}
+          <div>
+            <div className="text-center mb-8">
+              <span className="text-[10px] uppercase tracking-[0.4em] text-gold font-bold block mb-2">Recommandés pour vous</span>
+              <h3 className="font-serif text-2xl md:text-3xl font-bold text-green-dark">Vivez des expériences d'exception</h3>
+            </div>
+            <div className="grid gap-4 grid-cols-2 lg:grid-cols-4">
+              {[
+                { name: 'Sunset Lounge', location: 'Abidjan, Cocody', discount: '-20%', img: 'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&q=80&w=300' },
+                { name: 'Brunch & Chill', location: 'Bingerville', discount: '-15%', img: 'https://images.unsplash.com/photo-1514362545857-3bc16c4c7d1b?auto=format&fit=crop&q=80&w=300' },
+                { name: 'Weekend Assinie', location: 'Assinie', discount: '-25%', img: 'https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?auto=format&fit=crop&q=80&w=300' },
+                { name: 'Sofitel Abidjan', location: 'Abidjan, Cocody', discount: '-20%', img: 'https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?auto=format&fit=crop&q=80&w=300' },
+              ].map((place, idx) => (
+                <div key={idx} className="bg-white border border-gold/10 rounded-2xl overflow-hidden hover:border-gold/30 hover:shadow-soft transition-all duration-300 group">
+                  <div className="relative overflow-hidden h-28">
+                    <img src={place.img} alt={place.name} loading="lazy" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+                    <span className="absolute top-2 right-2 bg-gradient-to-r from-gold to-[#F0C040] text-green-darker text-[9px] uppercase tracking-wider font-extrabold px-2 py-0.5 rounded shadow-sm">{place.discount}</span>
+                  </div>
+                  <div className="p-3 text-left">
+                    <h5 className="font-serif text-xs font-bold text-green-dark truncate">{place.name}</h5>
+                    <p className="flex items-center gap-1 text-text-muted text-[9px] mt-0.5"><MapPin size={9} className="text-gold" /><span className="truncate">{place.location}</span></p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* CTA bas de page */}
+          <div className="text-center">
+            <button type="button" onClick={() => { setStep(1); window.scrollTo({ top: 0, behavior: 'smooth' }); }} className="btn-gold px-10 py-4">Compléter mon adhésion</button>
+          </div>
         </div>
       </div>
     </div>
